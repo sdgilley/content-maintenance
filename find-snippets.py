@@ -192,11 +192,12 @@ if __name__ == "__main__":
     repo_arg = args.repo.lower()
     if repo_arg == "all":
         print ("Finding all snippets in AI and ML docs")
-        print ("foundry-samples snippets")
+        print ("This will take awhile, go grab a coffee! ☕")
+        print ("foundry-samples snippets -- 1 of 3")
         find_snippets("ai")
-        print ("azureia-samples snippets")
+        print ("azureia-samples snippets -- 2 of 3")
         find_snippets("ai2")
-        print ("azureml-examples snippets")
+        print ("azureml-examples snippets -- last one! 3 of 3")
         find_snippets("ml")
 
     else:
