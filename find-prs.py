@@ -296,9 +296,9 @@ def display_results(all_pr_data, args):
     pd.set_option("display.max_colwidth", 50)
     pd.set_option("display.width", None)
     
-    print(f"\n{'='*80}")
-    print(f"FOUND {len(all_pr_data)} PRs REQUIRING REVIEW")
-    print(f"{'='*80}\n")
+    # print(f"\n{'='*80}")
+    # print(f"FOUND {len(all_pr_data)} PRs REQUIRING REVIEW")
+    # print(f"{'='*80}\n")
     
     if args.verbose:
         # Show detailed information
@@ -319,10 +319,10 @@ def display_results(all_pr_data, args):
             if pr['assignees']:
                 print(f"Assignees: {pr['assignees']}")
             print("-" * 60)
-    else:
+    # else:
         # Show summary table
-        summary_df = df[['repository', 'pr_number', 'title', 'author', 'review_status', 'updated_at', 'url']]
-        print(summary_df.to_string(index=False))
+        # summary_df = df[['repository', 'pr_number', 'title', 'author', 'review_status', 'updated_at', 'url']]
+        # print(summary_df.to_string(index=False))
     
     # Save to CSV if requested
     if args.output:
@@ -338,7 +338,7 @@ def display_results(all_pr_data, args):
     if not args.output and not args.markdown:
         default_md_file = f"pr-review-report-{datetime.now().strftime('%Y-%m-%d')}.md"
         write_markdown_report(all_pr_data, default_md_file)
-        print(f"\nMarkdown report automatically saved to: {default_md_file}")
+        print(f"\nMarkdown report saved to: {default_md_file}")
 
 
 def main():
