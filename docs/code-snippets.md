@@ -11,7 +11,7 @@ Follow the steps to [create/update a GitHub access token](create-update-auth.md)
 
 Once your secret is stored, perform all maintenance tasks using the button below to open this repo in GitHub Codespaces. No additional setup needed. Use the Codespace terminal to run the scripts.
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/sdgilley/code-maintenance?quickstart=1)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/sdgilley/content-maintenance?quickstart=1) 
 
 ## Daily tasks
 
@@ -24,8 +24,8 @@ Once your secret is stored, perform all maintenance tasks using the button below
     python find-prs.py
     ```
 
-1. Review the output in pr-review-report-DATE.md.  Set to Preview to make it easier to read.
-1. For each PR, use the python command shown in the Report column. 
+1. Review the output in pr-review-report-DATE.md.  Set to Preview (Ctrl=Shift-V) to make it easier to read.
+1. For each PR, use the python command shown in the Report column.
 1. Approve if no issues reported.
 1. If issues are present, see [Fix the Problem](fix-the-problem.md).
 

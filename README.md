@@ -18,7 +18,7 @@ Scripts in this folder are used to help us maintain our code references.
         pip install pyGithub pandas
         ```
   
- > ⚠️ IMPORTANT.   Set a GH_ACCESS_TOKEN environment variable before running the scripts. See https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens to create a token.  Then add the token to an environment variable called GH_ACCESS_TOKEN.
+ > ⚠️ IMPORTANT.   Set a GH_ACCESS_TOKEN environment variable before running the scripts. See https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens to create a token.  Then add the token to an environment variable called **GH_ACCESS_TOKEN**.
 
 
 ##  Scripts in this repository
