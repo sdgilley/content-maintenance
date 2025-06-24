@@ -26,16 +26,15 @@ def merge_report(days, service):
     elif service == "ml":
         repo_name = ["azureml-examples"]
         owner_name = ["Azure"]
-
-
     output_dir =  os.path.join(os.path.dirname(os.path.realpath(__file__)),"outputs")
+    
+    # get the refs-found file for this service
+    fn = os.path.join(output_dir, f"refs-found.csv")
+    # print(f"Reading {fn} for all snippets")
+    snippets = h.read_snippets(fn)  # read the snippets file
+    
     # loop through all the repos that contain snippets for this service
     for owner_name, repo_name in zip(owner_name, repo_name):
-        # get the refs-found file for this service
-        fn = os.path.join(output_dir, f"refs-found-{repo_name}.csv")
-        # print(f"Reading {fn} for {repo_name} snippets")
-        # read the snippets for this repo
-        snippets = h.read_snippets(fn)  # read the snippets file
         f.find_pr_files(owner_name, repo_name, snippets, days)
     return
 

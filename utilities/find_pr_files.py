@@ -25,7 +25,7 @@ def find_pr_files(owner_name, repo_name, snippets, days):
     print(
         f"\n================= {repo_name}: {datetime.now().date()} MERGED IN LAST {days} DAYS  ================\n"
     )
-    # Filter the PRs that were merged in the last 7 days
+    # Filter the PRs that were merged in the last N days
     merged_prs = [
         pr["number"] for pr in data if pr["merged_at"] and pr["merged_at"] > days_ago
     ]
@@ -39,20 +39,21 @@ def find_pr_files(owner_name, repo_name, snippets, days):
         prfiles = a.get_auth_response(url)
         modified_files = [
             file["filename"] for file in prfiles if file["status"] == "modified"
-        ]
-
-        # See if any of the file changes are reference problems
+        ]        # See if any of the file changes are reference problems
         if len(modified_files) > 0:
-
+            
             for file in modified_files:
                 if (snippets["ref_file"] == file).any():
-                    snippet_match = snippets.loc[snippets["ref_file"] == file, "from_file"]
+                    # Get matching rows for this file
+                    matching_rows = snippets.loc[snippets["ref_file"] == file]
+                    # Create snippet_match with from_file_dir/from_file format
+                    snippet_matches = matching_rows.apply(lambda row: f"{row['from_file_dir']}/{row['from_file']}", axis=1)
                     # Append the data to the list
                     data.append(
                         {
                             "PR": pr,
                             "Modified File": file,
-                            "Referenced In": snippet_match.to_string(index=False),
+                            "Referenced In": snippet_matches.to_string(index=False),
                         }
                     )
 
