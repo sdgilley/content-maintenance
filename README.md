@@ -23,6 +23,12 @@ Scripts in this folder are used to help us maintain our code references.
 
 ##  Scripts in this repository
 
+* [find-prs.py](find-prs.py) - Find PRs that need approval from your team. Use this to identify pull requests requiring review from team members across multiple repositories. The output will appear in pr-review-report-DATE.md.  You can delete the report when you're done with it.
+    * Examples:
+        * `python find-prs.py
+
+
+
 * [find-snippets.py](find-snippets.py) - use arguments (ai, ml, all) to specify which repo. If no arguments, defaults to all.
     * creates the file refs-found-xx.csv.  This file is used for both the pr-report and merge-report scripts.
     * create a CODEOWNERS file for the specified repo.  Use the content in this file to update the corresponding CODEOWNERS file in the repo.
