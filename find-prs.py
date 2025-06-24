@@ -261,7 +261,7 @@ def write_markdown_report(all_pr_data, filename):
                 status = pr['review_status']
                 if pr['draft']:
                     status += " (DRAFT)"
-                updated = pr['updated_at'].split(' ')[0]  # Just the date
+                # updated = pr['updated_at'].split(' ')[0]  # Just the date
                 # reviewers = pr['requested_reviewers'] if pr['requested_reviewers'] else "None"
                 # teams = pr['requested_teams'] if pr['requested_teams'] else "None"
                 # labels = pr['labels'] if pr['labels'] else "None"
@@ -273,7 +273,7 @@ def write_markdown_report(all_pr_data, filename):
                 elif "Azure-Samples/azureai-samples" in repo_name:
                     repo_arg = "ai2"
                 elif "Azure/azureml-examples" in repo_name:
-                    repo_arg = "ml"
+                    repo_arg = ""
                 
                 report_command = f"`python pr-report.py {pr['pr_number']} {repo_arg}`"
                 
@@ -283,6 +283,7 @@ def write_markdown_report(all_pr_data, filename):
         
         f.write("\n---\n")
         f.write("*Click on PR numbers to view the pull request on GitHub*\n")
+
 def display_results(all_pr_data, args):
     """Display the results in a formatted way"""
     if not all_pr_data:
