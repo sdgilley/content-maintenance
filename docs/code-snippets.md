@@ -3,7 +3,6 @@
 This repository contains scripts to help maintain code snippets in Azure documentation. 
 
 The scripts are designed to be run in a GitHub Codespace.
-https://github.com/pulls?q=is%3Apr+is%3Aopen+user-review-requested%3A%40me
 If you're evaluating a file for Machine Learning FRESHNESS, see the [Freshness Dashboard](https://sdgilley.github.io/learn-tools/).
 
 ## Setup for Codespaces
