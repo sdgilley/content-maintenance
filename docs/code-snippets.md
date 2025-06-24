@@ -24,8 +24,8 @@ Once your secret is stored, perform all maintenance tasks using the button below
     python find-prs.py
     ```
 
-1. Review the output in pr-review-report-DATE.md.  Set to Preview to make it easier to read.
-1. For each PR, use the python command shown in the Report column. 
+1. Review the output in pr-review-report-DATE.md.  Set to Preview (Ctrl=Shift-V) to make it easier to read.
+1. For each PR, use the python command shown in the Report column.
 1. Approve if no issues reported.
 1. If issues are present, see [Fix the Problem](fix-the-problem.md).
 
