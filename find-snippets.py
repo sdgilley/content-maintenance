@@ -10,7 +10,7 @@ It creates the following files in the outputs directory
 Run this script periodically to stay up to date with the latest references.
 """
 
-def find_snippets(repo_arg):
+def find_snippets():
     import os
     import re
     import sys
@@ -45,10 +45,6 @@ def find_snippets(repo_arg):
         {"path": "articles/machine-learning", "include_subdirs": False},
         {"path": "articles/ai-foundry", "include_subdirs": True}
     ]
-    
-    if repo_arg not in ["all"] + list(repo_configs.keys()):
-        print(f"{repo_arg} - Invalid repo value")
-        sys.exit()
 
     ############################ DONE ############################
     
@@ -103,13 +99,8 @@ def find_snippets(repo_arg):
                 # count hard-coded code blocks
                 blocks, inside_code_block, count, code_type = h.count_code_lines(
                     line, blocks, inside_code_block, count, code_type
-                )
-                
-                # Search for all three snippet patterns in each line
+                )                # Search for all three snippet patterns in each line
                 for repo_key, config in repo_configs.items():
-                    if repo_arg != "all" and repo_arg != repo_key:
-                        continue
-                        
                     repo_token = config["repo_token"]
                     az_branch = f"{repo_token}-main"
                     
@@ -173,13 +164,8 @@ def find_snippets(repo_arg):
         combined_found.to_csv(combined_result_fn, index=False)
         print(f"Writing combined {combined_result_fn} file with {len(combined_found)} total references")
     else:
-        print("No references found across all repositories")
-
-    # Process results for each repository (for individual CODEOWNERS files)
+        print("No references found across all repositories")    # Process results for each repository (for individual CODEOWNERS files)
     for repo_key, config in repo_configs.items():
-        if repo_arg != "all" and repo_arg != repo_key:
-            continue
-            
         repo_token = config["repo_token"]
         owners = config["owners"]
         
@@ -226,12 +212,4 @@ def find_snippets(repo_arg):
 
 
 if __name__ == "__main__":
-    import argparse
-    # Create the parser
-    parser = argparse.ArgumentParser(description="Find snippets by repo.")
-    parser.add_argument(
-        "input", type=str, nargs="?", default="all", help="Which repos to find: 'ai', 'ai2', 'ml', or 'all'"
-    )
-
-    args = parser.parse_args()  # Parse the arguments
-    find_snippets(args.input)
+    find_snippets()

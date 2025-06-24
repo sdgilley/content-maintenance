@@ -30,12 +30,10 @@ Scripts in this folder are used to help us maintain our code references.
 
 
 * [find-snippets.py](find-snippets.py) - use arguments (ai, ml, all) to specify which repo. If no arguments, defaults to all.
-    * creates the file refs-found-xx.csv.  This file is used for both the pr-report and merge-report scripts.
+    * creates the file refs-found.csv.  This file is used for both the pr-report and merge-report scripts.
     * create a CODEOWNERS file for the specified repo.  Use the content in this file to update the corresponding CODEOWNERS file in the repo.
     * Examples:
-        * `python find-snippets.py` - runs through all code repos.  Use this most of the time.
-        * `python find-snippets.py ai` to find all code snippets in both ai repos: foundry-samples &  azureai-samples repo.
-        * `python find-snippets.py ml` to find all code snippets in the azureml-examples repo.
+        * `python find-snippets.py` 
 
 * [pr-report.py](pr-report.py) - add argument `ai` to use for foundry-samples instead of azureml-examples. Use this to evaluate whether a PR in azureml-examples/azureai-samples or azure-ai-foundry/foundry-samples will cause problems in our docs build.  If you're using it for the first time in a while, first run [find-sippets.py](find-snippets.py) to get the most recent version of code snippets referenced by azure-ai-docs.
     * Examples:

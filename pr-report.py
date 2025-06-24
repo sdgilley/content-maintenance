@@ -72,7 +72,7 @@ else:
     added_files = [file["filename"] for file in prfiles if file["status"] == "added"]
     renamed_files = [file["previous_filename"] for file in prfiles if file["status"] == "renamed"]
 
-snippet_fn = os.path.join(os.path.dirname(os.path.realpath(__file__)),'outputs', f"refs-found-{repo_name}.csv")
+snippet_fn = os.path.join(os.path.dirname(os.path.realpath(__file__)),'outputs', f"refs-found.csv")
 snippets = h.read_snippets(snippet_fn)  # read the snippets file
 
 # Process the files:
@@ -99,14 +99,17 @@ nb_mods = []  # create an empty list to hold data for modified notebooks
 if modified > 0:
     if debug:
         print(f"Modified files: {modified_files}")
-        print(f"Checking {modified} modified files for deleted cells or comments:") 
+        print(f"Checking {modified} modified files for deleted cells or comments:")
     for file, blob_url in modified_files:
         if debug:
-                print(f"Checking {file} for deleted cells or comments:")    
+            print(f"Checking {file} for deleted cells or comments:")
         if (snippets["ref_file"] == file).any():
             if debug:
                 print(f"  {file} is referenced in azure-ai-docs-pr.")
-            snippet_match = snippets.loc[snippets["ref_file"] == file, "from_file"]
+            # Get matching rows for this file and create full path references
+            matching_rows = snippets.loc[snippets["ref_file"] == file]
+            snippet_matches = matching_rows.apply(lambda row: f"{row['from_file_dir']}/{row['from_file']}", axis=1)
+            snippet_match_str = snippet_matches.to_string(index=False)
             # Check if there are deleted nb named cells or code comments
             nb, adds, deletes, blob_url = h.find_changes(file, prfiles, blob_url)
             if debug:
@@ -123,7 +126,7 @@ if modified > 0:
                     data.append(
                         {
                             "Modified File": file,
-                            "Referenced In": snippet_match.to_string(index=False),
+                            "Referenced In": snippet_match_str,
                             "Cell Type": cell_type,
                             "Cell": cell,
                         }
@@ -141,14 +144,13 @@ if modified > 0:
             if key not in grouped_data:
                 grouped_data[key] = []
             grouped_data[key].append(item["Cell"])
-        print(f"Potential problems found in {len(grouped_data)} files. \n")
-        # Print the grouped data
+        print(f"Potential problems found in {len(grouped_data)} files. \n")        # Print the grouped data
         for (modified_file, referenced_in), cells in grouped_data.items():
             print(f"Modified File: {modified_file} \n  Referenced in:")
             refs = referenced_in.split("\n")
             for ref in refs:
                 print(
-                    f"   https://github.com/MicrosoftDocs/azure-ai-docs-pr/edit/main/articles/machine-learning/{ref.strip()}"
+                    f"   https://github.com/MicrosoftDocs/azure-ai-docs-pr/edit/main/articles/{ref.strip()}"
                 )
             print(f"   {cell_type} cells deleted: {len(cells)}")
             for cell in cells:
@@ -173,13 +175,15 @@ if deleted > 0:
     found = 0
     for file in deleted_files:
         if (snippets["ref_file"] == file).any():
-            snippet_match = snippets.loc[snippets["ref_file"] == file, "from_file"]
+            # Get matching rows for this file and create full path references
+            matching_rows = snippets.loc[snippets["ref_file"] == file]
+            snippet_matches = matching_rows.apply(lambda row: f"{row['from_file_dir']}/{row['from_file']}", axis=1)
 
             print(f"DELETED FILE: {file} \n  Referenced in:")
-            refs = snippet_match.to_string(index=False).split("\n")
+            refs = snippet_matches.to_string(index=False).split("\n")
             for ref in refs:
                 print(
-                    f"* https://github.com/MicrosoftDocs/azure-ai-docs-pr/edit/main/articles/machine-learning/{ref.strip()}"
+                    f"* https://github.com/MicrosoftDocs/azure-ai-docs-pr/edit/main/articles/{ref.strip()}"
                 )
             # print(snippet_match.to_string(index=False))
             h.compare_branches(repo, file, "main", "temp-fix")
@@ -196,13 +200,15 @@ if renamed > 0:
     found = 0
     for file in renamed_files:
         if (snippets["ref_file"] == file).any():
-            snippet_match = snippets.loc[snippets["ref_file"] == file, "from_file"]
+            # Get matching rows for this file and create full path references
+            matching_rows = snippets.loc[snippets["ref_file"] == file]
+            snippet_matches = matching_rows.apply(lambda row: f"{row['from_file_dir']}/{row['from_file']}", axis=1)
 
             print(f"RENAMED FILE: {file} \n  Referenced in:")
-            refs = snippet_match.to_string(index=False).split("\n")
+            refs = snippet_matches.to_string(index=False).split("\n")
             for ref in refs:
                 print(
-                    f"* https://github.com/MicrosoftDocs/azure-ai-docs-pr/edit/main/articles/machine-learning/{ref.strip()}"
+                    f"* https://github.com/MicrosoftDocs/azure-ai-docs-pr/edit/main/articles/{ref.strip()}"
                 )
             # print(snippet_match.to_string(index=False))
             h.compare_branches(repo, file, "main", "temp-fix")
