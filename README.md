@@ -27,18 +27,21 @@ Scripts in this folder are used to help us maintain our code references.
     * Examples:
         * `python find-prs.py
 
-
-
-* [find-snippets.py](find-snippets.py) - use arguments (ai, ml, all) to specify which repo. If no arguments, defaults to all.
+* [find-snippets.py](find-snippets.py) 
     * creates the file refs-found.csv.  This file is used for both the pr-report and merge-report scripts.
-    * create a CODEOWNERS file for the specified repo.  Use the content in this file to update the corresponding CODEOWNERS file in the repo.
+    * create a CODEOWNERS file for each repo.  Use the content in this file to update the corresponding CODEOWNERS file in that repo.
     * Examples:
         * `python find-snippets.py` 
 
-* [pr-report.py](pr-report.py) - add argument `ai` to use for foundry-samples instead of azureml-examples. Use this to evaluate whether a PR in azureml-examples/azureai-samples or azure-ai-foundry/foundry-samples will cause problems in our docs build.  If you're using it for the first time in a while, first run [find-sippets.py](find-snippets.py) to get the most recent version of code snippets referenced by azure-ai-docs.
+* [pr-report.py](pr-report.py) - 
+    * Add argument `ai` for **foundry-samples**.
+    * Add argument `ai2` for **azureai-samples**.  
+    * No argument needed for **azureml-examples**.
+Use this to evaluate whether a PR in the repo will cause problems in our docs build.  If you're using it for the first time in a while, first run [find-sippets.py](find-snippets.py) to get the most recent version of code snippets referenced by azure-ai-docs.
     * Examples:
-        * `python pr-report.py 91` to check PR 91 in  azureml-examples repo.
-        * `python pr-report.py 169 ai` to check PR 169 in foundry-samples repo. (this should show a comment was removed that would break our build)
+        * `python pr-report.py 91` to check PR 91 in  **azureml-examples** repo.
+        * `python pr-report.py 169 ai` to check PR 169 in **foundry-samples** repo. 
+        * `python pr-report.py 267 ai2` to check PR 267 in **azureai-samples** repo.
 
 * [merge-report.py](merge-report.py) -  Use this to see what PRs in azureml-examples, foundry-samples, and azureai-samples have merged in the last N days that might require a docs update (default is 8 days). If you're using it for the first time in a while, first run [find-sippets.py](find-snippets.py) to get the most recent version of code snippets referenced by azure-ai-docs.
     * Examples:

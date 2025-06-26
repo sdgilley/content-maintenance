@@ -54,7 +54,7 @@ def parse_arguments():
         "--days", 
         type=int, 
         default=14,
-        help="Look at PRs updated in the last N days (default: 7)"
+        help="Look at PRs updated in the last N days (default: 14)"
     )
     parser.add_argument(
         "--state", 
@@ -100,6 +100,11 @@ def get_team_repos():
             "owner": "Azure",
             "repo": "azureml-examples",
             "team": "@azure/ai-platform-docs"
+        },
+                {
+            "owner": "Azure-Samples",
+            "repo": "azureai-samples",
+            "team": "@azure-samples/ai-platform-docs"
         }
     ]
 
@@ -233,7 +238,7 @@ def write_markdown_report(all_pr_data, filename):
         f.write(f"Total PRs found: **{len(all_pr_data)}**\n\n")
         
         if not all_pr_data:
-            f.write("No PRs found matching the criteria.\n")
+            f.write("Nothing to do here, no PRs found.\n")
             return
         
         # Group by repository
@@ -244,14 +249,14 @@ def write_markdown_report(all_pr_data, filename):
                 repos[repo_name] = []
             repos[repo_name].append(pr)
         
+        # Write table header
+        f.write("Repo | PR | Title | Author |  Report |\n")
+        f.write("|----|----|----|----|----| \n")
         # Write each repository section
         for repo_name, prs in repos.items():
-            f.write(f"## {repo_name}\n\n")
-            f.write(f"Found **{len(prs)}** PRs in this repository\n\n")
+            # f.write(f"### {repo_name}\n\n")
+            # f.write(f"Found **{len(prs)}** PRs in this repository\n\n")          
             
-            # Write table header
-            f.write("| PR | Title | Author |  Report |\n")
-            f.write("|----|----|----|----| \n")
             
             # Write each PR as a table row
             for pr in prs:
@@ -270,16 +275,19 @@ def write_markdown_report(all_pr_data, filename):
                 repo_arg = ""
                 if "Azure-AI-Foundry/foundry-samples" in repo_name:
                     repo_arg = "ai"
+                    shortname = "foundry-samples"
                 elif "Azure-Samples/azureai-samples" in repo_name:
                     repo_arg = "ai2"
+                    shortname = "azureai-samples"
                 elif "Azure/azureml-examples" in repo_name:
                     repo_arg = ""
+                    shortname = "azureml-examples"
                 
                 report_command = f"`python pr-report.py {pr['pr_number']} {repo_arg}`"
                 
-                f.write(f"| {pr_link} | {title} | {author} | {report_command} |\n")
+                f.write(f" | {shortname} | {pr_link} | {title} | {author} | {report_command} |\n")
             
-            f.write("\n")
+            # f.write("\n")
         
         f.write("\n---\n")
         f.write("*Click on PR numbers to view the pull request on GitHub*\n")
@@ -358,8 +366,8 @@ def main():
         print(f"Checking repository: {owner}/{repo_name} (Team: {team})")
         pr_data = get_prs_for_repo(owner, repo_name, args)
         all_pr_data.extend(pr_data)
-    
-    # Display results
+      # Display results
+    print(f"\nTotal PRs found across all repositories: {len(all_pr_data)}")
     display_results(all_pr_data, args)
 
 
