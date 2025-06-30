@@ -1,4 +1,6 @@
 ref_file,from_file,repo_name,from_file_dir
+scenarios/langchain/getting-started-with-langchain-chat-models.ipynb,langchain.md,azureai-samples,ai-foundry/how-to/develop
+scenarios/langchain/getting-started-with-langchain-embeddings.ipynb,langchain.md,azureai-samples,ai-foundry/how-to/develop
 scenarios/projects/basic/chat-simple.py,get-started-code.md,azureai-samples,ai-foundry/quickstarts
 scenarios/projects/basic/chat-template.py,get-started-code.md,azureai-samples,ai-foundry/quickstarts
 scenarios/rag/custom-rag-app/assets/chat_eval_data.jsonl,copilot-sdk-evaluate.md,azureai-samples,ai-foundry/tutorials
