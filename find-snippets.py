@@ -61,6 +61,7 @@ def find_snippets():
     
     start_time = datetime.now()
     print(f"Starting search at {start_time.strftime('%Y-%m-%d %H:%M:%S')}")
+    print("☕This will take awhile, go grab a coffee and come back later...")
     
     # Search through all defined paths
     for search_config in search_paths:
@@ -162,7 +163,7 @@ def find_snippets():
         
         combined_result_fn = os.path.join(output_dir, "refs-found.csv")
         combined_found.to_csv(combined_result_fn, index=False)
-        print(f"Writing combined {combined_result_fn} file with {len(combined_found)} total references")
+        print(f"Writing {combined_result_fn} file with {len(combined_found)} total references")
     else:
         print("No references found across all repositories")    # Process results for each repository (for individual CODEOWNERS files)
     for repo_key, config in repo_configs.items():
