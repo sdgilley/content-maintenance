@@ -23,7 +23,7 @@ def find_pr_files(owner_name, repo_name, snippets, days):
     data = response.json()
 
     print(
-        f"\n================= {repo_name}: {datetime.now().date()} MERGED IN LAST {days} DAYS  ================\n"
+        f"\n=== {repo_name}: {datetime.now().date()} MERGED IN LAST {days} DAYS  ===\n"
     )
     # Filter the PRs that were merged in the last N days
     merged_prs = [
@@ -48,12 +48,14 @@ def find_pr_files(owner_name, repo_name, snippets, days):
                     matching_rows = snippets.loc[snippets["ref_file"] == file]
                     # Create snippet_match with from_file_dir/from_file format
                     snippet_matches = matching_rows.apply(lambda row: f"{row['from_file_dir']}/{row['from_file']}", axis=1)
+                    # Convert to list and join with newlines to avoid pandas truncation
+                    snippet_matches_str = '\n'.join(snippet_matches.tolist())
                     # Append the data to the list
                     data.append(
                         {
                             "PR": pr,
                             "Modified File": file,
-                            "Referenced In": snippet_matches.to_string(index=False),
+                            "Referenced In": snippet_matches_str,
                         }
                     )
 
@@ -97,6 +99,9 @@ def find_pr_files(owner_name, repo_name, snippets, days):
         )
         refs = df["Referenced In"].str.split("\n").explode().str.strip()
         i = 0
+        # Set pandas display options to prevent truncation
+        pd.set_option('display.max_colwidth', None)
+        pd.set_option('display.width', None)
         for ref in sorted(refs.unique()):
             i += 1
             print(f"{i}  {ref.strip()}")
