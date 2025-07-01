@@ -295,7 +295,7 @@ def write_markdown_report(all_pr_data, filename):
 def display_results(all_pr_data, args):
     """Display the results in a formatted way"""
     if not all_pr_data:
-        print("No PRs found matching the criteria.")
+        print("✅ You're all caught up.")
         return
     
     df = pd.DataFrame(all_pr_data)
