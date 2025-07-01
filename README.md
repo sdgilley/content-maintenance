@@ -1,8 +1,16 @@
-# GitHub scripts
+# Code maintenance for Azure docs
 
-See [Maintain code snippets in Azure docs](docs/code-snippets.md) for more information on how to use these scripts.
+## Documentation
 
-Scripts in this folder are used to help us maintain our code references.  
+* [Setup and overview](docs/setup.md) 
+* [Create token for authentication](docs/create-update-auth.md)
+* [Daily and weekly tasks](docs/code-snippets.md)
+* [Fix the problem](docs/fix-the-problem.md)
+
+
+## Scripts
+
+Scripts in this repo are used to help us maintain our code references.  You can run them locally or in a Codespace.
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/sdgilley/content-maintenance?quickstart=1) 
 

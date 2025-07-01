@@ -46,7 +46,12 @@ Once your secret is stored, perform all maintenance tasks using the button below
         ```bash
         python pr-report.py <PR number> ai
         ```
+    * for azureai-samples repo:
 
+        ```bash
+        python pr-report.py <PR number> ai2
+        ```
+    
 ## Weekly tasks
 
 ### Update snippet references and codeowners files
