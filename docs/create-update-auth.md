@@ -12,6 +12,13 @@ The scripts in this repo require the use of a github token to authenticate.  Use
 1. Use **Configure SSO** to authorize **MicrosoftDocs** to use the token.  
     > ⚠️ IMPORTANT! Once you start this step, you'll never see the text of the token again. So make sure you've copied it before you select the dropdown.
 
+### Troubleshooting
+
+If your token doesn't work when you run code, verify that you've configured the SSO: 
+ 
+1. Go to https://github.com/settings/tokens.
+1. Select **Configure SSO**.  You should see **Deauthorize** for MicrosoftDocs.  If you see **Authorize**, select it to authorize MicrosoftDocs to use the token.
+
 ## Save the token as a Codespace secret
 
 To save/update a Codespace secret:
