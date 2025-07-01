@@ -60,8 +60,8 @@ Once your secret is stored, perform all maintenance tasks using the button below
 1. If changes to **CODEOWNERS-xx.txt** and **refs-found.csv** files appear, commit them to sdgilley/content-maintenance. You can do this from a Codespace, but if you're on main, you'll first need to switch to a new branch. Create a PR and let me know so I can merge it. (If you're the one maintaining the snippets for the month, no hurry on the PR - just make sure you commit changes before the end of the month so the next person has the right versions of these files.)
 1. You can ignore any other txt or csv files that are changed.
 1. If changes to CODEOWNERS-azureml-examples.txt appear, copy the content and commit to [azureml-examples CODEOWNERS](https://github.com/Azure/azureml-examples/blob/main/.github/CODEOWNERS) file.
-1. If changes to CODEOWNERS-foundry-samples.txt appear, copy the content and commit to [azureml-examples CODEOWNERS](https://github.com/Azure-AI-Foundry/foundry-samples/blob/main/.github/CODEOWNERS) file.
-1. For now, you can ignore changes to CODEOWNERS-azureai-samples.txt.  
+1. If changes to CODEOWNERS-foundry-samples.txt appear, copy the content and commit to [foundry-samples CODEOWNERS](https://github.com/Azure-AI-Foundry/foundry-samples/blob/main/.github/CODEOWNERS) file.
+1. If changes to CODEOWNERS-azureai-samples.txt appear, copy the content and commit to [azureai-samples CODEOWNERS](https://github.com/Azure-Samples/azureai-samples/blob/main/.github/CODEOWNERS) file.
 1. If temp-fix is not listed as one of the active branches, [update the temp-fix branch](#temp-fix) to keep it current.
 
 ### Update docs
