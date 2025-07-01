@@ -3,7 +3,6 @@
 /samples/microsoft/csharp/mslearn-resources/quickstart/Samples/AgentFileSearch.cs @azure-ai-foundry/AI-Platform-Docs
 /samples/microsoft/csharp/mslearn-resources/quickstart/Samples/AgentService.cs @azure-ai-foundry/AI-Platform-Docs
 /samples/microsoft/csharp/mslearn-resources/quickstart/Samples/SimpleInference.cs @azure-ai-foundry/AI-Platform-Docs
-/samples/microsoft/java/mslearn-resources/quickstart/.env.template @azure-ai-foundry/AI-Platform-Docs
 /samples/microsoft/java/mslearn-resources/quickstart/src/main/java/com/azure/ai/foundry/samples/AgentSample.java @azure-ai-foundry/AI-Platform-Docs
 /samples/microsoft/java/mslearn-resources/quickstart/src/main/java/com/azure/ai/foundry/samples/ChatCompletionSample.java @azure-ai-foundry/AI-Platform-Docs
 /samples/microsoft/java/mslearn-resources/quickstart/src/main/java/com/azure/ai/foundry/samples/FileSearchAgentSample.java @azure-ai-foundry/AI-Platform-Docs
