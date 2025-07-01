@@ -353,7 +353,6 @@ samples/microsoft/csharp/mslearn-resources/quickstart/Samples/.env.example,get-s
 samples/microsoft/csharp/mslearn-resources/quickstart/Samples/AgentFileSearch.cs,get-started-fdp.md,foundry-samples,ai-foundry/includes
 samples/microsoft/csharp/mslearn-resources/quickstart/Samples/AgentService.cs,get-started-fdp.md,foundry-samples,ai-foundry/includes
 samples/microsoft/csharp/mslearn-resources/quickstart/Samples/SimpleInference.cs,get-started-fdp.md,foundry-samples,ai-foundry/includes
-samples/microsoft/java/mslearn-resources/quickstart/.env.template,get-started-fdp.md,foundry-samples,ai-foundry/includes
 samples/microsoft/java/mslearn-resources/quickstart/src/main/java/com/azure/ai/foundry/samples/AgentSample.java,get-started-fdp.md,foundry-samples,ai-foundry/includes
 samples/microsoft/java/mslearn-resources/quickstart/src/main/java/com/azure/ai/foundry/samples/ChatCompletionSample.java,get-started-fdp.md,foundry-samples,ai-foundry/includes
 samples/microsoft/java/mslearn-resources/quickstart/src/main/java/com/azure/ai/foundry/samples/FileSearchAgentSample.java,get-started-fdp.md,foundry-samples,ai-foundry/includes
