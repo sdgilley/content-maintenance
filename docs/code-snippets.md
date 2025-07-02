@@ -2,9 +2,6 @@
 
 This repository contains scripts to help maintain code snippets in Azure documentation. 
 
-The scripts are designed to be run in a GitHub Codespace.
-If you're evaluating a file for Machine Learning FRESHNESS, see the [Freshness Dashboard](https://sdgilley.github.io/learn-tools/).
-
 ## Setup for Codespaces
 
 Follow the steps to [create/update a GitHub access token](create-update-auth.md) for use with the scripts in this repo.
@@ -56,7 +53,9 @@ Once your secret is stored, perform all maintenance tasks using the button below
 
 ### Update snippet references and codeowners files
 
-1. Run this script (takes approximately 12 minutes ):
+Keep the appropriate CODEOWNERS files up to date with the find-snippets script.
+
+1. Run this script (takes approximately 10-12 minutes for the current three code repos):
 
     ```bash
     python find-snippets.py
@@ -67,9 +66,10 @@ Once your secret is stored, perform all maintenance tasks using the button below
 1. If changes to CODEOWNERS-azureml-examples.txt appear, copy the content and commit to [azureml-examples CODEOWNERS](https://github.com/Azure/azureml-examples/blob/main/.github/CODEOWNERS) file.
 1. If changes to CODEOWNERS-foundry-samples.txt appear, copy the content and commit to [foundry-samples CODEOWNERS](https://github.com/Azure-AI-Foundry/foundry-samples/blob/main/.github/CODEOWNERS) file.
 1. If changes to CODEOWNERS-azureai-samples.txt appear, copy the content and commit to [azureai-samples CODEOWNERS](https://github.com/Azure-Samples/azureai-samples/blob/main/.github/CODEOWNERS) file.
-1. If temp-fix is not listed as one of the active branches, [update the temp-fix branch](#temp-fix) to keep it current.
 
 ### Update docs
+
+When code changes in a code repository, the corresponding document won't update until the next time it's built.  Find related documents by using the merge report.  A change in metadata in these articles will force a build, allowing it to update to the latest code content.
 
 1. Run the merge report.  If last run 7 days ago, simply run:
 
