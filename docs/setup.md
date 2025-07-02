@@ -6,7 +6,7 @@ The process of monitoring a code repoository involves some initial setup:
 
 1. (Docs) Create GitHub team in appropriate organization.  The team must be in the same organization as the code repository.
     * In order to create or add someone to a team, you must first be members of the org. Each member can join the org at https://repos.opensurce.microsoft.com/orgs/{ORG-NAME}. (For example, https://repos.opensource.microsoft.com/orgs/azure)
-    * Create a team at https://github.com/orgs/{ORN-NAME}/teams/. (For example, https://github.com/orgs/azure/teams/)
+    * Create a team at https://github.com/orgs/{ORG-NAME}/teams/. (For example, https://github.com/orgs/azure/teams/)
     * Add members to the team once they've joined the org.
 1. (Docs) Add information about the repo to [config.yml](../config.yml)
 1. (Code repository admin) To configure a code repository:
