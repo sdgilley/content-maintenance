@@ -6,11 +6,11 @@
 
 ## Overview
 
-This repository contains automated scripts that help maintain consistency between Azure documentation and sample code repositories. The scripts monitor code repositories for changes that could break documentation builds and help identify when documentation updates are needed.
+This repository contains scripts that help monitor code repositories for changes that could break documentation builds and help identify when documentation updates are needed.
 
 ### How it Works
 
-When sample code from a code repository is referenced in documentation, certain changes can break the documentation build:
+When sample code from a code repository is referenced in documentation, certain changes in the code repository can break the documentation build:
 
 1. **File deletion** - Referenced files are removed
 2. **File renaming** - Referenced file paths change  
