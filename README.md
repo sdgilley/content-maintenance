@@ -6,7 +6,7 @@
 
 The set of scripts here help us monitor the code repos for code changes that could break our docs build.  
 
-Once code is referenced in a doc, the following activities can break the build:
+Once code from a code repo is referenced in a doc, the following activities in the code repo can break the build:
 
 1. The referenced file is deleted
 1. The referenced file is renamed
