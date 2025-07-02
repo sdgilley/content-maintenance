@@ -336,10 +336,10 @@ sdk/python/resources/compute/compute.ipynb,how-to-create-attach-compute-cluster.
 sdk/python/resources/compute/compute.ipynb,how-to-create-compute-instance.md,azureml-examples,machine-learning
 sdk/python/resources/compute/compute.ipynb,how-to-manage-compute-instance.md,azureml-examples,machine-learning
 sdk/python/resources/connections/connections.ipynb,create-hub-project-sdk.md,azureml-examples,ai-foundry/how-to/develop
-sdk/python/resources/workspace/workspace.ipynb,how-to-disable-local-auth-storage.md,azureml-examples,machine-learning
-sdk/python/resources/workspace/workspace.ipynb,how-to-manage-workspace.md,azureml-examples,machine-learning
 sdk/python/resources/workspace/workspace.ipynb,development-environment-config.md,azureml-examples,ai-foundry/includes
 sdk/python/resources/workspace/workspace.ipynb,disable-local-auth.md,azureml-examples,ai-foundry/how-to
+sdk/python/resources/workspace/workspace.ipynb,how-to-disable-local-auth-storage.md,azureml-examples,machine-learning
+sdk/python/resources/workspace/workspace.ipynb,how-to-manage-workspace.md,azureml-examples,machine-learning
 sdk/python/schedules/job-schedule.ipynb,how-to-schedule-data-import.md,azureml-examples,machine-learning
 sdk/python/schedules/job-schedule.ipynb,how-to-schedule-pipeline-job.md,azureml-examples,machine-learning
 sdk/python/using-mlflow/deploy/environment/conda.yaml,how-to-use-mlflow-cli-runs.md,azureml-examples,machine-learning

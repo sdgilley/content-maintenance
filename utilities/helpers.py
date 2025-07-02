@@ -199,17 +199,55 @@ def find_snippets(line, branches, az_ml_branch, file):
 
 
 # get all contents from the path and all sub-directories
-def get_all_contents(repo, path, repo_branch):
+def get_all_contents(repo, path, repo_branch, exclude_dirs=None):
+    """
+    Get all contents from the path and all sub-directories.
+    
+    Args:
+        repo: GitHub repository object
+        path: Starting path to search
+        repo_branch: Branch to search
+        exclude_dirs: List of directory names to exclude (default: ['media'])
+    
+    Returns:
+        List of content objects
+    """
+    if exclude_dirs is None:
+        exclude_dirs = ['media']  # Default exclusion for backward compatibility
+    
     contents = []
     stack = [path]
 
     while stack:
         current_path = stack.pop()
-        current_contents = repo.get_contents(current_path, ref=repo_branch)
+        try:
+            current_contents = repo.get_contents(current_path, ref=repo_branch)
+        except Exception as e:
+            print(f"Warning: Could not access {current_path}: {e}")
+            continue
 
         for content in current_contents:
-            if content.type == 'dir' and 'media' not in content.path:  # skip media directories
-                stack.append(content.path)
+            if content.type == 'dir':
+                # Check if directory should be excluded
+                should_exclude = False
+                
+                for exclude_pattern in exclude_dirs:
+                    exclude_pattern = exclude_pattern.lower().strip('/')
+                    content_path_lower = content.path.lower()
+                    content_name_lower = content.name.lower()
+                    
+                    # Check if the exclude pattern matches:
+                    # 1. The directory name exactly
+                    # 2. The directory path contains the pattern
+                    # 3. The directory path ends with the pattern
+                    if (exclude_pattern == content_name_lower or 
+                        exclude_pattern in content_path_lower or
+                        content_path_lower.endswith(exclude_pattern)):
+                        should_exclude = True
+                        break
+                
+                if not should_exclude:
+                    stack.append(content.path)
             else:
                 contents.append(content)
 

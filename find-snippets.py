@@ -8,6 +8,10 @@ It creates the following files in the outputs directory
 * refs-found.csv - needed for the merge-report and pr-report scripts
 
 Run this script periodically to stay up to date with the latest references.
+
+Configuration:
+- Repository configurations and search paths are defined in config.yml
+- Exclude directories can be configured in config.yml under defaults.exclude_directories
 """
 
 def find_snippets():
@@ -44,6 +48,9 @@ def find_snippets():
         {"path": path, "include_subdirs": True if "ai-foundry" in path else False}
         for path in sorted(all_search_paths)
     ]
+    
+    # Get exclude directories from config
+    exclude_dirs = config.get_exclude_directories()
 
     ############################ DONE ############################
     
@@ -71,7 +78,7 @@ def find_snippets():
         
         try:
             if include_subdirs:
-                contents = h.get_all_contents(repo, path_in_repo, repo_branch)
+                contents = h.get_all_contents(repo, path_in_repo, repo_branch, exclude_dirs)
             else:
                 contents = repo.get_contents(path_in_repo, ref=repo_branch)
                 # Convert to list if not already (when getting single directory)
@@ -145,7 +152,7 @@ def find_snippets():
                                 combined_refs_list.append(combined_row_dict)
 
             if inside_code_block:
-                print(f"{file}: Warning: A code block started but did not end.")
+                print(f"⚠️ Warning! {content_file}: A code block started but did not end.")
                 print(f"  The last code block type was {code_type} and had {count} lines.")
                 
             if blocks:

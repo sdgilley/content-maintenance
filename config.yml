@@ -6,7 +6,7 @@ repositories:
   foundry-samples:
     owner: "Azure-AI-Foundry"
     repo: "foundry-samples"
-    team: "@azure-ai-foundry/ai-platform-docs"
+    team: "@azure-ai-foundry/AI-Platform-Docs"
     short_name: "foundry-samples"
     service_type: "ai"
     pr_report_arg: "ai"
@@ -18,19 +18,19 @@ repositories:
   azureai-samples:
     owner: "Azure-Samples"
     repo: "azureai-samples" 
-    team: "@azure-samples/ai-platform-docs"
+    team: "@azure-samples/AI-Platform-Docs"
     short_name: "azureai-samples"
     service_type: "ai"
     pr_report_arg: "ai2"
     search_paths:
       - "articles/ai-foundry"
       - "articles/machine-learning"
-      
+
   # Azure ML examples repository
   azureml-examples:
     owner: "Azure"
     repo: "azureml-examples"
-    team: "@azure/ai-platform-docs"
+    team: "@Azure/AI-Platform-Docs"
     short_name: "azureml-examples"
     service_type: "ml"
     pr_report_arg: ""
@@ -50,6 +50,11 @@ defaults:
     - "[!code-"
     - "<!-- sample:"
     - "!INCLUDE"
+  
+  # Directories to exclude when searching for snippets
+  exclude_directories:
+    - media
+    - ai-foundry/openai/
 
 # File paths
 files:

@@ -72,3 +72,9 @@ def get_snippet_patterns():
     """Get the list of snippet patterns to search for."""
     defaults = get_default_settings()
     return defaults.get('snippet_patterns', [])
+
+
+def get_exclude_directories():
+    """Get the list of directories to exclude when searching."""
+    defaults = get_default_settings()
+    return defaults.get('exclude_directories', [])
