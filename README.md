@@ -1,5 +1,19 @@
 # Code maintenance for Azure docs
 
+- **Code Repo** refers to the GitHub repository where code is stored. You can have multiple code repos (we currently have three).  
+- **Docs Repo** refers the MicrosoftDocs repo where articles are stored.  At this time, the docs repo is hard coded as **MicrosoftDocs/azure-ai-docs** in the scripts, but this could be easily modified.
+- **This Repo** refers to the content maintenance repository you're looking at right now.
+
+The set of scripts here help us monitor the code repos for code changes that could break our docs build.  
+
+Once code is referenced in a doc, the following activities can break the build:
+
+1. The referenced file is deleted
+1. The referenced file is renamed
+1. A named section in the file is deleted or renamed
+
+After a code repository has been configured, PRs that touch referenced files require a review from a member of the docs team.  A script will let you know if any problems are found in the PR to make review easy.
+
 ## Documentation
 
 * [Setup and overview](docs/setup.md) 
@@ -7,8 +21,20 @@
 * [Daily and weekly tasks](docs/code-snippets.md)
 * [Fix the problem](docs/fix-the-problem.md)
 
+## Configuration of scripts in this repo
 
-## Scripts
+All code repository configurations are centralized in `config.yml`. This file contains:
+
+- Repository details (owner, repo name, team assignments)
+- Search paths for each repository  
+- File naming patterns and output directories
+- Default settings for various scripts
+
+To add or modify repositories, edit the `config.yml` file.
+
+At the moment, the docs repo is hard-coded as **MicrosoftDocs/azure-ai-docs** in the scripts.  
+
+## Install instructions for this repo
 
 Scripts in this repo are used to help us maintain our code references.  You can run them locally or in a Codespace.
 
@@ -20,16 +46,16 @@ Scripts in this repo are used to help us maintain our code references.  You can 
     * Azure CLI installed and authenticated with `az login`
     * Create a python virtual environment and install requirements:
 
-        ```
+        ```bash
         py -3 -m venv .venv
         .venv\scripts\activate
-        pip install pyGithub pandas
+        pip install -r requirements.txt
         ```
   
- > ⚠️ IMPORTANT.   Set a GH_ACCESS_TOKEN environment variable before running the scripts. See https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens to create a token.  Then add the token to an environment variable called **GH_ACCESS_TOKEN**.
+ > ⚠️ IMPORTANT.   Set a GH_ACCESS_TOKEN environment variable before running the scripts. See instructions at [Create/update a GitHub access token](docs/create-update-auth.md).  Then add the token to an environment variable called **GH_ACCESS_TOKEN**.
 
 
-##  Scripts in this repository
+##  Script details
 
 * [find-prs.py](find-prs.py) - Find PRs that need approval from your team. Use this to identify pull requests requiring review from team members across multiple repositories. The output will appear in pr-review-report-DATE.md.  You can delete the report when you're done with it.
     * Examples:
@@ -51,13 +77,15 @@ Use this to evaluate whether a PR in the repo will cause problems in our docs bu
         * `python pr-report.py 169 ai` to check PR 169 in **foundry-samples** repo. 
         * `python pr-report.py 267 ai2` to check PR 267 in **azureai-samples** repo.
 
-* [merge-report.py](merge-report.py) -  Use this to see what PRs in azureml-examples, foundry-samples, and azureai-samples have merged in the last N days that might require a docs update (default is 8 days). If you're using it for the first time in a while, first run [find-sippets.py](find-snippets.py) to get the most recent version of code snippets referenced by azure-ai-docs.
+* [merge-report.py](merge-report.py) -  Use to see what PRs in your repos have merged in the last N days that might require a docs update (default is 8 days). If you're using it for the first time in a while, first run [find-sippets.py](find-snippets.py) to get the most recent version of code snippets referenced by azure-ai-docs.
     * Examples:
         * `python merge-report.py` to check all repos.
 
-The following files provide functions used in the above scripts:
+### Utilities
 
-* [utilities.py](utilities.py) - functions used by find-snippets, pr-report, and merge-report
-* [auth_request.py](auth.py) - function used by pr-report and merge-report to authenticate to github.
-    
-    You'll need to set a GH_ACCESS_TOKEN environment variable before using auth_request.py. See https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens to create a token.  Then add the token to an environment variable called GH_ACCESS_TOKEN.
+These files provide functions used in the above scripts:
+
+* [helpers.py](utilities/helpers.py) - functions used by find-snippets, pr-report, and merge-report
+* [h_auth.py](utilities/gh_auth.py) - function used by pr-report and merge-report to authenticate to github.
+* [find_pr_files.py](utilities/find_pr_files.py) - function used from merge_report, finds PRs merged in the last N days that have doc references. 
+* [config.py](utilities/config.py) - reads the config.yml file to get information about the repositories to monitor

@@ -17,24 +17,36 @@ def merge_report(days, service):
 
     from utilities import helpers as h
     from utilities import find_pr_files as f
+    from utilities import config
     import os
 
+    # Get repository configurations from config file
+    repos_config = config.get_repositories()
+    
     if service == "ai":
-        repo_name = ["azureai-samples", "foundry-samples"]
-        owner_name = ["Azure-Samples", "azure-ai-foundry"]
-        # add more here if needed; at that time, will have to loop through the repos
+        # Get AI-related repositories
+        ai_repos = config.get_repositories_by_service("ai")
+        repo_names = [repo_config["repo"] for repo_config in ai_repos.values()]
+        owner_names = [repo_config["owner"] for repo_config in ai_repos.values()]
     elif service == "ml":
-        repo_name = ["azureml-examples"]
-        owner_name = ["Azure"]
-    output_dir =  os.path.join(os.path.dirname(os.path.realpath(__file__)),"outputs")
+        # Get ML-related repositories  
+        ml_repos = config.get_repositories_by_service("ml")
+        repo_names = [repo_config["repo"] for repo_config in ml_repos.values()]
+        owner_names = [repo_config["owner"] for repo_config in ml_repos.values()]
+    else:
+        print(f"Unknown service: {service}")
+        return
+        
+    output_dir = config.get_output_directory()
     
     # get the refs-found file for this service
-    fn = os.path.join(output_dir, f"refs-found.csv")
+    file_paths = config.get_file_paths()
+    fn = os.path.join(output_dir, file_paths["refs_found_csv"])
     # print(f"Reading {fn} for all snippets")
     snippets = h.read_snippets(fn)  # read the snippets file
     
     # loop through all the repos that contain snippets for this service
-    for owner_name, repo_name in zip(owner_name, repo_name):
+    for owner_name, repo_name in zip(owner_names, repo_names):
         f.find_pr_files(owner_name, repo_name, snippets, days)
     return
 

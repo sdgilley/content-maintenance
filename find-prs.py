@@ -29,6 +29,7 @@ import argparse
 from datetime import datetime, timedelta, timezone
 import pandas as pd
 from utilities import gh_auth as auth
+from utilities import config
 
 
 def parse_arguments():
@@ -90,23 +91,19 @@ def parse_arguments():
 
 def get_team_repos():
     """Get the hardcoded list of repositories and their teams"""
-    return [
-        {
-            "owner": "Azure-AI-Foundry",
-            "repo": "foundry-samples", 
-            "team": "@azure-ai-foundry/ai-platform-docs"
-        },
-        {
-            "owner": "Azure",
-            "repo": "azureml-examples",
-            "team": "@azure/ai-platform-docs"
-        },
-                {
-            "owner": "Azure-Samples",
-            "repo": "azureai-samples",
-            "team": "@azure-samples/ai-platform-docs"
-        }
-    ]
+    repos_config = config.get_repositories()
+    team_repos = []
+    
+    for repo_key, repo_config in repos_config.items():
+        team_repos.append({
+            "owner": repo_config["owner"],
+            "repo": repo_config["repo"], 
+            "team": repo_config["team"],
+            "short_name": repo_config["short_name"],
+            "pr_report_arg": repo_config["pr_report_arg"]
+        })
+    
+    return team_repos
 
 
 def get_prs_for_repo(owner, repo_name, args):
@@ -272,18 +269,13 @@ def write_markdown_report(all_pr_data, filename):
                 # labels = pr['labels'] if pr['labels'] else "None"
                 
                 # Generate the appropriate pr-report.py command based on repository
-                repo_arg = ""
-                if "Azure-AI-Foundry/foundry-samples" in repo_name:
-                    repo_arg = "ai"
-                    shortname = "foundry-samples"
-                elif "Azure-Samples/azureai-samples" in repo_name:
-                    repo_arg = "ai2"
-                    shortname = "azureai-samples"
-                elif "Azure/azureml-examples" in repo_name:
-                    repo_arg = ""
-                    shortname = "azureml-examples"
-                
-                report_command = f"`python pr-report.py {pr['pr_number']} {repo_arg}`"
+                repo_config = config.get_repository_by_owner_repo(repo_name.split('/')[0], repo_name.split('/')[1])
+                if repo_config:
+                    report_command = f"`python pr-report.py {pr['pr_number']} {repo_config['pr_report_arg']}`"
+                    shortname = repo_config['short_name']
+                else:
+                    report_command = f"`python pr-report.py {pr['pr_number']}`"
+                    shortname = repo_name.split('/')[-1]
                 
                 f.write(f" | {shortname} | {pr_link} | {title} | {author} | {report_command} |\n")
             

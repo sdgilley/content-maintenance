@@ -5,12 +5,12 @@ The scripts in this repo require the use of a github token to authenticate.  Use
 ## Create a GitHub token
 
 1. Go to https://github.com/settings/tokens.  Generate a new token (classic). Add a note and pick an expiration date.  Skip all the checkboxes; scroll to the bottom, and click **Generate token**.
-1. COPY the token. SAVE it somewhere temporarily.  It's about to go away and you'll need it in a future step.  
-1. If you're going to run scripts locally, create or update an environment variable **GH_ACCESS_TOKEN** with this value.
-1. To run in a codespace, see next section to save the token in a Codespace secret.
-1. Make sure you have stored the copy of the token before going on to the next step.
+1. **COPY** the token. **SAVE** it somewhere temporarily.  It's about to go away forever, and you'll need it in a future step.  
+    1. If you're going to run scripts locally, create or update an environment variable **GH_ACCESS_TOKEN** with this value.
+    1. To run in a codespace, see next section to save the token in a Codespace secret.
+    1. Make sure you have stored the copy of the token before going on to the next step.
 1. Use **Configure SSO** to authorize **MicrosoftDocs** to use the token.  
-    > ⚠️ IMPORTANT! Once you start this step, you'll never see the text of the token again. So make sure you've copied it before you select the dropdown.
+    > ⚠️ IMPORTANT! Once you start this step, you'll never see the token value again. So make sure you've copied it before you select the dropdown.
 
 ### Troubleshooting
 
@@ -32,7 +32,7 @@ To save/update a Codespace secret:
     * To update GH_ACCESS_TOKEN, click **Update**.  
         * Under **Value** you'll see a sentence saying it can't be displayed.  Click on the **enter a new value** link, then paste in your new token.
     * Select **Save changes**.
-    
+
 
 ## Update your codespace
 
@@ -42,11 +42,11 @@ If you have a codespace open, it sometimes detects the change and asks you if yo
 
 ## For local environments
 
-To run the scripts locally, save the token as an environment variable with the name GH_ACCESS_TOKEN.
+To run the scripts locally, save the token as an environment variable with the name **GH_ACCESS_TOKEN**.
 
-Close and reopen VS Code to use the new token.
+⚠️ If VS Code is open, close and reopen so it sees the correct value.
 
-Besides authentication, you also need to `pip install PyGithub` to use the scripts locally.
+Besides authentication, you also need to `pip install -r requirements.txt` to use the scripts locally.
 
 ## Next
 

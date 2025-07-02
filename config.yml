@@ -1,0 +1,58 @@
+# Central configuration file for content maintenance scripts
+# This file contains repository configurations and settings used across multiple scripts
+
+repositories:
+  # Azure AI Foundry samples repository
+  foundry-samples:
+    owner: "Azure-AI-Foundry"
+    repo: "foundry-samples"
+    team: "@azure-ai-foundry/ai-platform-docs"
+    short_name: "foundry-samples"
+    service_type: "ai"
+    pr_report_arg: "ai"
+    search_paths:
+      - "articles/ai-foundry"
+      - "articles/machine-learning"
+  
+  # Azure AI samples repository  
+  azureai-samples:
+    owner: "Azure-Samples"
+    repo: "azureai-samples" 
+    team: "@azure-samples/ai-platform-docs"
+    short_name: "azureai-samples"
+    service_type: "ai"
+    pr_report_arg: "ai2"
+    search_paths:
+      - "articles/ai-foundry"
+      - "articles/machine-learning"
+      
+  # Azure ML examples repository
+  azureml-examples:
+    owner: "Azure"
+    repo: "azureml-examples"
+    team: "@azure/ai-platform-docs"
+    short_name: "azureml-examples"
+    service_type: "ml"
+    pr_report_arg: ""
+    search_paths:
+      - "articles/ai-foundry"
+      - "articles/machine-learning"
+
+# Output directory for generated files
+output_directory: "outputs"
+
+# Default settings
+defaults:
+  max_days_for_pr_search: 100
+  default_pr_days: 14
+  snippet_patterns:
+    - ":::code"
+    - "[!code-"
+    - "<!-- sample:"
+    - "!INCLUDE"
+
+# File paths
+files:
+  refs_found_csv: "refs-found.csv"
+  codeowners_prefix: "CODEOWNERS-"
+  code_counts_prefix: "code-counts-"

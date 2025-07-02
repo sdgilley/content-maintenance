@@ -16,6 +16,7 @@ def find_snippets():
     import sys
     from utilities import helpers as h
     from utilities import gh_auth as a
+    from utilities import config
     import pandas as pd
     from datetime import datetime
 
@@ -24,26 +25,24 @@ def find_snippets():
     repo_name = "MicrosoftDocs/azure-ai-docs"
     repo_branch = "main"
     
-    # Define all repository configurations
-    repo_configs = {
-        "ai": {
-            "repo_token": "foundry-samples",
-            "owners": "@azure-ai-foundry/AI-Platform-Docs"
-        },
-        "ai2": {
-            "repo_token": "azureai-samples", 
-            "owners": "@azure-samples/AI-Platform-Docs"
-        },
-        "ml": {
-            "repo_token": "azureml-examples",
-            "owners": "@Azure/AI-Platform-Docs"
+    # Get repository configurations from config file
+    repos_config = config.get_repositories()
+    repo_configs = {}
+    for repo_key, repo_config in repos_config.items():
+        repo_configs[repo_key] = {
+            "repo_token": repo_config["repo"],
+            "owners": repo_config["team"]
         }
-    }
     
-    # Define search paths and whether to include subdirectories
+    # Get search paths from config (use all unique paths from all repos)
+    all_search_paths = set()
+    for repo_config in repos_config.values():
+        for path in repo_config.get("search_paths", []):
+            all_search_paths.add(path)
+    
     search_paths = [
-        {"path": "articles/machine-learning", "include_subdirs": False},
-        {"path": "articles/ai-foundry", "include_subdirs": True}
+        {"path": path, "include_subdirs": True if "ai-foundry" in path else False}
+        for path in sorted(all_search_paths)
     ]
 
     ############################ DONE ############################

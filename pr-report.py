@@ -19,33 +19,49 @@ import pandas as pd
 import sys
 from utilities import gh_auth as a
 from utilities import helpers as h
+from utilities import config
 import os
 
 # read arguments from command line - pr and optionally, whether to authenticate
 import argparse
 debug = False
+
+# Get repository configurations from config
+repos_config = config.get_repositories()
+repo_choices = list(repos_config.keys())
+
 parser = argparse.ArgumentParser(
     description="Process a PR number."
 )  # Create the parser
 # Add the arguments
 parser.add_argument("pr", type=int, help="The PR number you are interested in.")
-parser.add_argument("repo", type=str, nargs='?', default="ml", choices=["ai", "ai2", "ml"], help="Which repo: 'ai', 'ai2', or 'ml'")
+parser.add_argument("repo", type=str, nargs='?', default="azureml-examples", 
+                   choices=repo_choices + ["ml", "ai", "ai2"], 
+                   help=f"Which repo: {', '.join(repo_choices)} or legacy shortcuts ml, ai, ai2")
 args = parser.parse_args()  # Parse the arguments
 pr = args.pr
 repo_arg = args.repo.lower()
+
+# Handle legacy shortcuts
+legacy_mapping = {
+    "ml": "azureml-examples",
+    "ai": "foundry-samples", 
+    "ai2": "azureai-samples"
+}
+if repo_arg in legacy_mapping:
+    repo_arg = legacy_mapping[repo_arg]
+
 # fix truncation?
 pd.set_option("display.max_colwidth", 500)
 
-# form the URL for the GitHub API
-if repo_arg == "ml":
-    repo_name = "azureml-examples"
-    owner_name = "Azure"
-elif repo_arg == "ai":
-    repo_name = "foundry-samples"
-    owner_name = "Azure-AI-Foundry"
-elif repo_arg == "ai2":
-    repo_name = "azureai-samples"
-    owner_name = "Azure-Samples"
+# Get repository configuration
+repo_config = config.get_repository_by_key(repo_arg)
+if not repo_config:
+    print(f"Error: Repository '{repo_arg}' not found in config")
+    sys.exit(1)
+
+repo_name = repo_config["repo"]
+owner_name = repo_config["owner"]
 
 url = f"https://api.github.com/repos/{owner_name}/{repo_name}/pulls/{pr}/files?per_page=100"
 
@@ -72,7 +88,7 @@ else:
     added_files = [file["filename"] for file in prfiles if file["status"] == "added"]
     renamed_files = [file["previous_filename"] for file in prfiles if file["status"] == "renamed"]
 
-snippet_fn = os.path.join(os.path.dirname(os.path.realpath(__file__)),'outputs', f"refs-found.csv")
+snippet_fn = os.path.join(config.get_output_directory(), config.get_file_paths()["refs_found_csv"])
 snippets = h.read_snippets(snippet_fn)  # read the snippets file
 
 # Process the files:
