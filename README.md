@@ -1,7 +1,7 @@
 # Code maintenance for Azure docs
 
-- **Code Repositories** - GitHub repositories where sample code is stored (currently: azureml-examples, foundry-samples, and azureai-samples)
-- **Docs Repository** - The MicrosoftDocs/azure-ai-docs repository where documentation articles are stored
+- **Code Repositories** - GitHub repositories where sample code is stored (Currently for ML and Foundry: azureml-examples, foundry-samples, and azureai-samples)
+- **Docs Repository** - The MicrosoftDocs repository where documentation articles are stored - currently hardcoded to MicrosoftDocs/azure-ai-docs
 - **This Repository** - The content maintenance repository you're viewing now, containing monitoring and reporting scripts
 
 ## Overview
@@ -17,6 +17,7 @@ When sample code from a code repository is referenced in documentation, certain 
 3. **Content changes** - Named sections or code blocks are modified or removed
 
 The scripts in this repository help identify these issues by:
+
 - Scanning documentation for code references
 - Monitoring pull requests in code repositories
 - Generating reports when referenced code is modified
@@ -38,13 +39,15 @@ All code repository configurations are centralized in `config.yml`. This file co
 - File naming patterns and output directories  
 - Default settings for various scripts
 
-To add or modify repositories, edit the `config.yml` file instead of hardcoding values in individual scripts.
+To add or modify repositories, edit the `config.yml` file.
 
 **Note:** The docs repository is currently hardcoded as `MicrosoftDocs/azure-ai-docs` in the scripts.  
 
 ## Installation
 
 Scripts in this repository can be run locally or in a GitHub Codespace.
+
+First create a GitHub personal access token and store it as a code secret.  See [Create/update a GitHub access token](docs/create-update-auth.md). 
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/sdgilley/content-maintenance?quickstart=1)
 
@@ -67,7 +70,7 @@ For local execution, you'll need:
    pip install -r requirements.txt
    ```
 
-3. Set up your GitHub access token as an environment variable:
+3. Store your GitHub access token as an environment variable:
    - Create a personal access token following steps in [Create/update a GitHub access token](docs/create-update-auth.md) 
    - Set the `GH_ACCESS_TOKEN` environment variable with your token
 
