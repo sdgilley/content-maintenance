@@ -68,11 +68,10 @@ For local execution, you'll need:
    ```
 
 3. Set up your GitHub access token as an environment variable:
-   - Create a personal access token following [GitHub's instructions](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
+   - Create a personal access token following steps in [Create/update a GitHub access token](docs/create-update-auth.md) 
    - Set the `GH_ACCESS_TOKEN` environment variable with your token
 
-> ⚠️ **Important:** You must set the `GH_ACCESS_TOKEN` environment variable before running any scripts. See [Create/update a GitHub access token](docs/create-update-auth.md) for detailed instructions.
-
+> ⚠️ **Important:** You must set the `GH_ACCESS_TOKEN` environment variable before running any scripts. 
 
 ## Scripts
 
