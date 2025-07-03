@@ -1,17 +1,18 @@
 # Fix the problem 
 
-We currently have two code repos:
+We currently have three code repos:
 
 | Docs reference | Code repo |
 | ---------------|-----------|
-| ~/azureml-examples-main | https://github.com/Azure-Samples/azureai-samples |
+| ~/azureml-examples-main | https://github.com/Azure/azureml-examples |
 | ~/foundry-samples-main | https://github.com/azure-ai-foundry/foundry-samples |
+| ~/azureai-samples-main | https://github.com/azure-samples/azureai-samples |
 
-When the pr-report shows a problem in a PR in either of these repos, you need to fix the problem before you can approve the PR.
+When the pr-report shows a problem in a PR in any of these repos, you need to fix the problem before you can approve the PR.
 
 The problems that will break our build are:
 
-* A file that we reference is being deleted.
+* A file that we reference is being deleted or renamed.
 * An id or notebook cell name is being deleted.
 
 Before the PR can be approved, we need to make sure that the docs that reference these files or ids/names are updated.  
@@ -19,7 +20,7 @@ Before the PR can be approved, we need to make sure that the docs that reference
 There are various ways to fix the problem, depending on the situation.  These are outlined in the sections below.
 
 > ⚠️ IMPORTANT! During a docs freeze (before Build or Ignite), try not to approve any PRs that have problems - it's harder to fix on our end during this time.  If they deleted a file, have them put it back.  If they deleted an ID or cell name, have them put it back, even if there are no contents in the section or cell.
-> If the HAVE to make the change, our doc fix first has to merge into all the release branches before we can approve the PR.
+> If the HAVE to make the change, the doc fix first has to merge into **all** the release branches before we can approve the PR.
 > 
 
 ## Push back - why is the change needed?
@@ -28,7 +29,7 @@ The first question I'd ask in a PR is why the change is necessary.  Remember, th
 
 ## No fix necessary
 
-In some cases, the name of the notebook cell or id that was deleted is not actually used in the referencing file.  In that case, you can approve the PR without making any changes.  
+In some cases, the name of the notebook cell or id that was deleted is not actually used in the referencing file.  In that case, you can approve the PR without making any changes. This does sometimes happen.  
 
 ### Example
 
@@ -118,7 +119,7 @@ Once the azureml-examples change has merged, you can go back to the docs and upd
 
 Before you make any changes to the temp-fix branch in azureml-examples, see if it currently being used for any docs in azure-ai-docs-pr.
 
-Run `python find-snippet.py ai` or `python find-snippet.py ml` to see if the temp-fix is one of the active branches for the ml or ai repo. 
+Run `python find-snippet.py ml` to see if the temp-fix is one of the active branches. As of now, we don't have temp-fix branches in the other repos.  Create one if necessary.  To use it in our documentation, add to the .openpublishing.publish.config.json file.
 
 ### temp-fix is NOT an active branch
     
