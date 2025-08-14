@@ -1,0 +1,13 @@
+<svg width="90" height="80" viewBox="0 0 90 80" xmlns="http://www.w3.org/2000/svg" xml:space="preserve">
+  <!-- Brick red coding symbols without background -->
+  <g fill="#C0504D" stroke="#C0504D" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Left angle bracket < -->
+    <path d="M 30 20 L 15 40 L 30 60" fill="none"/>
+    
+    <!-- Forward slash / -->
+    <path d="M 40 55 L 50 25" fill="none"/>
+    
+    <!-- Right angle bracket > -->
+    <path d="M 60 20 L 75 40 L 60 60" fill="none"/>
+  </g>
+</svg>

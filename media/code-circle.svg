@@ -1,0 +1,16 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" xml:space="preserve">
+  <!-- Red circular background -->
+  <circle cx="60" cy="60" r="60" fill="#C0504D"/>
+  
+  <!-- White coding symbols -->
+  <g fill="white" stroke="white" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Left angle bracket < -->
+    <path d="M 45 40 L 30 60 L 45 80" fill="none"/>
+    
+    <!-- Forward slash / (corrected direction) -->
+    <path d="M 55 75 L 65 45" fill="none"/>
+    
+    <!-- Right angle bracket > -->
+    <path d="M 75 40 L 90 60 L 75 80" fill="none"/>
+  </g>
+</svg>
