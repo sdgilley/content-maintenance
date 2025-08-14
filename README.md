@@ -1,4 +1,4 @@
-# Code maintenance for Azure docs
+# <img src="./media/maintenance.svg" width="46" height="46" style="vertical-align: text-bottom"> Code maintenance for Azure docs
 
 When using this process, you'll create PRs in each of the following repositories:
 
@@ -8,11 +8,11 @@ When using this process, you'll create PRs in each of the following repositories
 
 ## Overview
 
-This repository contains scripts that help monitor code repositories for changes that could break documentation builds and help identify when documentation updates are needed.
+This repository contains scripts that help monitor code repos for changes that could break documentation builds and help identify when documentation updates are needed.
 
 ### How it Works
 
-When sample code from a code repository is referenced in documentation, certain changes in the code repository can break the documentation build:
+When sample code from a code repo is referenced in documentation, certain changes in the code repos can break the documentation build:
 
 - **File deletion** - Referenced files are removed
 - **File renaming** - Referenced file paths change  
@@ -23,7 +23,7 @@ Also, when a code file is updated, the document won't reflect the changes until 
 The scripts in this repository help prevent problems and identify necessary document updates:
 
 - Scanning documentation for code references
-- Monitoring pull requests in code repositories
+- Monitoring pull requests in code repos
 - Providing review guidance for documentation team members
 - Generating reports when referenced code is modified
 
@@ -38,7 +38,7 @@ The scripts in this repository help prevent problems and identify necessary docu
 
 ### Configuration
 
-All code repository configurations are centralized in `config.yml`. This file contains:
+All code repo configurations are centralized in `config.yml`. This file contains:
 
 - Repository details (owner, repo name, team assignments)
 - Search paths for each repository
@@ -47,7 +47,7 @@ All code repository configurations are centralized in `config.yml`. This file co
 
 To add or modify repositories, edit the `config.yml` file.
 
-**Note:** The docs repository is currently hardcoded as `MicrosoftDocs/azure-ai-docs` in the scripts.  
+**Note:** The docs repo is currently hardcoded as `MicrosoftDocs/azure-ai-docs` in the scripts.  
 
 ### Installation
 
