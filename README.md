@@ -125,6 +125,8 @@ These files provide functions used by the main scripts:
 - **[gh_auth.py](utilities/gh_auth.py)** - GitHub authentication and API interaction functions  
 - **[find_pr_files.py](utilities/find_pr_files.py)** - Functions for analyzing PR file changes and documentation impact
 
+</details>
+
 ## Workflow
 
 1. **Initial Setup:** Run `find-snippets.py` to scan documentation and create the reference database
