@@ -1,0 +1,15 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "markdown.preview.openMarkdownLinks": "inPreview"
+    },
+    "extensions": {
+        "recommendations": [
+            "ms-vscode.vscode-markdown"
+        ]
+    }
+}

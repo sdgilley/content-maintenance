@@ -1,5 +1,7 @@
 # <img src="./media/maintenance.svg" width="46" height="46" style="vertical-align: text-bottom"> Code maintenance for Azure docs
 
+> **📖 Getting Started:** Open [Daily and weekly tasks](docs/code-snippets.md) to start work on maintenance tasks.
+
 ## Overview
 
 This repository contains scripts that help monitor code repos for changes that could break documentation builds and help identify when documentation updates are needed.
