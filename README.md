@@ -10,7 +10,7 @@ When using this process, you'll create PRs in each of the following repositories
 
 This repository contains scripts that help monitor code repos for changes that could break documentation builds and help identify when documentation updates are needed.
 
-### How it Works
+## How it Works
 
 When sample code from a code repo is referenced in documentation, certain changes in the code repos can break the documentation build:
 
@@ -53,39 +53,7 @@ To add or modify repositories, edit the `config.yml` file.
 
 Scripts in this repository can be run locally or in a GitHub Codespace.
 
-First create a GitHub personal access token and store it as a code secret.  See [Create/update a GitHub access token](docs/create-update-auth.md). 
-
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/sdgilley/content-maintenance?quickstart=1)
-
-### Local Setup
-
-<details>
-<summary> Click to view local setup </summary>
-
-For local execution, you'll need:
-
-- Python 3.8 or later (check with `py -3 --version`)
-- Git installed and configured
-- A GitHub personal access token (see [authentication setup](docs/create-update-auth.md))
-
-**Setup steps:**
-
-1. Clone this repository
-2. Create a virtual environment and install dependencies:
-
-   ```bash
-   py -3 -m venv .venv
-   .venv\scripts\activate
-   pip install -r requirements.txt
-   ```
-
-3. Store your GitHub access token as an environment variable:
-   - Create a personal access token following steps in [Create/update a GitHub access token](docs/create-update-auth.md) 
-   - Set the `GH_ACCESS_TOKEN` environment variable with your token
-
-> ⚠️ **Important:** You must set the `GH_ACCESS_TOKEN` environment variable before running any scripts. 
-
-</details>
+See instructions in [Daily and weekly tasks](docs/code-snippets.md) for details.
 
 ## Scripts
 

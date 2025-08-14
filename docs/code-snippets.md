@@ -1,14 +1,53 @@
 # Maintain code snippets in Azure docs
 
-This repository contains scripts to help maintain code snippets in Azure documentation. 
+Run these scripts either locally or in GitHub Codespaces
 
-## Setup for Codespaces
+First create a GitHub personal access token and store it as a code secret (if using Codespaces) or environment variable (for running locally).  
+See [Create/update a GitHub access token](docs/create-update-auth.md) for complete instructions. 
 
-Follow the steps to [create/update a GitHub access token](create-update-auth.md) for use with the scripts in this repo.
+> ⚠️ **Important:**  Don't forget to configure SSO for MicrosoftDocs.
+
+### GitHub Codespaces
+
+<details>
+<summary> Click to view GitHub codespaces info</summary>
 
 Once your secret is stored, perform all maintenance tasks using the button below to open this repo in GitHub Codespaces. No additional setup needed. Use the Codespace terminal to run the scripts.
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/sdgilley/content-maintenance?quickstart=1) 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/sdgilley/content-maintenance?quickstart=1)
+
+</details>
+
+### Local Setup
+
+<details>
+<summary> Click to view local setup info</summary>
+
+For local execution, you'll need:
+
+- Python 3.8 or later (check with `py -3 --version`)
+- Git installed and configured
+- A GitHub personal access token (see [authentication setup](docs/create-update-auth.md))
+
+**Setup steps:**
+
+1. Clone this repository
+2. Create a virtual environment and install dependencies:
+
+   ```bash
+   py -3 -m venv .venv
+   .venv\scripts\activate
+   pip install -r requirements.txt
+   ```
+
+3. Store your GitHub access token as an environment variable:
+   - Create a personal access token following steps in [Create/update a GitHub access token](docs/create-update-auth.md) 
+   - Set the `GH_ACCESS_TOKEN` environment variable with your token
+
+> ⚠️ **Important:** You must set the `GH_ACCESS_TOKEN` environment variable before running any scripts. 
+
+</details>
+
 
 ## Daily tasks - monitor the Code Repos
 

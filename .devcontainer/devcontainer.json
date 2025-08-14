@@ -19,10 +19,22 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "pip install PyGithub PyYAML"
+	"postCreateCommand": "pip install PyGithub PyYAML",
+
+	// Use 'postStartCommand' to run commands after the container starts.
+	"postStartCommand": "code --command markdown.showPreview docs/code-snippets.md",
 
 	// Configure tool-specific properties.
-	// "customizations": {},
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"files.defaultLanguage": "markdown"
+			},
+			"extensions": [
+				"ms-vscode.vscode-markdown"
+			]
+		}
+	}
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
