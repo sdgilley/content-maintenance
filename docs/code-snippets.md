@@ -1,16 +1,26 @@
 # Maintain code snippets in Azure docs
 
-Run these scripts either locally or in GitHub Codespaces
+When using this process, you'll create PRs in each of the following repositories:
 
-First create a GitHub personal access token and store it as a code secret (if using Codespaces) or environment variable (for running locally).  
-See [Create/update a GitHub access token](docs/create-update-auth.md) for complete instructions. 
+- **<img src="./media/code.svg" width="20" height="20" style="vertical-align: text-top"> Code Repo** - GitHub repositories where sample code is stored (Currently for ML and Foundry: azureml-examples, foundry-samples, and azureai-samples)
+- **<img src="./media/docs.svg" width="18" height="18" style="vertical-align: text-top">  Docs Repo** - The MicrosoftDocs repository where documentation articles are stored - currently hardcoded to MicrosoftDocs/azure-ai-docs
+- **<img src="./media/maintenance.svg" width="18" height="18" style="vertical-align: text-top">  Maintenance Repo** - The content maintenance repository you're viewing now, containing monitoring and reporting scripts
+- 
+## Set up your environment
+
+Run all scripts referenced below either locally or in GitHub Codespaces
+
+<details>
+<summary> Create a GitHub personal access token</summary>
+
+First create a GitHub personal access token following instructions in [Create/update a GitHub access token](docs/create-update-auth.md). 
 
 > ⚠️ **Important:**  Don't forget to configure SSO for MicrosoftDocs.
 
-### GitHub Codespaces
+</details>
 
 <details>
-<summary> Click to view GitHub codespaces info</summary>
+<summary> Run scripts in GitHub CODESPACES</summary>
 
 Once your secret is stored, perform all maintenance tasks using the button below to open this repo in GitHub Codespaces. No additional setup needed. Use the Codespace terminal to run the scripts.
 
@@ -18,10 +28,8 @@ Once your secret is stored, perform all maintenance tasks using the button below
 
 </details>
 
-### Local Setup
-
 <details>
-<summary> Click to view local setup info</summary>
+<summary> Run scripts locally </summary>
 
 For local execution, you'll need:
 
@@ -49,8 +57,7 @@ For local execution, you'll need:
 </details>
 
 
-## Daily tasks - monitor the Code Repos
-
+## Daily tasks - monitor the <img src="../media/code.svg" width="44" height="44" style="vertical-align: text-bottom"> Code Repos
 
 ### Check PRs
 

@@ -1,11 +1,5 @@
 # <img src="./media/maintenance.svg" width="46" height="46" style="vertical-align: text-bottom"> Code maintenance for Azure docs
 
-When using this process, you'll create PRs in each of the following repositories:
-
-- **<img src="./media/code.svg" width="20" height="20" style="vertical-align: text-top"> Code Repo** - GitHub repositories where sample code is stored (Currently for ML and Foundry: azureml-examples, foundry-samples, and azureai-samples)
-- **<img src="./media/docs.svg" width="18" height="18" style="vertical-align: text-top">  Docs Repo** - The MicrosoftDocs repository where documentation articles are stored - currently hardcoded to MicrosoftDocs/azure-ai-docs
-- **<img src="./media/maintenance.svg" width="18" height="18" style="vertical-align: text-top">  Maintenance Repo** - The content maintenance repository you're viewing now, containing monitoring and reporting scripts
-
 ## Overview
 
 This repository contains scripts that help monitor code repos for changes that could break documentation builds and help identify when documentation updates are needed.
