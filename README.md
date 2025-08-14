@@ -16,12 +16,7 @@ When sample code from a code repo is referenced in documentation, certain change
 
 Also, when a code file is updated, the document won't reflect the changes until a rebuild of the markdown file is triggered.
 
-The scripts in this repository help prevent problems and identify necessary document updates:
-
-- Scanning documentation for code references
-- Monitoring pull requests in code repos
-- Providing review guidance for documentation team members
-- Generating reports when referenced code is modified
+The scripts in this repository help prevent problems and identify necessary document updates.
 
 ## Documentation
 
