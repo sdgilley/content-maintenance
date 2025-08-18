@@ -1,61 +1,14 @@
 # Maintain code snippets in Azure docs
 
+Run all scripts referenced below either locally or in GitHub Codespaces.  See [Setup](setup.md) for further instructions.
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/sdgilley/content-maintenance?quickstart=1)
+
 When using this process, you'll create PRs in each of the following repositories:
 
 - **<img src="../media/code.svg" width="20" height="20" style="vertical-align: text-top"> Code Repo** - GitHub repositories where sample code is stored (Currently for ML and Foundry: azureml-examples, foundry-samples, and azureai-samples)
 - **<img src="../media/docs.svg" width="18" height="18" style="vertical-align: text-top">  Docs Repo** - The MicrosoftDocs repository where documentation articles are stored - currently hardcoded to MicrosoftDocs/azure-ai-docs
 - **<img src="../media/maintenance.svg" width="18" height="18" style="vertical-align: text-top">  Maintenance Repo** - The content maintenance repository you're viewing now, containing monitoring and reporting scripts
-
-## Set up your environment
-
-Run all scripts referenced below either locally or in GitHub Codespaces
-
-<details>
-<summary> Create a GitHub personal access token</summary>
-
-First create a GitHub personal access token following instructions in [Create/update a GitHub access token](docs/create-update-auth.md). 
-
-> ⚠️ **Important:**  Don't forget to configure SSO for MicrosoftDocs.
-
-</details>
-
-<details>
-<summary> Run scripts in GitHub CODESPACES</summary>
-
-Once your secret is stored, perform all maintenance tasks using the button below to open this repo in GitHub Codespaces. No additional setup needed. Use the Codespace terminal to run the scripts.
-
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/sdgilley/content-maintenance?quickstart=1)
-
-</details>
-
-<details>
-<summary> Run scripts locally </summary>
-
-For local execution, you'll need:
-
-- Python 3.8 or later (check with `py -3 --version`)
-- Git installed and configured
-- A GitHub personal access token (see [authentication setup](docs/create-update-auth.md))
-
-**Setup steps:**
-
-1. Clone this repository
-2. Create a virtual environment and install dependencies:
-
-   ```bash
-   py -3 -m venv .venv
-   .venv\scripts\activate
-   pip install -r requirements.txt
-   ```
-
-3. Store your GitHub access token as an environment variable:
-   - Create a personal access token following steps in [Create/update a GitHub access token](docs/create-update-auth.md) 
-   - Set the `GH_ACCESS_TOKEN` environment variable with your token
-
-> ⚠️ **Important:** You must set the `GH_ACCESS_TOKEN` environment variable before running any scripts. 
-
-</details>
-
 
 ## Daily tasks - monitor the <img src="../media/code.svg" width="44" height="44" style="vertical-align: text-bottom"> Code Repos
 
@@ -74,7 +27,7 @@ For local execution, you'll need:
 
 ### Check messages
 
-1. Check for message at the [AI Platform Docs teams channel](https://teams.microsoft.com/l/channel/19%3AHhf4F_YfPn3kYGdmWvePNwlbF5-RR8wciQEUwwrcggw1%40thread.tacv2/General?groupId=fdaf4412-8993-4ea6-a7d4-aeaded7fc854&tenantId=72f988bf-86f1-41af-91ab-2d7cd011db47).
+1. Check for message at the [AI Platform Docs teams channel](https://teams.microsoft.com/l/channel/19%3AHhf4F_YfPn3kYGdmWvePNwlbF5-RR8wciQEUwwrcggw1%40thread.tacv2/General?groupId=fdaf4412-8993-4ea6-a7d4-aeaded7fc854&tenantId=72f988bf-86f1-41af-91ab-2d7cd011db47). 
 
 1. If you're asked to review a PR, in the terminal, run:
 
