@@ -51,9 +51,11 @@ When using this process, you'll create PRs in each of the following repositories
 
 ## Weekly tasks - update files
 
-### Search code for updates
+On a weekly basis, update the files that make the scripts work correctly. And update articles that have recent code changes.
 
-Keep the appropriate files up to date with the find-snippets script.
+### Search docs for updates
+
+Use the find-snippets script to find all the docs that reference code repos.  
 
 1. Run this script (takes approximately 10-12 minutes for the current three code repos):
 
@@ -61,15 +63,15 @@ Keep the appropriate files up to date with the find-snippets script.
     python find-snippets.py
     ```
 
-### Update codeowners files - <img src="../media/maintenance.svg" width="32" height="32" style="vertical-align: text-top"> Maintenance Repo
+### Update files - <img src="../media/maintenance.svg" width="32" height="32" style="vertical-align: text-top"> Maintenance Repo
 
 1. If changes to any `*.txt` files appear, commit them to sdgilley/content-maintenance. 
 
 ### Update codeowners files - <img src="../media/code.svg" width="32" height="32" style="vertical-align: text-top"> Code Repos
 
-1. If changes to CODEOWNERS-azureml-examples.txt appear, copy the content and commit to [azureml-examples CODEOWNERS](https://github.com/Azure/azureml-examples/blob/main/.github/CODEOWNERS) file.
-1. If changes to CODEOWNERS-foundry-samples.txt appear, copy the content and commit to [foundry-samples CODEOWNERS](https://github.com/Azure-AI-Foundry/foundry-samples/blob/main/.github/CODEOWNERS) file.
-1. If changes to CODEOWNERS-azureai-samples.txt appear, copy the content and commit to [azureai-samples CODEOWNERS](https://github.com/Azure-Samples/azureai-samples/blob/main/.github/CODEOWNERS) file.
+1. If changes to **CODEOWNERS-azureml-examples.txt** appear, copy the content and commit to [azureml-examples CODEOWNERS](https://github.com/Azure/azureml-examples/blob/main/.github/CODEOWNERS) file.
+1. If changes to **CODEOWNERS-foundry-samples.txt** appear, copy the content and commit to [foundry-samples CODEOWNERS](https://github.com/Azure-AI-Foundry/foundry-samples/blob/main/.github/CODEOWNERS) file.
+1. If changes to **CODEOWNERS-azureai-samples.txt** appear, copy the content and commit to [azureai-samples CODEOWNERS](https://github.com/Azure-Samples/azureai-samples/blob/main/.github/CODEOWNERS) file.
 
 ### Update docs - <img src="../media/docs.svg" width="32" height="32" style="vertical-align: text-top"> Docs Repo
 
