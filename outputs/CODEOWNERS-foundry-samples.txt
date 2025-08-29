@@ -9,7 +9,7 @@
 /samples/microsoft/java/mslearn-resources/quickstart/src/main/java/com/azure/ai/foundry/samples/AgentSample.java @azure-ai-foundry/AI-Platform-Docs
 /samples/microsoft/java/mslearn-resources/quickstart/src/main/java/com/azure/ai/foundry/samples/ChatCompletionSample.java @azure-ai-foundry/AI-Platform-Docs
 /samples/microsoft/java/mslearn-resources/quickstart/src/main/java/com/azure/ai/foundry/samples/FileSearchAgentSample.java @azure-ai-foundry/AI-Platform-Docs
-/samples/microsoft/javascript/mslearn-resources/quickstart/.env.template @azure-ai-foundry/AI-Platform-Docs
-/samples/microsoft/javascript/mslearn-resources/quickstart/src/quickstart.js @azure-ai-foundry/AI-Platform-Docs
 /samples/microsoft/python/mslearn-resources/quickstart/create_project.py @azure-ai-foundry/AI-Platform-Docs
 /samples/microsoft/python/mslearn-resources/quickstart/quickstart.py @azure-ai-foundry/AI-Platform-Docs
+/samples/microsoft/typescript/mslearn-resources/quickstart/.env.template @azure-ai-foundry/AI-Platform-Docs
+/samples/microsoft/typescript/mslearn-resources/quickstart/src/quickstart.ts @azure-ai-foundry/AI-Platform-Docs
