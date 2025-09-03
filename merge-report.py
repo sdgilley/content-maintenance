@@ -132,7 +132,7 @@ if __name__ == "__main__":
             pr_url = f"https://github.com/{row['owner']}/{row['repo']}/pull/{row['PR']}"
             print(f"* PR {row['PR']} ({row['repo']}) - {pr_url}")
 
-        print("\n✏️  Add 'update-code' to ms.custom metadata (or modify if already present) to the following files:")
+        print("\n✏️ Modify ms.custom metadata  (add or modify 'update-code') in these files:")
         refs = []
         for ref_list in df["Referenced In"]:
             refs.extend(ref_list)

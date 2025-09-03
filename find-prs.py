@@ -135,10 +135,14 @@ def get_prs_for_repo(owner, repo_name, args):
         for pr in prs:
             # Skip if too old
             if since_date and pr.updated_at < since_date:
+                if args.verbose and pr.number == 3662:
+                    print(f"PR #{pr.number} skipped due to age. Updated: {pr.updated_at}, Cutoff: {since_date}")
                 continue
                 
             # Skip drafts unless requested
             if pr.draft and not args.draft:
+                if args.verbose and pr.number == 3662:
+                    print(f"PR #{pr.number} skipped because it's a draft")
                 continue
             
             # Check labels filter
@@ -146,11 +150,18 @@ def get_prs_for_repo(owner, repo_name, args):
                 required_labels = [label.strip() for label in args.labels.split(",")]
                 pr_labels = [label.name for label in pr.labels]
                 if not any(label in pr_labels for label in required_labels):
+                    if args.verbose and pr.number == 3662:
+                        print(f"PR #{pr.number} skipped due to labels filter")
                     continue
             
             # Check if PR needs review from team
             needs_team_review = check_if_needs_team_review(pr, args, team_info)
             
+            if args.verbose and pr.number == 3662:
+                print(f"PR #{pr.number} needs_team_review: {needs_team_review}")
+                if hasattr(pr, 'requested_teams'):
+                    print(f"Requested teams: {[team.slug for team in pr.requested_teams]}")
+
             if needs_team_review:
                 pr_info = {
                     "repository": f"{owner}/{repo_name}",
@@ -187,13 +198,14 @@ def check_if_needs_team_review(pr, args, team_info):
     team_name = team_info["team"].replace("@", "")
     
     # Check if the team is in requested reviewers (teams)
-    requested_teams = [team.slug for team in pr.requested_teams] if hasattr(pr, 'requested_teams') else []
+    requested_teams = [team.slug.lower() for team in pr.requested_teams] if hasattr(pr, 'requested_teams') else []
     
     # The team slug format might be different, so check various formats
     team_variations = [
-        team_name,
-        team_name.replace("/", "-"),
-        team_name.split("/")[-1] if "/" in team_name else team_name
+        team_name.lower(),
+        team_name.lower().replace("/", "-"),
+        team_name.lower().split("/")[-1] if "/" in team_name else team_name.lower(),
+        "ai-platform-docs"  # Add the known GitHub team slug
     ]
     
     # Check if any variation of our team name is in the requested teams
