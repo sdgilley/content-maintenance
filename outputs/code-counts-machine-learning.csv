@@ -1253,9 +1253,13 @@ how-to-manage-rest.md,json,9,machine-learning
 how-to-manage-rest.md,bash,1,machine-learning
 how-to-manage-rest.md,bash,1,machine-learning
 how-to-manage-rest.md,json,22,machine-learning
-how-to-manage-rest.md,,2,machine-learning
+how-to-manage-rest.md,bash,2,machine-learning
 how-to-manage-rest.md,json,31,machine-learning
 how-to-manage-rest.md,json,12,machine-learning
+how-to-manage-rest.md,bash,3,machine-learning
+how-to-manage-rest.md,bash,3,machine-learning
+how-to-manage-rest.md,bash,3,machine-learning
+how-to-manage-rest.md,bash,3,machine-learning
 how-to-manage-rest.md,bash,3,machine-learning
 how-to-manage-rest.md,bash,3,machine-learning
 how-to-manage-rest.md,bash,3,machine-learning
@@ -1495,16 +1499,6 @@ how-to-responsible-ai-insights-sdk-cli.md,yml,16,machine-learning
 how-to-responsible-ai-insights-sdk-cli.md,yml,26,machine-learning
 how-to-responsible-ai-insights-sdk-cli.md,yml,31,machine-learning
 how-to-responsible-ai-insights-sdk-cli.md,yml,27,machine-learning
-how-to-responsible-ai-text-insights.md,yml,17,machine-learning
-how-to-responsible-ai-text-insights.md,python,3,machine-learning
-how-to-responsible-ai-text-insights.md,python,10,machine-learning
-how-to-responsible-ai-text-insights.md,python,2,machine-learning
-how-to-responsible-ai-vision-insights.md,python,1,machine-learning
-how-to-responsible-ai-vision-insights.md,python,11,machine-learning
-how-to-responsible-ai-vision-insights.md,yml,18,machine-learning
-how-to-responsible-ai-vision-insights.md,python,3,machine-learning
-how-to-responsible-ai-vision-insights.md,python,10,machine-learning
-how-to-responsible-ai-vision-insights.md,python,2,machine-learning
 how-to-safely-rollout-online-endpoints.md,azurecli,2,machine-learning
 how-to-safely-rollout-online-endpoints.md,azurecli,3,machine-learning
 how-to-safely-rollout-online-endpoints.md,bash,2,machine-learning
@@ -1805,6 +1799,7 @@ how-to-troubleshoot-kubernetes-extension.md,,1,machine-learning
 how-to-troubleshoot-online-endpoints.md,azurecli,1,machine-learning
 how-to-troubleshoot-online-endpoints.md,python,1,machine-learning
 how-to-troubleshoot-online-endpoints.md,bash,1,machine-learning
+how-to-troubleshoot-online-endpoints.md,azurecli,1,machine-learning
 how-to-troubleshoot-online-endpoints.md,azurecli,1,machine-learning
 how-to-troubleshoot-online-endpoints.md,azurecli,1,machine-learning
 how-to-troubleshoot-online-endpoints.md,azurecli,1,machine-learning
@@ -2327,7 +2322,6 @@ tutorial-explore-data.md,bash,1,machine-learning
 tutorial-explore-data.md,bash,3,machine-learning
 tutorial-explore-data.md,python,15,machine-learning
 tutorial-explore-data.md,python,27,machine-learning
-tutorial-explore-data.md,python,3,machine-learning
 tutorial-explore-data.md,python,1,machine-learning
 tutorial-explore-data.md,python,10,machine-learning
 tutorial-explore-data.md,python,9,machine-learning

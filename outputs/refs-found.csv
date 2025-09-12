@@ -334,11 +334,12 @@ samples/microsoft/csharp/mslearn-resources/quickstart/Samples/SimpleInference.cs
 samples/microsoft/infrastructure-setup-terraform/00-basic/code/main.tf,create-resource-terraform.md,foundry-samples,ai-foundry/how-to
 samples/microsoft/infrastructure-setup-terraform/00-basic/code/providers.tf,create-resource-terraform.md,foundry-samples,ai-foundry/how-to
 samples/microsoft/infrastructure-setup-terraform/00-basic/code/variables.tf,create-resource-terraform.md,foundry-samples,ai-foundry/how-to
+samples/microsoft/infrastructure-setup/01-connections/connection-key-vault.bicep,set-up-key-vault-connection.md,foundry-samples,ai-foundry/how-to
 samples/microsoft/java/mslearn-resources/quickstart/src/main/java/com/azure/ai/foundry/samples/AgentSample.java,get-started-fdp.md,foundry-samples,ai-foundry/includes
 samples/microsoft/java/mslearn-resources/quickstart/src/main/java/com/azure/ai/foundry/samples/ChatCompletionSample.java,get-started-fdp.md,foundry-samples,ai-foundry/includes
 samples/microsoft/java/mslearn-resources/quickstart/src/main/java/com/azure/ai/foundry/samples/FileSearchAgentSample.java,get-started-fdp.md,foundry-samples,ai-foundry/includes
-samples/microsoft/javascript/mslearn-resources/quickstart/.env.template,get-started-fdp.md,foundry-samples,ai-foundry/includes
-samples/microsoft/javascript/mslearn-resources/quickstart/src/quickstart.js,get-started-fdp.md,foundry-samples,ai-foundry/includes
 samples/microsoft/python/mslearn-resources/quickstart/create_project.py,create-project-fdp.md,foundry-samples,ai-foundry/includes
 samples/microsoft/python/mslearn-resources/quickstart/create_project.py,create-second-fdp-project.md,foundry-samples,ai-foundry/includes
 samples/microsoft/python/mslearn-resources/quickstart/quickstart.py,get-started-fdp.md,foundry-samples,ai-foundry/includes
+samples/microsoft/typescript/mslearn-resources/quickstart/.env.template,get-started-fdp.md,foundry-samples,ai-foundry/includes
+samples/microsoft/typescript/mslearn-resources/quickstart/src/quickstart.ts,get-started-fdp.md,foundry-samples,ai-foundry/includes
