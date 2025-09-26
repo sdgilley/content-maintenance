@@ -1181,6 +1181,7 @@ how-to-manage-imported-data-assets.md,python,11,machine-learning
 how-to-manage-imported-data-assets.md,cli,3,machine-learning
 how-to-manage-inputs-outputs-pipeline.md,python,65,machine-learning
 how-to-manage-inputs-outputs-pipeline.md,azurecli,6,machine-learning
+how-to-manage-inputs-outputs-pipeline.md,python,18,machine-learning
 how-to-manage-inputs-outputs-pipeline.md,azurecli,5,machine-learning
 how-to-manage-inputs-outputs-pipeline.md,python,9,machine-learning
 how-to-manage-inputs-outputs-pipeline.md,python,5,machine-learning
@@ -1188,8 +1189,8 @@ how-to-manage-inputs-outputs-pipeline.md,azurecli,5,machine-learning
 how-to-manage-inputs-outputs-pipeline.md,python,9,machine-learning
 how-to-manage-inputs-outputs-pipeline.md,python,6,machine-learning
 how-to-manage-inputs-outputs-pipeline.md,yaml,19,machine-learning
-how-to-manage-inputs-outputs-pipeline.md,python,21,machine-learning
-how-to-manage-inputs-outputs-pipeline.md,yaml,17,machine-learning
+how-to-manage-inputs-outputs-pipeline.md,python,34,machine-learning
+how-to-manage-inputs-outputs-pipeline.md,yaml,2,machine-learning
 how-to-manage-inputs-outputs-pipeline.md,python,18,machine-learning
 how-to-manage-kubernetes-instance-types.md,yaml,8,machine-learning
 how-to-manage-kubernetes-instance-types.md,bash,1,machine-learning
@@ -1388,11 +1389,9 @@ how-to-mltable.md,python,10,machine-learning
 how-to-mltable.md,python,10,machine-learning
 how-to-mltable.md,bash,1,machine-learning
 how-to-mltable.md,bash,1,machine-learning
-how-to-mltable.md,python,36,machine-learning
+how-to-mltable.md,python,37,machine-learning
 how-to-mltable.md,python,3,machine-learning
 how-to-mltable.md,python,4,machine-learning
-how-to-mltable.md,python,28,machine-learning
-how-to-mltable.md,python,20,machine-learning
 how-to-mltable.md,,8,machine-learning
 how-to-mltable.md,python,18,machine-learning
 how-to-mltable.md,python,13,machine-learning
