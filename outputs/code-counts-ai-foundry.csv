@@ -509,6 +509,15 @@ trace-production-sdk.md,yaml,1,ai-foundry
 trace-production-sdk.md,yaml,2,ai-foundry
 trace-production-sdk.md,python,63,ai-foundry
 vs-code-agents.md,yml,19,ai-foundry
+vs-code-agents.md,bash,2,ai-foundry
+vs-code-agents.md,xml,2,ai-foundry
+vs-code-agents.md,powershell,3,ai-foundry
+vs-code-agents.md,dos,3,ai-foundry
+vs-code-agents.md,bash,3,ai-foundry
+vs-code-agents.md,bash,2,ai-foundry
+vs-code-agents.md,,3,ai-foundry
+vs-code-agents.md,bash,1,ai-foundry
+vs-code-agents.md,python,2,ai-foundry
 get-started-deepseek-r1.md,python,15,ai-foundry
 get-started-deepseek-r1.md,console,8,ai-foundry
 code-create-chat-client-entra.md,bash,1,ai-foundry
@@ -970,6 +979,7 @@ content-filter.md,json,5,ai-foundry
 content-filter.md,json,14,ai-foundry
 content-filter.md,json,5,ai-foundry
 content-filter.md,json,20,ai-foundry
+deployment-types.md,json,17,ai-foundry
 get-started.md,bash,1,ai-foundry
 get-started.md,bash,2,ai-foundry
 get-started.md,bash,1,ai-foundry
