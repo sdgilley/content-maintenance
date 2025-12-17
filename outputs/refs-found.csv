@@ -350,11 +350,15 @@ samples/REST/quickstart/quickstart-responses.sh,quickstart-v2-chat.md,foundry-sa
 samples/csharp/quickstart/quickstart-chat-with-agent.cs,quickstart-v2-agent-chat.md,foundry-samples,ai-foundry/default/includes
 samples/csharp/quickstart/quickstart-create-agent.cs,quickstart-v2-create-agent.md,foundry-samples,ai-foundry/default/includes
 samples/csharp/quickstart/quickstart-responses.cs,quickstart-v2-chat.md,foundry-samples,ai-foundry/default/includes
-samples/java/quickstart/src/main/java/com/azure/ai/foundry/samples/AgentSample.java,quickstart-v2-agent-chat.md,foundry-samples,ai-foundry/default/includes
+samples/java/quickstart/src/main/java/com/microsoft/foundry/samples/ChatWithAgent.java,quickstart-v2-agent-chat.md,foundry-samples,ai-foundry/default/includes
+samples/java/quickstart/src/main/java/com/microsoft/foundry/samples/CreateAgent.java,quickstart-v2-create-agent.md,foundry-samples,ai-foundry/default/includes
+samples/java/quickstart/src/main/java/com/microsoft/foundry/samples/CreateResponses.java,quickstart-v2-chat.md,foundry-samples,ai-foundry/default/includes
 samples/python/enterprise-agent-tutorial/1-idea-to-prototype/evaluate.py,developer-journey-idea-to-prototype.md,foundry-samples,ai-foundry/default/tutorials
 samples/python/enterprise-agent-tutorial/1-idea-to-prototype/main.py,developer-journey-idea-to-prototype.md,foundry-samples,ai-foundry/default/tutorials
 samples/python/enterprise-agent-tutorial/1-idea-to-prototype/questions.jsonl,developer-journey-idea-to-prototype.md,foundry-samples,ai-foundry/default/tutorials
 samples/python/quickstart/quickstart-chat-with-agent.py,quickstart-v2-agent-chat.md,foundry-samples,ai-foundry/default/includes
 samples/python/quickstart/quickstart-create-agent.py,quickstart-v2-create-agent.md,foundry-samples,ai-foundry/default/includes
 samples/python/quickstart/quickstart-responses.py,quickstart-v2-chat.md,foundry-samples,ai-foundry/default/includes
-samples/typescript/quickstart/src/quickstart.ts,quickstart-v2-agent-chat.md,foundry-samples,ai-foundry/default/includes
+samples/typescript/quickstart/src/quickstart-chat-with-agent.ts,quickstart-v2-agent-chat.md,foundry-samples,ai-foundry/default/includes
+samples/typescript/quickstart/src/quickstart-create-agent.ts,quickstart-v2-create-agent.md,foundry-samples,ai-foundry/default/includes
+samples/typescript/quickstart/src/quickstart-responses.ts,quickstart-v2-chat.md,foundry-samples,ai-foundry/default/includes

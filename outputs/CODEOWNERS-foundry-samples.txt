@@ -24,11 +24,15 @@
 /samples/csharp/quickstart/quickstart-chat-with-agent.cs @azure-ai-foundry/AI-Platform-Docs
 /samples/csharp/quickstart/quickstart-create-agent.cs @azure-ai-foundry/AI-Platform-Docs
 /samples/csharp/quickstart/quickstart-responses.cs @azure-ai-foundry/AI-Platform-Docs
-/samples/java/quickstart/src/main/java/com/azure/ai/foundry/samples/AgentSample.java @azure-ai-foundry/AI-Platform-Docs
+/samples/java/quickstart/src/main/java/com/microsoft/foundry/samples/ChatWithAgent.java @azure-ai-foundry/AI-Platform-Docs
+/samples/java/quickstart/src/main/java/com/microsoft/foundry/samples/CreateAgent.java @azure-ai-foundry/AI-Platform-Docs
+/samples/java/quickstart/src/main/java/com/microsoft/foundry/samples/CreateResponses.java @azure-ai-foundry/AI-Platform-Docs
 /samples/python/enterprise-agent-tutorial/1-idea-to-prototype/evaluate.py @azure-ai-foundry/AI-Platform-Docs
 /samples/python/enterprise-agent-tutorial/1-idea-to-prototype/main.py @azure-ai-foundry/AI-Platform-Docs
 /samples/python/enterprise-agent-tutorial/1-idea-to-prototype/questions.jsonl @azure-ai-foundry/AI-Platform-Docs
 /samples/python/quickstart/quickstart-chat-with-agent.py @azure-ai-foundry/AI-Platform-Docs
 /samples/python/quickstart/quickstart-create-agent.py @azure-ai-foundry/AI-Platform-Docs
 /samples/python/quickstart/quickstart-responses.py @azure-ai-foundry/AI-Platform-Docs
-/samples/typescript/quickstart/src/quickstart.ts @azure-ai-foundry/AI-Platform-Docs
+/samples/typescript/quickstart/src/quickstart-chat-with-agent.ts @azure-ai-foundry/AI-Platform-Docs
+/samples/typescript/quickstart/src/quickstart-create-agent.ts @azure-ai-foundry/AI-Platform-Docs
+/samples/typescript/quickstart/src/quickstart-responses.ts @azure-ai-foundry/AI-Platform-Docs
