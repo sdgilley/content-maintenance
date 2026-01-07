@@ -4,9 +4,9 @@
 repositories:
   # Azure AI Foundry samples repository
   foundry-samples:
-    owner: "Azure-AI-Foundry"
+    owner: "microsoft-foundry"
     repo: "foundry-samples"
-    team: "@azure-ai-foundry/AI-Platform-Docs"
+    team: "@microsoft-foundry/AI-Platform-Docs"
     short_name: "foundry-samples"
     service_type: "ai"
     pr_report_arg: "ai"

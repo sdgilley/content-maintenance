@@ -97,7 +97,7 @@ These files provide functions used by the main scripts:
 
 The monitored repositories are defined in `config.yml`:
 
-- **foundry-samples** (Azure-AI-Foundry/foundry-samples)
+- **foundry-samples** (microsoft-foundry/foundry-samples)
 - **azureai-samples** (Azure-Samples/azureai-samples)  
 - **azureml-examples** (Azure/azureml-examples)
 

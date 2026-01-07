@@ -3,9 +3,8 @@
 Find PRs that need approval from our team
 
 This script helps identify pull requests in the AI platform docs team repositories
-that require review. It automatically checks both:
-- Azure-AI-Foundry/foundry-samples (Team: @azure-ai-foundry/ai-platform-docs)
-- Azure-Samples/azureai-samples (Team: @azure/ai-platform-docs)
+that require review. It automatically checks all repos in the config.yml file.
+
 
 The script can filter by various criteria like:
 - PRs awaiting review

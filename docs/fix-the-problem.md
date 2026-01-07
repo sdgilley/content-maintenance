@@ -5,7 +5,7 @@ We currently have three code repos:
 | Docs reference | Code repo |
 | ---------------|-----------|
 | ~/azureml-examples-main | https://github.com/Azure/azureml-examples |
-| ~/foundry-samples-main | https://github.com/azure-ai-foundry/foundry-samples |
+| ~/foundry-samples-main | https://github.com/microsoft-foundry/foundry-samples |
 | ~/azureai-samples-main | https://github.com/azure-samples/azureai-samples |
 
 When the pr-report shows a problem in a PR in any of these repos, you need to fix the problem before you can approve the PR.

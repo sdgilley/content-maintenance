@@ -70,7 +70,7 @@ python find-snippets.py
 ### Update codeowners files - <img src="../media/code.svg" width="32" height="32" style="vertical-align: text-top"> Code Repos
 
 * If changes to **CODEOWNERS-azureml-examples.txt** appear, copy the content and commit to [azureml-examples CODEOWNERS](https://github.com/Azure/azureml-examples/blob/main/.github/CODEOWNERS) file.
-* If changes to **CODEOWNERS-foundry-samples.txt** appear, copy the content and commit to [foundry-samples CODEOWNERS](https://github.com/Azure-AI-Foundry/foundry-samples/blob/main/.github/CODEOWNERS) file.
+* If changes to **CODEOWNERS-foundry-samples.txt** appear, copy the content and commit to [foundry-samples CODEOWNERS](https://github.com/microsoft-foundry/foundry-samples/blob/main/.github/CODEOWNERS) file.
 * If changes to **CODEOWNERS-azureai-samples.txt** appear, copy the content and commit to [azureai-samples CODEOWNERS](https://github.com/Azure-Samples/azureai-samples/blob/main/.github/CODEOWNERS) file.
 
 ### Update docs - <img src="../media/docs.svg" width="32" height="32" style="vertical-align: text-top"> Docs Repo

@@ -85,6 +85,6 @@ Code samples we monitor are currently in one of these three repos:
 
 | Docset | Code Repo | Docs Team |
 | -- | -- | -- |
-| Foundry | https://github.com/azure-ai-foundry/foundry-samples | [@azure-ai-foundry/ai-platform-docs](https://github.com/orgs/azure-ai-foundry/teams/ai-platform-docs/) |
+| Foundry | https://github.com/microsoft-foundry/foundry-samples | [@microsoft-foundry/ai-platform-docs](https://github.com/orgs/microsoft-foundry/teams/ai-platform-docs/) |
 | Foundry | https://github.com/Azure-Samples/azureai-samples | [@azure-samples/ai-platform-docs](https://github.com/orgs/azure-samples/teams/ai-platform-docs/) |
 | ML | https://github.com/Azure/azureml-examples | [@azure/ai-platform-docs](https://github.com/orgs/azure/teams/ai-platform-docs/) |
