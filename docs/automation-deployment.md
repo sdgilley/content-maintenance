@@ -38,7 +38,10 @@ Before starting deployment, ensure you have:
 
 ### A. GitHub Personal Access Token Setup
 
-The automation requires a GitHub Personal Access Token (PAT) with specific permissions to interact with repositories and workflows.
+The automation requires a GitHub Personal Access Token (PAT) with specific permissions to interact with repositories and workflows across **3 code repositories**:
+- **Azure/azureml-examples** - Azure Machine Learning examples
+- **Azure-AI-Foundry/foundry-samples** - Azure AI Foundry samples
+- **Azure-Samples/azureai-samples** - Azure AI samples
 
 #### 1. Create a Personal Access Token
 
@@ -78,15 +81,18 @@ The automation requires a GitHub Personal Access Token (PAT) with specific permi
 
 #### 4. Configure SSO Authorization
 
-If your organization uses SSO (like MicrosoftDocs):
+The automation monitors repositories across **3 different GitHub organizations**, so SSO authorization is required for each:
 
 1. Next to the newly created token, click **Configure SSO**
-2. Find **MicrosoftDocs** organization
-3. Click **Authorize** next to it
+2. **Authorize for ALL 3 organizations:**
+   - **Azure** (for Azure/azureml-examples)
+   - **Azure-AI-Foundry** (for Azure-AI-Foundry/foundry-samples)
+   - **Azure-Samples** (for Azure-Samples/azureai-samples)
+3. Click **Authorize** next to each organization
 4. Complete any additional authentication steps
-5. Verify: Token should show "Authorized" for MicrosoftDocs
+5. Verify: Token should show "Authorized" for all 3 organizations
 
-> ⚠️ **CRITICAL**: Without SSO authorization, the token won't work with organization repositories!
+> ⚠️ **CRITICAL**: Without SSO authorization for ALL 3 organizations, the automation cannot access all code repositories!
 
 #### 5. Test Token Works
 

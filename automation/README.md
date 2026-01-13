@@ -92,14 +92,18 @@ AUTO_APPROVE_ENABLED=true        # Enable/disable PR auto-approval
 **Schedule:** Monday-Friday at 7:00 AM EST (12:00 UTC)
 
 **What it does:**
-1. Finds PRs requesting review from the AI Platform Docs team
-2. Analyzes each PR for documentation impact
-3. Auto-approves PRs that meet safety criteria:
+1. Monitors PRs across **3 code repositories**:
+   - **Azure/azureml-examples** - Azure Machine Learning examples
+   - **Azure-AI-Foundry/foundry-samples** - Azure AI Foundry samples
+   - **Azure-Samples/azureai-samples** - Azure AI samples
+2. Finds PRs requesting review from the AI Platform Docs team
+3. Analyzes each PR for documentation impact
+4. Auto-approves PRs that meet safety criteria:
    - No deleted files referenced in documentation
    - No renamed files referenced in documentation
    - No deleted cells/snippets in modified files that are referenced in docs
-4. Flags unsafe PRs for manual review
-5. Sends email report with results
+5. Flags unsafe PRs for manual review
+6. Sends email report with results
 
 **Manual trigger:**
 ```bash

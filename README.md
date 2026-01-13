@@ -22,7 +22,7 @@ The scripts in this repository help prevent problems and identify necessary docu
 
 **NEW!** This repository now includes automation for daily, weekly, and monthly maintenance tasks:
 
-- **Daily PR Monitor** - Automatically reviews and approves safe PRs (Mon-Fri 7 AM EST)
+- **Daily PR Monitor** - Automatically monitors PRs across **3 code repositories** (Azure/azureml-examples, Azure-AI-Foundry/foundry-samples, Azure-Samples/azureai-samples), analyzes them for documentation impact, and auto-approves safe PRs (Mon-Fri 7 AM EST)
 - **Weekly Snippet Scanner** - Scans docs and updates CODEOWNERS files (Mon 6 AM EST)
 - **Monthly Reports** - Generates statistics and health reports (1st of month)
 
