@@ -49,6 +49,16 @@ def run_weekly_workflow(dry_run: bool = False):
     logger.info(f"Dry run mode: {dry_run}")
     logger.info("=" * 60)
     
+    # Initialize variables for report generation (ensures report is always created)
+    config = None
+    report_gen = None
+    results = {
+        'snippet_scan_completed': False,
+        'codeowners_updates': [],
+        'docs_updates': [],
+        'errors': []
+    }
+    
     try:
         # Load configurations
         config = get_automation_config()
@@ -64,13 +74,6 @@ def run_weekly_workflow(dry_run: bool = False):
         github_client = GitHubClient()
         git_ops = GitOperations(github_client, git_config.commit_author_name, git_config.commit_author_email)
         report_gen = ReportGenerator()
-        
-        results = {
-            'snippet_scan_completed': False,
-            'codeowners_updates': [],
-            'docs_updates': [],
-            'errors': []
-        }
         
         # Step 1: Run snippet scanner
         logger.info("Step 1: Running snippet scanner")
@@ -273,6 +276,49 @@ def run_weekly_workflow(dry_run: bool = False):
         
     except Exception as e:
         logger.error(f"Weekly workflow failed: {e}", exc_info=True)
+        results['errors'].append(f"Workflow error: {str(e)}")
+        
+        # Still try to generate a report even on failure
+        try:
+            if report_gen is None:
+                report_gen = ReportGenerator()
+            if config is None:
+                config = get_automation_config()
+            
+            snippet_results = {
+                'completed': results['snippet_scan_completed'],
+                'files_committed': len([e for e in results['codeowners_updates'] if e.get('status') == 'success'])
+            }
+            
+            html, text = report_gen.generate_weekly_report(
+                snippet_results,
+                results['codeowners_updates'],
+                results['docs_updates']
+            )
+            
+            reports_dir = config.get_reports_directory()
+            saved_path = report_gen.save_to_file(html, reports_dir, 'weekly')
+            if saved_path:
+                logger.info(f"Error report saved to: {saved_path}")
+            
+            # Write error summary to GitHub Actions
+            summary_md = f"""# Weekly Snippet Scan Report - {datetime.now().strftime('%Y-%m-%d')}
+
+## ⚠️ Workflow Error
+
+The workflow encountered an error: `{str(e)}`
+
+## Partial Results
+- **Snippet Scan**: {'✅ Completed' if results['snippet_scan_completed'] else '❌ Failed'}
+- **CODEOWNERS Updates**: {len(results['codeowners_updates'])}
+- **Errors**: {len(results['errors'])}
+
+Please check the workflow logs for more details.
+"""
+            report_gen.write_github_summary(summary_md)
+        except Exception as report_error:
+            logger.error(f"Failed to generate error report: {report_error}")
+        
         raise
 
 

@@ -197,6 +197,14 @@ def run_daily_workflow(dry_run: bool = False):
     logger.info(f"Dry run mode: {dry_run}")
     logger.info("=" * 60)
     
+    # Initialize variables for report generation (ensures report is always created)
+    auto_approved = []
+    manual_review = []
+    errors = []
+    prs = []
+    config = None
+    report_gen = None
+    
     try:
         # Load configurations
         config = get_automation_config()
@@ -219,38 +227,7 @@ def run_daily_workflow(dry_run: bool = False):
         
         if not prs:
             logger.info("No PRs found needing review")
-            
-            # Generate report even with no PRs
-            html, text = report_gen.generate_daily_report([], [], [])
-            
-            # Save report to file
-            reports_dir = config.get_reports_directory()
-            saved_path = report_gen.save_to_file(html, reports_dir, 'daily')
-            if saved_path:
-                logger.info(f"Report saved to: {saved_path}")
-            
-            # Send email notification (if configured)
-            if email_config.is_configured():
-                logger.info("Email is configured, sending email report")
-                email_sender = EmailSender(
-                    email_config.smtp_server,
-                    email_config.smtp_port,
-                    email_config.smtp_username,
-                    email_config.smtp_password,
-                    email_config.from_address
-                )
-                email_sender.send_email(
-                    email_config.to_addresses,
-                    f"[Azure AI Docs] Daily PR Monitor - {datetime.now().strftime('%Y-%m-%d')}",
-                    html,
-                    text,
-                    dry_run
-                )
-                logger.info("Email report sent")
-            else:
-                logger.info("Email not configured, skipping email notification")
-            
-            return
+            # Continue to report generation below (don't return early)
         
         # Analyze each PR
         auto_approved = []
@@ -385,6 +362,41 @@ def run_daily_workflow(dry_run: bool = False):
         
     except Exception as e:
         logger.error(f"Daily workflow failed: {e}", exc_info=True)
+        errors.append(f"Workflow error: {str(e)}")
+        
+        # Still try to generate a report even on failure
+        try:
+            if report_gen is None:
+                report_gen = ReportGenerator()
+            if config is None:
+                config = get_automation_config()
+            
+            html, text = report_gen.generate_daily_report(auto_approved, manual_review, errors)
+            
+            reports_dir = config.get_reports_directory()
+            saved_path = report_gen.save_to_file(html, reports_dir, 'daily')
+            if saved_path:
+                logger.info(f"Error report saved to: {saved_path}")
+            
+            # Write error summary to GitHub Actions
+            summary_md = f"""# Daily PR Monitor Report - {datetime.now().strftime('%Y-%m-%d')}
+
+## ⚠️ Workflow Error
+
+The workflow encountered an error: `{str(e)}`
+
+## Partial Results
+- **PRs Analyzed Before Error**: {len(auto_approved) + len(manual_review)}
+- **Auto-Approved**: {len(auto_approved)}
+- **Requiring Manual Review**: {len(manual_review)}
+- **Errors**: {len(errors)}
+
+Please check the workflow logs for more details.
+"""
+            report_gen.write_github_summary(summary_md)
+        except Exception as report_error:
+            logger.error(f"Failed to generate error report: {report_error}")
+        
         raise
 
 
