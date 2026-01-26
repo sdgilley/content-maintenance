@@ -90,11 +90,12 @@ class EmailConfig:
         self.email_enabled = os.getenv('EMAIL_ENABLED', 'false').lower() == 'true'
         
         # Load SMTP settings (optional if email is disabled)
-        self.smtp_server = os.getenv('SMTP_SERVER', 'smtp.gmail.com')
-        self.smtp_port = int(os.getenv('SMTP_PORT', '587'))
-        self.smtp_username = os.getenv('SMTP_USERNAME', '')
-        self.smtp_password = os.getenv('SMTP_PASSWORD', '')
-        self.from_address = os.getenv('SMTP_EMAIL', self.smtp_username)
+        self.smtp_server = os.getenv('SMTP_SERVER') or 'smtp.gmail.com'
+        smtp_port_str = os.getenv('SMTP_PORT') or '587'
+        self.smtp_port = int(smtp_port_str) if smtp_port_str else 587
+        self.smtp_username = os.getenv('SMTP_USERNAME') or ''
+        self.smtp_password = os.getenv('SMTP_PASSWORD') or ''
+        self.from_address = os.getenv('SMTP_EMAIL') or self.smtp_username
         
         # Parse recipient addresses
         notification_emails = os.getenv('NOTIFICATION_EMAIL', '')
