@@ -116,6 +116,12 @@ def run_monthly_workflow(dry_run: bool = False):
     logger.info(f"Dry run mode: {dry_run}")
     logger.info("=" * 60)
     
+    # Initialize variables for report generation (ensures report is always created)
+    config = None
+    report_gen = None
+    statistics = {}
+    warnings = []
+    
     try:
         # Load configurations
         config = get_automation_config()
@@ -208,6 +214,40 @@ def run_monthly_workflow(dry_run: bool = False):
         
     except Exception as e:
         logger.error(f"Monthly workflow failed: {e}", exc_info=True)
+        warnings.append(f"Workflow error: {str(e)}")
+        
+        # Still try to generate a report even on failure
+        try:
+            if report_gen is None:
+                report_gen = ReportGenerator()
+            if config is None:
+                config = get_automation_config()
+            
+            html, text = report_gen.generate_monthly_report(statistics, warnings)
+            
+            reports_dir = config.get_reports_directory()
+            saved_path = report_gen.save_to_file(html, reports_dir, 'monthly')
+            if saved_path:
+                logger.info(f"Error report saved to: {saved_path}")
+            
+            # Write error summary to GitHub Actions
+            month_name = datetime.now().strftime('%B %Y')
+            summary_md = f"""# Monthly Maintenance Report - {month_name}
+
+## ⚠️ Workflow Error
+
+The workflow encountered an error: `{str(e)}`
+
+## Partial Results
+- **Statistics Collected**: {len(statistics) > 0}
+- **Warnings**: {len(warnings)}
+
+Please check the workflow logs for more details.
+"""
+            report_gen.write_github_summary(summary_md)
+        except Exception as report_error:
+            logger.error(f"Failed to generate error report: {report_error}")
+        
         raise
 
 
