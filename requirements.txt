@@ -2,3 +2,5 @@ PyGithub
 requests
 pandas
 PyYAML
+GitPython>=3.1.40
+jinja2>=3.1.2

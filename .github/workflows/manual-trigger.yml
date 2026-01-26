@@ -1,0 +1,120 @@
+name: Manual Automation Trigger
+
+on:
+  workflow_dispatch:
+    inputs:
+      workflow_type:
+        description: 'Which workflow to run'
+        required: true
+        type: choice
+        options:
+          - daily
+          - weekly
+          - monthly
+      dry_run:
+        description: 'Run in dry-run mode'
+        required: true
+        type: boolean
+        default: true
+
+env:
+  TZ: America/New_York
+
+jobs:
+  run-workflow:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Configure Git
+        if: inputs.workflow_type == 'weekly'
+        run: |
+          git config --global user.name "Content Maintenance Bot"
+          git config --global user.email "bot@example.com"
+      
+      - name: Run Daily Workflow
+        if: inputs.workflow_type == 'daily'
+        env:
+          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+          SMTP_SERVER: ${{ secrets.SMTP_SERVER }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SMTP_EMAIL: ${{ secrets.SMTP_EMAIL }}
+          NOTIFICATION_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
+          EMAIL_ENABLED: ${{ secrets.EMAIL_ENABLED || 'false' }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          AUTO_APPROVE_ENABLED: 'true'
+          GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python -m automation.workflows.daily_pr_monitor ${{ inputs.dry_run && '--dry-run' || '' }}
+      
+      - name: Run Weekly Workflow
+        if: inputs.workflow_type == 'weekly'
+        env:
+          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+          SMTP_SERVER: ${{ secrets.SMTP_SERVER }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SMTP_EMAIL: ${{ secrets.SMTP_EMAIL }}
+          NOTIFICATION_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
+          EMAIL_ENABLED: ${{ secrets.EMAIL_ENABLED || 'false' }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          GIT_AUTHOR_NAME: "Content Maintenance Bot"
+          GIT_AUTHOR_EMAIL: "bot@example.com"
+          GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python -m automation.workflows.weekly_scanner ${{ inputs.dry_run && '--dry-run' || '' }}
+      
+      - name: Run Monthly Workflow
+        if: inputs.workflow_type == 'monthly'
+        env:
+          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+          SMTP_SERVER: ${{ secrets.SMTP_SERVER }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SMTP_EMAIL: ${{ secrets.SMTP_EMAIL }}
+          NOTIFICATION_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
+          EMAIL_ENABLED: ${{ secrets.EMAIL_ENABLED || 'false' }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python -m automation.workflows.monthly_report ${{ inputs.dry_run && '--dry-run' || '' }}
+      
+      - name: Upload reports artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: manual-reports-${{ inputs.workflow_type }}-${{ github.run_number }}
+          path: automation/reports/
+          retention-days: 30
+          if-no-files-found: warn
+      
+      - name: Upload outputs artifact
+        if: always() && inputs.workflow_type == 'weekly'
+        uses: actions/upload-artifact@v4
+        with:
+          name: manual-outputs-${{ github.run_number }}
+          path: outputs/
+          retention-days: 30
+          if-no-files-found: warn

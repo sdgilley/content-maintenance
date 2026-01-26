@@ -1,0 +1,63 @@
+name: Daily PR Monitor
+
+on:
+  schedule:
+    # Run at 12:00 UTC (7:00 AM EST) Monday-Friday
+    - cron: '0 12 * * 1-5'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Run in dry-run mode (no actual approvals)'
+        required: false
+        type: boolean
+        default: true
+
+env:
+  TZ: America/New_York
+
+jobs:
+  monitor-prs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Run Daily PR Monitor
+        env:
+          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+          SMTP_SERVER: ${{ secrets.SMTP_SERVER }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SMTP_EMAIL: ${{ secrets.SMTP_EMAIL }}
+          NOTIFICATION_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
+          EMAIL_ENABLED: ${{ secrets.EMAIL_ENABLED || 'false' }}
+          DRY_RUN: ${{ inputs.dry_run || 'false' }}
+          AUTO_APPROVE_ENABLED: 'true'
+          GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python -m automation.workflows.daily_pr_monitor ${{ inputs.dry_run && '--dry-run' || '' }}
+      
+      - name: Upload reports artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-reports-${{ github.run_number }}
+          path: automation/reports/
+          retention-days: 30
+          if-no-files-found: warn

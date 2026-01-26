@@ -1,5 +1,9 @@
 # output from find-prs.py
 pr-review*.md
+
+# Automation reports directory
+automation/reports/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
