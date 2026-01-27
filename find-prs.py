@@ -27,6 +27,13 @@ Requirements:
 import argparse
 from datetime import datetime, timedelta, timezone
 import pandas as pd
+import subprocess
+import sys
+
+# Fix Unicode encoding issues on Windows
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+import sys
 from utilities import gh_auth as auth
 from utilities import config
 
@@ -176,8 +183,7 @@ def get_prs_for_repo(owner, repo_name, args):
                     "requested_reviewers": ", ".join([reviewer.login for reviewer in pr.requested_reviewers]),
                     "requested_teams": ", ".join([team.slug for team in pr.requested_teams]) if hasattr(pr, 'requested_teams') else "",
                     "assignees": ", ".join([assignee.login for assignee in pr.assignees]),
-                    "mergeable": pr.mergeable,
-                    "review_status": get_review_status(pr)
+                    "mergeable": pr.mergeable
                 }
                 pr_data.append(pr_info)
                 
@@ -220,143 +226,186 @@ def check_if_needs_team_review(pr, args, team_info):
     return False
 
 
-def get_review_status(pr):
-    """Get the review status of a PR"""
+def run_pr_report(pr_number, repo_key):
+    """Run pr-report.py for a specific PR and return the report status"""
     try:
-        reviews = pr.get_reviews()
-        review_states = [review.state for review in reviews]
+        result = subprocess.run(
+            [sys.executable, "pr-report.py", str(pr_number), repo_key],
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+        output = result.stdout + result.stderr
         
-        if "APPROVED" in review_states:
-            return "APPROVED"
-        elif "CHANGES_REQUESTED" in review_states:
-            return "CHANGES_REQUESTED"
-        elif "COMMENTED" in review_states:
-            return "COMMENTED"
-        else:
-            return "NO_REVIEWS"
-    except:
-        return "UNKNOWN"
+        # Check for approval indicators in output
+        # [OK] indicates no problems found
+        # [WARN] indicates issues that need fixing
+        has_issues = "[WARN]" in output
+        has_approval = "[OK]" in output
+        
+        return {
+            "approved": has_approval and not has_issues,
+            "output": output,
+            "needs_check": has_issues
+        }
+    except subprocess.TimeoutExpired:
+        return {
+            "approved": False,
+            "output": "Report execution timed out",
+            "needs_check": True
+        }
+    except Exception as e:
+        return {
+            "approved": False,
+            "output": f"Error running report: {e}",
+            "needs_check": True
+        }
 
 
 def write_markdown_report(all_pr_data, filename):
-    """Write results to a Markdown file with clickable links"""
+    """Write results to a Markdown file with categorized PRs"""
+    approved_prs = all_pr_data.get("approved", [])
+    check_prs = all_pr_data.get("needs_check", [])
+    
     with open(filename, 'w', encoding='utf-8') as f:
-        f.write("# Pull Requests Requiring Review\n\n")
+        f.write("# Pull Requests Review Report\n\n")
         f.write(f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
-        f.write(f"Total PRs found: **{len(all_pr_data)}**\n\n")
         
-        if not all_pr_data:
+        total_prs = len(approved_prs) + len(check_prs)
+        f.write(f"**Total PRs Analyzed: {total_prs}**\n\n")
+        
+        if total_prs == 0:
             f.write("Nothing to do here, no PRs found.\n")
             return
         
-        # Group by repository
-        repos = {}
-        for pr in all_pr_data:
-            repo_name = pr['repository']
-            if repo_name not in repos:
-                repos[repo_name] = []
-            repos[repo_name].append(pr)
+        # Section 1: PRs OK to Approve
+        f.write("## [OK] PRs OK to Approve\n\n")
+        f.write(f"**Count: {len(approved_prs)}**\n\n")
         
-        # Write table header
-        f.write("Repo | PR | Title | Author |  Report |\n")
-        f.write("|----|----|----|----|----| \n")
-        # Write each repository section
-        for repo_name, prs in repos.items():
-            # f.write(f"### {repo_name}\n\n")
-            # f.write(f"Found **{len(prs)}** PRs in this repository\n\n")          
+        if approved_prs:
+            f.write("| Repo | PR | Title | Author |\n")
+            f.write("|----|----|----|----|  \n")
             
-            
-            # Write each PR as a table row
-            for pr in prs:
+            for pr in approved_prs:
                 pr_link = f"[#{pr['pr_number']}]({pr['url']})"
-                title = pr['title'].replace('|', '\\|')  # Escape pipes in title
+                title = pr['title'].replace('|', '\\|')
                 author = pr['author']
-                status = pr['review_status']
-                if pr['draft']:
-                    status += " (DRAFT)"
-                # updated = pr['updated_at'].split(' ')[0]  # Just the date
-                # reviewers = pr['requested_reviewers'] if pr['requested_reviewers'] else "None"
-                # teams = pr['requested_teams'] if pr['requested_teams'] else "None"
-                # labels = pr['labels'] if pr['labels'] else "None"
+                shortname = pr.get('short_name', pr['repository'].split('/')[-1])
                 
-                # Generate the appropriate pr-report.py command based on repository
-                repo_config = config.get_repository_by_owner_repo(repo_name.split('/')[0], repo_name.split('/')[1])
-                if repo_config:
-                    report_command = f"`python pr-report.py {pr['pr_number']} {repo_config['pr_report_arg']}`"
-                    shortname = repo_config['short_name']
-                else:
-                    report_command = f"`python pr-report.py {pr['pr_number']}`"
-                    shortname = repo_name.split('/')[-1]
-                
-                f.write(f" | {shortname} | {pr_link} | {title} | {author} | {report_command} |\n")
+                f.write(f"| {shortname} | {pr_link} | {title} | {author} |\n")
+        else:
+            f.write("No PRs ready for approval at this time.\n")
+        
+        f.write("\n")
+        
+        # Section 2: PRs Requiring Further Review
+        f.write("## [WARN] PRs Requiring Further Review\n\n")
+        f.write(f"**Count: {len(check_prs)}**\n\n")
+        
+        if check_prs:
+            f.write("| Repo | PR | Title | Author | Issues Found |\n")
+            f.write("|----|----|----|----|----| \n")
             
-            # f.write("\n")
+            for pr in check_prs:
+                pr_link = f"[#{pr['pr_number']}]({pr['url']})"
+                title = pr['title'].replace('|', '\\|')
+                author = pr['author']
+                shortname = pr.get('short_name', pr['repository'].split('/')[-1])
+                issues = pr.get('issue_summary', 'Issues found - review details')
+                
+                f.write(f"| {shortname} | {pr_link} | {title} | {author} | {issues} |\n")
+            
+            # Add detailed findings section
+            f.write("\n### Detailed Findings\n\n")
+            
+            for pr in check_prs:
+                f.write(f"#### PR #{pr['pr_number']}: {pr['title']}\n\n")
+                f.write(f"**Repository:** {pr['repository']}\n\n")
+                f.write(f"**Author:** {pr['author']}\n\n")
+                
+                if pr.get('report_output'):
+                    f.write("**Report Output:**\n\n")
+                    f.write("```\n")
+                    f.write(pr['report_output'][:1000])  # Limit output to first 1000 chars
+                    if len(pr.get('report_output', '')) > 1000:
+                        f.write("\n... (output truncated) ...\n")
+                    f.write("```\n\n")
+                
+                f.write("---\n\n")
+        else:
+            f.write("No PRs requiring further review.\n")
         
         f.write("\n---\n")
-        f.write("*Click on PR numbers to view the pull request on GitHub*\n")
+        f.write("*Report generated by find-prs.py with pr-report.py analysis*\n")
+
+
+
 
 def display_results(all_pr_data, args):
     """Display the results in a formatted way"""
-    if not all_pr_data:
+    approved_prs = all_pr_data.get("approved", [])
+    check_prs = all_pr_data.get("needs_check", [])
+    
+    total_prs = len(approved_prs) + len(check_prs)
+    
+    if total_prs == 0:
         print("✅ You're all caught up.")
         return
     
-    df = pd.DataFrame(all_pr_data)
-      # Set display options for better formatting
-    pd.set_option("display.max_columns", None)
-    pd.set_option("display.max_colwidth", 50)
-    pd.set_option("display.width", None)
+    print(f"\n{'='*80}")
+    print(f"PR ANALYSIS COMPLETE")
+    print(f"{'='*80}\n")
     
-    # print(f"\n{'='*80}")
-    # print(f"FOUND {len(all_pr_data)} PRs REQUIRING REVIEW")
-    # print(f"{'='*80}\n")
+    print(f"[OK] PRs OK to Approve: {len(approved_prs)}")
+    if approved_prs:
+        for pr in approved_prs:
+            print(f"  - [{pr['short_name']}] #{pr['pr_number']}: {pr['title'][:60]}")
+            print(f"    {pr['url']}")
     
-    if args.verbose:
-        # Show detailed information
-        for _, pr in df.iterrows():
-            print(f"Repository: {pr['repository']}")
-            print(f"PR #{pr['pr_number']}: {pr['title']}")
-            print(f"Author: {pr['author']}")
-            print(f"State: {pr['state']} {'(DRAFT)' if pr['draft'] else ''}")
-            print(f"Review Status: {pr['review_status']}")
-            print(f"Updated: {pr['updated_at']}")
-            print(f"URL: {pr['url']}")
-            if pr['labels']:
-                print(f"Labels: {pr['labels']}")
-            if pr['requested_reviewers']:
-                print(f"Requested Reviewers: {pr['requested_reviewers']}")
-            if pr['requested_teams']:
-                print(f"Requested Teams: {pr['requested_teams']}")
-            if pr['assignees']:
-                print(f"Assignees: {pr['assignees']}")
-            print("-" * 60)
-    # else:
-        # Show summary table
-        # summary_df = df[['repository', 'pr_number', 'title', 'author', 'review_status', 'updated_at', 'url']]
-        # print(summary_df.to_string(index=False))
+    print(f"\n[WARN]  PRs Requiring Further Review: {len(check_prs)}")
+    if check_prs:
+        for pr in check_prs:
+            print(f"  - [{pr['short_name']}] #{pr['pr_number']}: {pr['title'][:60]}")
+            print(f"    {pr['url']}")
+            if pr.get('issue_summary'):
+                print(f"    Issue: {pr['issue_summary']}")
+    
+    print(f"\n{'='*80}\n")
+    
+    # Save to Markdown
+    if args.markdown:
+        write_markdown_report(all_pr_data, args.markdown)
+        print(f"Markdown report saved to: {args.markdown}")
+    else:
+        # Auto-generate markdown report with default name if no specific output requested
+        default_md_file = f"pr-review-report-{datetime.now().strftime('%Y-%m-%d')}.md"
+        write_markdown_report(all_pr_data, default_md_file)
+        print(f"Markdown report saved to: {default_md_file}")
     
     # Save to CSV if requested
     if args.output:
-        df.to_csv(args.output, index=False)
-        print(f"\nResults saved to: {args.output}")
-    
-    # Save to Markdown if requested
-    if args.markdown:
-        write_markdown_report(all_pr_data, args.markdown)
-        print(f"\nMarkdown report saved to: {args.markdown}")
-    
-    # Auto-generate markdown report with default name if no specific output requested
-    if not args.output and not args.markdown:
-        default_md_file = f"pr-review-report-{datetime.now().strftime('%Y-%m-%d')}.md"
-        write_markdown_report(all_pr_data, default_md_file)
-        print(f"\nMarkdown report saved to: {default_md_file}")
+        # Flatten the data for CSV output
+        csv_data = []
+        for pr in approved_prs:
+            pr['status'] = 'OK_TO_APPROVE'
+            csv_data.append(pr)
+        for pr in check_prs:
+            pr['status'] = 'NEEDS_CHECK'
+            csv_data.append(pr)
+        
+        if csv_data:
+            df = pd.DataFrame(csv_data)
+            df.to_csv(args.output, index=False)
+            print(f"CSV report saved to: {args.output}")
+
 
 
 def main():
     """Main function"""
     args = parse_arguments()
     
-    all_pr_data = []
+    approved_prs = []
+    check_prs = []
     
     # Process hardcoded repositories
     team_repos = get_team_repos()
@@ -365,12 +414,50 @@ def main():
         owner = repo_config["owner"]
         repo_name = repo_config["repo"]
         team = repo_config["team"]
+        repo_key = repo_config["pr_report_arg"]
+        short_name = repo_config["short_name"]
         
         print(f"Checking repository: {owner}/{repo_name} (Team: {team})")
         pr_data = get_prs_for_repo(owner, repo_name, args)
-        all_pr_data.extend(pr_data)
-      # Display results
-    print(f"\nTotal PRs found across all repositories: {len(all_pr_data)}")
+        
+        # Run pr-report.py for each PR and categorize
+        for pr in pr_data:
+            print(f"  Analyzing PR #{pr['pr_number']}: {pr['title'][:50]}...", end=" ")
+            report = run_pr_report(pr['pr_number'], repo_key)
+            
+            pr['short_name'] = short_name
+            pr['report_output'] = report['output']
+            
+            if report['approved']:
+                approved_prs.append(pr)
+                print("[OK]")
+            else:
+                # Extract issue summary from output
+                if "Modified File" in report['output']:
+                    pr['issue_summary'] = "Modified files with references found"
+                elif "DELETED FILE" in report['output']:
+                    pr['issue_summary'] = "Deleted files with references found"
+                elif "RENAMED FILE" in report['output']:
+                    pr['issue_summary'] = "Renamed files with references found"
+                elif "No problems" in report['output']:
+                    pr['issue_summary'] = "Review passed"
+                    approved_prs.append(pr)
+                    print("[OK]")
+                    continue
+                else:
+                    pr['issue_summary'] = "Review required"
+                
+                check_prs.append(pr)
+                print("[WARN]")
+    
+    # Prepare data for output
+    all_pr_data = {
+        "approved": approved_prs,
+        "needs_check": check_prs
+    }
+    
+    # Display and save results
+    print(f"\nTotal PRs found across all repositories: {len(approved_prs) + len(check_prs)}")
     display_results(all_pr_data, args)
 
 
