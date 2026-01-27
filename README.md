@@ -18,12 +18,25 @@ Also, when a code file is updated, the document won't reflect the changes until 
 
 The scripts in this repository help prevent problems and identify necessary document updates.
 
+## 🤖 Automation
+
+**NEW!** This repository now includes automation for daily, weekly, and monthly maintenance tasks:
+
+- **Daily PR Monitor** - Automatically monitors PRs across **3 code repositories** (Azure/azureml-examples, Azure-AI-Foundry/foundry-samples, Azure-Samples/azureai-samples), analyzes them for documentation impact, and auto-approves safe PRs (Mon-Fri 7 AM EST)
+- **Weekly Snippet Scanner** - Scans docs and updates CODEOWNERS files (Mon 6 AM EST)
+- **Monthly Reports** - Generates statistics and health reports (1st of month)
+
+👉 **See [automation/README.md](automation/README.md) for setup and usage**
+
+The automation reduces manual effort by ~80% while maintaining documentation quality through automated validation and safety checks.
+
 ## Documentation
 
-* [Setup and overview](docs/setup.md) 
+* [Setup and overview](docs/setup.md)
 * [Create token for authentication](docs/create-update-auth.md)
 * [Daily and weekly tasks](docs/code-snippets.md)
 * [Fix the problem](docs/fix-the-problem.md)
+* **[Automation Guide](automation/README.md)** ⭐ **NEW**
 
 ## Run the scripts in this repository
 

@@ -7,7 +7,7 @@ To run the scripts, create a GitHub access token.  Then run the scripts either i
 <details>
 <summary> Create a GitHub personal access token</summary>
 
-First create a GitHub personal access token following instructions in [Create/update a GitHub access token](docs/create-update-auth.md). 
+First create a GitHub personal access token following instructions in [Create/update a GitHub access token](create-update-auth.md). 
 
 > ⚠️ **Important:**  Don't forget to configure SSO for MicrosoftDocs.
 

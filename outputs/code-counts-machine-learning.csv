@@ -1,9 +1,9 @@
 file,type,lines,path
 concept-automl-forecasting-calendar-features.md,python,18,machine-learning
-concept-azure-machine-learning-v2.md,python,15,machine-learning
+concept-azure-machine-learning-v2.md,python,16,machine-learning
 concept-azure-machine-learning-v2.md,python,10,machine-learning
 concept-azure-machine-learning-v2.md,bash,1,machine-learning
-concept-azure-machine-learning-v2.md,python,10,machine-learning
+concept-azure-machine-learning-v2.md,python,11,machine-learning
 concept-azure-machine-learning-v2.md,bash,1,machine-learning
 concept-azure-machine-learning-v2.md,python,12,machine-learning
 concept-azure-machine-learning-v2.md,bash,1,machine-learning
@@ -24,7 +24,7 @@ concept-onnx.md,python,2,machine-learning
 concept-onnx.md,python,3,machine-learning
 concept-onnx.md,python,3,machine-learning
 concept-plan-manage-cost.md,python,2,machine-learning
-concept-secure-online-endpoint.md,azurecli,1,machine-learning
+concept-secure-online-endpoint.md,azurecli,10,machine-learning
 concept-secure-online-endpoint.md,python,9,machine-learning
 concept-secure-online-endpoint.md,azurecli,1,machine-learning
 concept-secure-online-endpoint.md,python,13,machine-learning
@@ -523,6 +523,8 @@ how-to-create-attach-compute-cluster.md,azurecli,1,machine-learning
 how-to-create-attach-compute-cluster.md,azurecli,1,machine-learning
 how-to-create-attach-compute-cluster.md,azurecli,1,machine-learning
 how-to-create-component-pipeline-python.md,bash,2,machine-learning
+how-to-create-component-pipeline-python.md,python,10,machine-learning
+how-to-create-component-pipeline-python.md,python,4,machine-learning
 how-to-create-component-pipelines-cli.md,azurecli-interactive,2,machine-learning
 how-to-create-component-pipelines-cli.md,azurecli,1,machine-learning
 how-to-create-component-pipelines-cli.md,azurecli,1,machine-learning
@@ -585,6 +587,7 @@ how-to-create-workspace-template.md,azurecli,1,machine-learning
 how-to-create-workspace-template.md,azurepowershell,1,machine-learning
 how-to-create-workspace-template.md,azurecli,5,machine-learning
 how-to-create-workspace-template.md,azurepowershell,6,machine-learning
+how-to-create-workspace-template.md,azurecli,4,machine-learning
 how-to-create-workspace-template.md,azurecli,8,machine-learning
 how-to-create-workspace-template.md,azurepowershell,8,machine-learning
 how-to-create-workspace-template.md,azurecli,1,machine-learning
@@ -1123,6 +1126,9 @@ how-to-log-mlflow-models.md,python,32,machine-learning
 how-to-log-mlflow-models.md,python,8,machine-learning
 how-to-log-mlflow-models.md,python,14,machine-learning
 how-to-log-mlflow-models.md,python,23,machine-learning
+how-to-log-search.md,python,20,machine-learning
+how-to-log-search.md,yaml,9,machine-learning
+how-to-log-search.md,azurecli,1,machine-learning
 how-to-log-view-metrics.md,bash,1,machine-learning
 how-to-log-view-metrics.md,python,1,machine-learning
 how-to-log-view-metrics.md,python,10,machine-learning
@@ -1181,6 +1187,7 @@ how-to-manage-imported-data-assets.md,python,11,machine-learning
 how-to-manage-imported-data-assets.md,cli,3,machine-learning
 how-to-manage-inputs-outputs-pipeline.md,python,65,machine-learning
 how-to-manage-inputs-outputs-pipeline.md,azurecli,6,machine-learning
+how-to-manage-inputs-outputs-pipeline.md,python,18,machine-learning
 how-to-manage-inputs-outputs-pipeline.md,azurecli,5,machine-learning
 how-to-manage-inputs-outputs-pipeline.md,python,9,machine-learning
 how-to-manage-inputs-outputs-pipeline.md,python,5,machine-learning
@@ -1188,8 +1195,8 @@ how-to-manage-inputs-outputs-pipeline.md,azurecli,5,machine-learning
 how-to-manage-inputs-outputs-pipeline.md,python,9,machine-learning
 how-to-manage-inputs-outputs-pipeline.md,python,6,machine-learning
 how-to-manage-inputs-outputs-pipeline.md,yaml,19,machine-learning
-how-to-manage-inputs-outputs-pipeline.md,python,21,machine-learning
-how-to-manage-inputs-outputs-pipeline.md,yaml,17,machine-learning
+how-to-manage-inputs-outputs-pipeline.md,python,34,machine-learning
+how-to-manage-inputs-outputs-pipeline.md,yaml,2,machine-learning
 how-to-manage-inputs-outputs-pipeline.md,python,18,machine-learning
 how-to-manage-kubernetes-instance-types.md,yaml,8,machine-learning
 how-to-manage-kubernetes-instance-types.md,bash,1,machine-learning
@@ -1207,7 +1214,6 @@ how-to-manage-models-mlflow.md,python,1,machine-learning
 how-to-manage-models-mlflow.md,python,6,machine-learning
 how-to-manage-models-mlflow.md,python,4,machine-learning
 how-to-manage-models-mlflow.md,python,2,machine-learning
-how-to-manage-models-mlflow.md,python,1,machine-learning
 how-to-manage-models-mlflow.md,python,1,machine-learning
 how-to-manage-models-mlflow.md,python,1,machine-learning
 how-to-manage-models-mlflow.md,python,1,machine-learning
@@ -1253,9 +1259,13 @@ how-to-manage-rest.md,json,9,machine-learning
 how-to-manage-rest.md,bash,1,machine-learning
 how-to-manage-rest.md,bash,1,machine-learning
 how-to-manage-rest.md,json,22,machine-learning
-how-to-manage-rest.md,,2,machine-learning
+how-to-manage-rest.md,bash,2,machine-learning
 how-to-manage-rest.md,json,31,machine-learning
 how-to-manage-rest.md,json,12,machine-learning
+how-to-manage-rest.md,bash,3,machine-learning
+how-to-manage-rest.md,bash,3,machine-learning
+how-to-manage-rest.md,bash,3,machine-learning
+how-to-manage-rest.md,bash,3,machine-learning
 how-to-manage-rest.md,bash,3,machine-learning
 how-to-manage-rest.md,bash,3,machine-learning
 how-to-manage-rest.md,bash,3,machine-learning
@@ -1384,11 +1394,9 @@ how-to-mltable.md,python,10,machine-learning
 how-to-mltable.md,python,10,machine-learning
 how-to-mltable.md,bash,1,machine-learning
 how-to-mltable.md,bash,1,machine-learning
-how-to-mltable.md,python,36,machine-learning
+how-to-mltable.md,python,37,machine-learning
 how-to-mltable.md,python,3,machine-learning
 how-to-mltable.md,python,4,machine-learning
-how-to-mltable.md,python,28,machine-learning
-how-to-mltable.md,python,20,machine-learning
 how-to-mltable.md,,8,machine-learning
 how-to-mltable.md,python,18,machine-learning
 how-to-mltable.md,python,13,machine-learning
@@ -1495,16 +1503,6 @@ how-to-responsible-ai-insights-sdk-cli.md,yml,16,machine-learning
 how-to-responsible-ai-insights-sdk-cli.md,yml,26,machine-learning
 how-to-responsible-ai-insights-sdk-cli.md,yml,31,machine-learning
 how-to-responsible-ai-insights-sdk-cli.md,yml,27,machine-learning
-how-to-responsible-ai-text-insights.md,yml,17,machine-learning
-how-to-responsible-ai-text-insights.md,python,3,machine-learning
-how-to-responsible-ai-text-insights.md,python,10,machine-learning
-how-to-responsible-ai-text-insights.md,python,2,machine-learning
-how-to-responsible-ai-vision-insights.md,python,1,machine-learning
-how-to-responsible-ai-vision-insights.md,python,11,machine-learning
-how-to-responsible-ai-vision-insights.md,yml,18,machine-learning
-how-to-responsible-ai-vision-insights.md,python,3,machine-learning
-how-to-responsible-ai-vision-insights.md,python,10,machine-learning
-how-to-responsible-ai-vision-insights.md,python,2,machine-learning
 how-to-safely-rollout-online-endpoints.md,azurecli,2,machine-learning
 how-to-safely-rollout-online-endpoints.md,azurecli,3,machine-learning
 how-to-safely-rollout-online-endpoints.md,bash,2,machine-learning
@@ -1808,6 +1806,7 @@ how-to-troubleshoot-online-endpoints.md,bash,1,machine-learning
 how-to-troubleshoot-online-endpoints.md,azurecli,1,machine-learning
 how-to-troubleshoot-online-endpoints.md,azurecli,1,machine-learning
 how-to-troubleshoot-online-endpoints.md,azurecli,1,machine-learning
+how-to-troubleshoot-online-endpoints.md,azurecli,1,machine-learning
 how-to-troubleshoot-online-endpoints.md,python,3,machine-learning
 how-to-troubleshoot-online-endpoints.md,python,3,machine-learning
 how-to-troubleshoot-online-endpoints.md,azurecli,1,machine-learning
@@ -1828,7 +1827,7 @@ how-to-troubleshoot-secure-connection-workspace.md,output,5,machine-learning
 how-to-tune-hyperparameters.md,Python,6,machine-learning
 how-to-tune-hyperparameters.md,Python,6,machine-learning
 how-to-tune-hyperparameters.md,YAML,8,machine-learning
-how-to-tune-hyperparameters.md,Python,13,machine-learning
+how-to-tune-hyperparameters.md,Python,20,machine-learning
 how-to-tune-hyperparameters.md,Python,7,machine-learning
 how-to-tune-hyperparameters.md,Python,12,machine-learning
 how-to-tune-hyperparameters.md,Python,12,machine-learning
@@ -1974,7 +1973,7 @@ how-to-use-serverless-compute.md,python,18,machine-learning
 how-to-use-serverless-compute.md,azurecli,1,machine-learning
 how-to-use-serverless-compute.md,python,21,machine-learning
 how-to-use-serverless-compute.md,YAML,6,machine-learning
-how-to-use-serverless-compute.md,python,19,machine-learning
+how-to-use-serverless-compute.md,python,18,machine-learning
 how-to-use-serverless-compute.md,YAML,4,machine-learning
 how-to-use-serverless-compute.md,python,20,machine-learning
 how-to-use-serverless-compute.md,YAML,7,machine-learning
@@ -2233,6 +2232,9 @@ troubleshooting-managed-feature-store.md,python,8,machine-learning
 troubleshooting-managed-feature-store.md,json,1,machine-learning
 troubleshooting-managed-feature-store.md,json,1,machine-learning
 troubleshooting-managed-feature-store.md,python,1,machine-learning
+troubleshooting-managed-feature-store.md,python,1,machine-learning
+troubleshooting-managed-feature-store.md,python,1,machine-learning
+troubleshooting-managed-feature-store.md,python,1,machine-learning
 troubleshooting-managed-feature-store.md,json,1,machine-learning
 troubleshooting-managed-feature-store.md,json,1,machine-learning
 troubleshooting-managed-feature-store.md,python,8,machine-learning
@@ -2327,7 +2329,6 @@ tutorial-explore-data.md,bash,1,machine-learning
 tutorial-explore-data.md,bash,3,machine-learning
 tutorial-explore-data.md,python,15,machine-learning
 tutorial-explore-data.md,python,27,machine-learning
-tutorial-explore-data.md,python,3,machine-learning
 tutorial-explore-data.md,python,1,machine-learning
 tutorial-explore-data.md,python,10,machine-learning
 tutorial-explore-data.md,python,9,machine-learning
