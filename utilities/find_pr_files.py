@@ -2,6 +2,7 @@
 # used from merge_report
 def find_pr_files(owner_name, repo_name, snippets, days):
     import requests
+    import os
     import pandas as pd
     from utilities import gh_auth as a
     from datetime import datetime, timedelta
@@ -15,8 +16,19 @@ def find_pr_files(owner_name, repo_name, snippets, days):
 
     # Define the URL for the GitHub API
     url = f"https://api.github.com/repos/{owner_name}/{repo_name}/pulls?state=closed&sort=updated&direction=desc"
-    response = requests.get(url)
+    
+    # Use authenticated request to avoid rate limiting
+    headers = {}
+    token = os.environ.get("GH_ACCESS_TOKEN")
+    if token:
+        headers["Authorization"] = f"token {token}"
+    
+    response = requests.get(url, headers=headers)
     pr_data = response.json()
+    
+    # Check if we got an error response (usually a dict with 'message' key)
+    if isinstance(pr_data, dict) and "message" in pr_data:
+        return {"error": f"GitHub API error for {repo_name}: {pr_data['message']}"}
 
     # Filter the PRs that were merged in the last N days
     merged_prs = [

@@ -31,6 +31,11 @@ import sys
 import logging
 from typing import List, Dict, Any
 
+# Configure logging to show messages
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(levelname)s: %(message)s'
+)
 logger = logging.getLogger(__name__)
 
 
@@ -235,7 +240,7 @@ def create_metadata_update_pr(
                 logger.info(f"  - {file}")
             if failed_files:
                 logger.warning(f"Would skip {len(failed_files)} files (not found)")
-            return None
+            return "dry-run-success"  # Return truthy value to indicate success in dry-run
         
         # Build PR information
         pr_summary = []
