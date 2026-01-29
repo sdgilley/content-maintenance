@@ -8,12 +8,19 @@ Usage examples:
     python merge-report.py 8 --create-pr       # Create metadata update PR (auto-detects your fork)
     python merge-report.py 8 --create-pr --dry-run  # Preview changes without creating PR
     python merge-report.py 8 --create-pr --fork-repo username/fork-name  # Use different fork
+    python merge-report.py 8 --ignore-tracking  # Process all PRs, ignoring tracking data
 
 The --create-pr option creates a PR in the main repo from your fork that automatically:
 - Identifies documentation files impacted by recent code repository PRs
 - Adds or increments the 'update-code' metadata field for each file
 - Uses GitHub API (no large clone needed) - only updates files that actually change
 - Generates a detailed PR with related code repository references
+- Records processed PRs in outputs/merge-tracking.json to avoid duplicates
+
+Tracking:
+  - Processed PRs are recorded in outputs/merge-tracking.json
+  - On subsequent runs, already-processed PRs are automatically skipped
+  - Use --ignore-tracking to process all PRs regardless of tracking data
 
 Fork detection:
   - By default, uses your GitHub username from the GH_ACCESS_TOKEN
@@ -28,10 +35,132 @@ Requirements:
 import os
 import re
 import sys
+import json
 import logging
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Set
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
+
+
+def load_tracking_data() -> Dict[str, Any]:
+    """
+    Load the merge tracking data from the JSON file.
+    
+    Returns:
+        Dictionary with tracking data including:
+        - processed_prs: Dict mapping "owner/repo" to list of processed PR numbers
+        - update_prs: List of documentation update PRs that were created
+    """
+    from utilities import config
+    
+    tracking_file = config.get_tracking_file_path()
+    
+    if os.path.exists(tracking_file):
+        try:
+            with open(tracking_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            logger.info(f"Loaded tracking data from {tracking_file}")
+            return data
+        except (json.JSONDecodeError, IOError) as e:
+            logger.warning(f"Error reading tracking file: {e}. Starting fresh.")
+    
+    # Return empty structure if file doesn't exist or is invalid
+    return {
+        "processed_prs": {},  # "owner/repo" -> [pr_numbers]
+        "update_prs": []      # List of update PR records
+    }
+
+
+def save_tracking_data(data: Dict[str, Any]) -> None:
+    """
+    Save the merge tracking data to the JSON file.
+    
+    Args:
+        data: Tracking data dictionary to save
+    """
+    from utilities import config
+    
+    tracking_file = config.get_tracking_file_path()
+    
+    # Ensure output directory exists
+    os.makedirs(os.path.dirname(tracking_file), exist_ok=True)
+    
+    with open(tracking_file, 'w', encoding='utf-8') as f:
+        json.dump(data, f, indent=2)
+    
+    logger.info(f"Saved tracking data to {tracking_file}")
+
+
+def get_processed_prs(tracking_data: Dict[str, Any], owner: str, repo: str) -> Set[int]:
+    """
+    Get the set of already-processed PR numbers for a repository.
+    
+    Args:
+        tracking_data: The tracking data dictionary
+        owner: Repository owner
+        repo: Repository name
+        
+    Returns:
+        Set of PR numbers that have already been processed
+    """
+    repo_key = f"{owner}/{repo}"
+    pr_list = tracking_data.get("processed_prs", {}).get(repo_key, [])
+    return set(pr_list)
+
+
+def record_processed_prs(
+    tracking_data: Dict[str, Any],
+    pr_info: Dict[str, Any],
+    doc_pr_url: str,
+    updated_files: List[str]
+) -> None:
+    """
+    Record that PRs have been processed and a documentation update PR was created.
+    
+    Args:
+        tracking_data: The tracking data dictionary (will be modified in place)
+        pr_info: Dictionary mapping repo names to lists of PR numbers
+        doc_pr_url: URL of the documentation update PR that was created
+        updated_files: List of documentation files that were updated
+    """
+    # Add PR numbers to the processed list
+    if "processed_prs" not in tracking_data:
+        tracking_data["processed_prs"] = {}
+    
+    for repo_name, pr_numbers in pr_info.items():
+        # pr_info keys might be just repo name, not owner/repo
+        # We need to find the full key
+        repo_key = repo_name
+        if "/" not in repo_key:
+            # Try to find the matching repository from config
+            from utilities import config
+            repos_config = config.get_repositories()
+            for key, repo_config in repos_config.items():
+                if repo_config["repo"] == repo_name:
+                    repo_key = f"{repo_config['owner']}/{repo_name}"
+                    break
+        
+        if repo_key not in tracking_data["processed_prs"]:
+            tracking_data["processed_prs"][repo_key] = []
+        
+        # Add new PR numbers (avoid duplicates)
+        existing = set(tracking_data["processed_prs"][repo_key])
+        for pr_num in pr_numbers:
+            if pr_num not in existing:
+                tracking_data["processed_prs"][repo_key].append(pr_num)
+    
+    # Record the update PR
+    if "update_prs" not in tracking_data:
+        tracking_data["update_prs"] = []
+    
+    update_record = {
+        "created_at": datetime.now().isoformat(),
+        "pr_url": doc_pr_url,
+        "source_prs": pr_info,
+        "files_updated": updated_files
+    }
+    tracking_data["update_prs"].append(update_record)
 
 
 def update_yaml_metadata(content: str) -> tuple[str, bool]:
@@ -277,11 +406,11 @@ Updated `update-code` metadata for documentation files impacted by recent code r
         if failed_files:
             logger.warning(f"Note: {len(failed_files)} files were not found in the repo")
         
-        return pr.html_url
+        return pr.html_url, updated_files
             
     except Exception as e:
         logger.error(f"Failed to create metadata update PR: {e}", exc_info=True)
-        return None
+        return None, []
 
 
 
@@ -360,13 +489,18 @@ if __name__ == "__main__":
     parser.add_argument('--create-pr', action='store_true', help='Create PR in your fork with metadata updates')
     parser.add_argument('--fork-repo', type=str, default=None, help='Fork repository (owner/repo). Defaults to GH_FORK_REPO env var or config.yml')
     parser.add_argument('--dry-run', action='store_true', help='Show what would change without creating PR')
+    parser.add_argument('--ignore-tracking', action='store_true', help='Ignore tracking data and process all PRs')
     
     args = parser.parse_args()
     days = args.days
     create_pr = args.create_pr
     fork_repo = args.fork_repo
     dry_run = args.dry_run
+    ignore_tracking = args.ignore_tracking
 
+    # Load tracking data to filter out already-processed PRs
+    tracking_data = load_tracking_data()
+    
     # Always use all repos from config.yml
     repos_config = config.get_repositories()
     repo_args = [(repo_config["owner"], repo_config["repo"]) for repo_config in repos_config.values()]
@@ -377,6 +511,8 @@ if __name__ == "__main__":
     snippets = h.read_snippets(fn)
 
     all_results = []
+    skipped_prs = []  # Track PRs we skip because they were already processed
+    
     def process_repo(args):
         owner_name, repo_name = args
         repo_results = f.find_pr_files(owner_name, repo_name, snippets, days)
@@ -393,6 +529,26 @@ if __name__ == "__main__":
             result = future.result()
             if result:
                 all_results.extend(result)
+
+    # Filter out already-processed PRs (unless --ignore-tracking is set)
+    if not ignore_tracking and all_results:
+        filtered_results = []
+        for result in all_results:
+            owner = result.get('owner', '')
+            repo = result.get('repo', '')
+            pr_num = result.get('PR', 0)
+            
+            processed_prs = get_processed_prs(tracking_data, owner, repo)
+            if pr_num in processed_prs:
+                skipped_prs.append(f"{owner}/{repo}#{pr_num}")
+            else:
+                filtered_results.append(result)
+        
+        if skipped_prs:
+            print(f"\n📋 Skipped {len(skipped_prs)} already-processed PR(s): {', '.join(skipped_prs)}")
+            print("   (Use --ignore-tracking to process them again)\n")
+        
+        all_results = filtered_results
 
     # Print a single combined report
     if not all_results:
@@ -424,21 +580,37 @@ if __name__ == "__main__":
             else:
                 print("Creating metadata update PR...")
             
-            # Build PR info dictionary
+            # Build PR info dictionary with full owner/repo for tracking
             pr_info = {}
+            pr_info_full = {}  # For tracking with owner/repo keys
             for _, row in df[["owner", "repo", "PR"]].drop_duplicates().iterrows():
                 repo = row['repo']
+                owner = row['owner']
                 pr_num = row['PR']
+                
+                # Short key for PR body
                 if repo not in pr_info:
                     pr_info[repo] = []
                 pr_info[repo].append(pr_num)
+                
+                # Full key for tracking
+                full_key = f"{owner}/{repo}"
+                if full_key not in pr_info_full:
+                    pr_info_full[full_key] = []
+                pr_info_full[full_key].append(pr_num)
             
             # Create the PR (fork_repo can be None to use config/env)
-            pr_url = create_metadata_update_pr(refs, pr_info, dry_run=dry_run, fork_repo=fork_repo)
+            pr_url, updated_files = create_metadata_update_pr(refs, pr_info, dry_run=dry_run, fork_repo=fork_repo)
             
             if pr_url:
                 print("✅ Metadata update PR created successfully!")
                 print(f"   {pr_url}")
-            else:
+                
+                # Record the processed PRs in tracking data
+                if not dry_run:
+                    record_processed_prs(tracking_data, pr_info_full, pr_url, updated_files)
+                    save_tracking_data(tracking_data)
+                    print(f"📝 Recorded {sum(len(prs) for prs in pr_info_full.values())} processed PR(s) in tracking file")
+            elif pr_url is None and not dry_run:
                 print("❌ Failed to create metadata update PR")
                 sys.exit(1)

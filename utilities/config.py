@@ -84,3 +84,10 @@ def get_exclude_directories():
     """Get the list of directories to exclude when searching."""
     defaults = get_default_settings()
     return defaults.get('exclude_directories', [])
+
+
+def get_tracking_file_path():
+    """Get the path to the merge tracking JSON file."""
+    output_dir = get_output_directory()
+    file_paths = get_file_paths()
+    return os.path.join(output_dir, file_paths.get('merge_tracking_json', 'merge-tracking.json'))

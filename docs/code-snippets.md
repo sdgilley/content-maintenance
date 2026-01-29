@@ -21,9 +21,9 @@ When using this process, you'll create PRs in each of the following repositories
     ```
 
 1. Review the output in pr-review-report-DATE.md.  Set to Preview (Ctrl=Shift-V) to make it easier to read.
-1. For each PR, use the python command shown in the Report column.
-1. Approve if no issues reported.
-1. If issues are present, see [Fix the Problem](fix-the-problem.md).
+1. Approve all the PRs listed as OK to Approve
+1. If ther are PRs requiring further review, see [Fix the Problem](fix-the-problem.md).
+1. You can ignore any PR with "DO NOT MERGE" in the title.
 
 ### Check messages
 

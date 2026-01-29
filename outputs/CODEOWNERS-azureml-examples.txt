@@ -169,7 +169,6 @@
 /cli/resources/compute/instance-minimal.yml @Azure/AI-Platform-Docs
 /cli/resources/compute/instance-schedule.yml @Azure/AI-Platform-Docs
 /cli/resources/compute/vm-attach.yml @Azure/AI-Platform-Docs
-/cli/resources/connections/container-registry-managed-identity.yml @Azure/AI-Platform-Docs
 /cli/resources/datastore/adls-gen1-credless.yml @Azure/AI-Platform-Docs
 /cli/resources/datastore/adls-gen1.yml @Azure/AI-Platform-Docs
 /cli/resources/datastore/adls-gen2-credless.yml @Azure/AI-Platform-Docs

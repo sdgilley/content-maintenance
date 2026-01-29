@@ -159,7 +159,7 @@ def find_snippets():
                 # this file has code blocks. add info to the dictionary
                 path_name = "ai-foundry" if "ai-foundry" in content_file.path else "machine-learning"
                 for block in blocks:
-                    all_code_counts.append({"file": file, "type": block[0], "lines": block[1], "path": path_name})
+                    all_code_counts.append({"file": content_file.path, "type": block[0], "lines": block[1], "path": path_name})
 
     # Write combined refs file with all references
     if combined_refs_list:
