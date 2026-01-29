@@ -54,7 +54,7 @@ defaults:
   # Directories to exclude when searching for snippets
   exclude_directories:
     - media
-    - ai-foundry/openai/
+    # - ai-foundry/openai/
 
 # File paths
 files:

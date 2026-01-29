@@ -169,18 +169,20 @@ def compare_branches(repo, file, branch1, branch2):
 
 
 # call  for each line in the file, send in current info and get back updated values
-def count_code_lines(line, blocks, inside_code_block, count, code_type):
+def count_code_lines(line, blocks, inside_code_block, count, code_type, line_num=None, start_line=None):
     line = line.lstrip()
     if line.startswith("```"):
         if inside_code_block:  # done - this is the end of the block
-            blocks.append((code_type, count))  # Add type and count to the list
+            blocks.append((code_type, count, start_line))  # Add type, count, and start line to the list
+            start_line = None
         else:  # starting - get the type and reset the count
             code_type = line[3:].strip()  # Get the rest of the line after ```
             count = 0
+            start_line = line_num  # Record where the code block starts
         inside_code_block = not inside_code_block
     else:
         count += 1
-    return blocks, inside_code_block, count, code_type
+    return blocks, inside_code_block, count, code_type, start_line
 
 
 def find_snippets(line, branches, az_ml_branch, file):
