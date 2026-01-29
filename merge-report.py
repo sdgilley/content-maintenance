@@ -454,7 +454,7 @@ Updated `update-code` metadata for documentation files impacted by recent code r
 
     # Print a single combined report
     if not all_results:
-        print("\n ✅ Nothing to do here :-)  There are no PRs that impacted references.\n")
+        print("\n[OK] Nothing to do here :-)  There are no PRs that impacted references.\n")
         return
 
     import pandas as pd
@@ -465,7 +465,7 @@ Updated `update-code` metadata for documentation files impacted by recent code r
         pr_url = f"https://github.com/{row['owner']}/{row['repo']}/pull/{row['PR']}"
         print(f"* [PR {row['PR']} ({row['repo']})]({pr_url})")
 
-    print("\n✏️ **Add 'update-code' to ms.custom metadata (or modify if already present) to the following files:**")
+    print("\n[ACTION] **Add 'update-code' to ms.custom metadata (or modify if already present) to the following files:**")
     # Collect all referenced files
     refs = []
     for ref_list in df["Referenced In"]:
@@ -545,14 +545,14 @@ if __name__ == "__main__":
                 filtered_results.append(result)
         
         if skipped_prs:
-            print(f"\n📋 Skipped {len(skipped_prs)} already-processed PR(s): {', '.join(skipped_prs)}")
+            print(f"\n[INFO] Skipped {len(skipped_prs)} already-processed PR(s): {', '.join(skipped_prs)}")
             print("   (Use --ignore-tracking to process them again)\n")
         
         all_results = filtered_results
 
     # Print a single combined report
     if not all_results:
-        print("\n ✅ Nothing to do here :-)  There are no PRs that impacted references.\n")
+        print("\n[OK] Nothing to do here :-)  There are no PRs that impacted references.\n")
     else:
         import pandas as pd
         df = pd.DataFrame(all_results)
@@ -562,7 +562,7 @@ if __name__ == "__main__":
             pr_url = f"https://github.com/{row['owner']}/{row['repo']}/pull/{row['PR']}"
             print(f"* PR {row['PR']} ({row['repo']}) - {pr_url}")
 
-        print("\n✏️ Modify ms.custom metadata  (add or modify 'update-code') in these files:")
+        print("\n[ACTION] Modify ms.custom metadata  (add or modify 'update-code') in these files:")
         refs = []
         for ref_list in df["Referenced In"]:
             refs.extend(ref_list)
@@ -603,14 +603,14 @@ if __name__ == "__main__":
             pr_url, updated_files = create_metadata_update_pr(refs, pr_info, dry_run=dry_run, fork_repo=fork_repo)
             
             if pr_url:
-                print("✅ Metadata update PR created successfully!")
+                print("[OK] Metadata update PR created successfully!")
                 print(f"   {pr_url}")
                 
                 # Record the processed PRs in tracking data
                 if not dry_run:
                     record_processed_prs(tracking_data, pr_info_full, pr_url, updated_files)
                     save_tracking_data(tracking_data)
-                    print(f"📝 Recorded {sum(len(prs) for prs in pr_info_full.values())} processed PR(s) in tracking file")
+                    print(f"[INFO] Recorded {sum(len(prs) for prs in pr_info_full.values())} processed PR(s) in tracking file")
             elif pr_url is None and not dry_run:
-                print("❌ Failed to create metadata update PR")
+                print("[ERROR] Failed to create metadata update PR")
                 sys.exit(1)

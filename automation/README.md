@@ -4,11 +4,12 @@ This directory contains the automation infrastructure for monitoring Azure code 
 
 ## Overview
 
-The automation system provides three main workflows:
+The automation system provides four main workflows:
 
 1. **Daily PR Monitor** - Automatically reviews and approves safe PRs in code repositories
-2. **Weekly Snippet Scanner** - Scans documentation for code references and updates CODEOWNERS files
-3. **Monthly Report** - Generates statistics and health reports
+2. **Daily Merge Docs** - Creates documentation update PRs when code changes affect docs
+3. **Weekly Snippet Scanner** - Scans documentation for code references and updates CODEOWNERS files
+4. **Monthly Report** - Generates statistics and health reports
 
 ## Directory Structure
 
@@ -21,6 +22,7 @@ automation/
 │   └── reporter.py           # Report generation and file saving
 ├── workflows/                 # Workflow orchestrators
 │   ├── daily_pr_monitor.py   # Daily PR review automation
+│   ├── merge_docs.py         # Daily merge documentation updates
 │   ├── weekly_scanner.py     # Weekly snippet scanning
 │   └── monthly_report.py     # Monthly statistics
 ├── templates/                 # Report templates (HTML)
@@ -94,7 +96,7 @@ AUTO_APPROVE_ENABLED=true        # Enable/disable PR auto-approval
 **What it does:**
 1. Monitors PRs across **3 code repositories**:
    - **Azure/azureml-examples** - Azure Machine Learning examples
-   - **Azure-AI-Foundry/foundry-samples** - Azure AI Foundry samples
+   - **microsoft-foundry/foundry-samples** - Azure AI Foundry samples
    - **Azure-Samples/azureai-samples** - Azure AI samples
 2. Finds PRs requesting review from the AI Platform Docs team
 3. Analyzes each PR for documentation impact
@@ -103,7 +105,7 @@ AUTO_APPROVE_ENABLED=true        # Enable/disable PR auto-approval
    - No renamed files referenced in documentation
    - No deleted cells/snippets in modified files that are referenced in docs
 5. Flags unsafe PRs for manual review
-6. Sends email report with results
+6. Saves report to `automation/reports/` (email optional)
 
 **Manual trigger:**
 ```bash
@@ -118,6 +120,45 @@ PRs are only auto-approved if ALL of the following are true:
 - No renamed files are referenced in documentation
 - No deleted notebook cells/code snippets in modified files
 - PR is mergeable (no conflicts)
+
+### Daily Merge Documentation
+
+**Schedule:** Daily at 9:00 AM EST (14:00 UTC)
+
+**What it does:**
+1. Analyzes recently merged PRs in code repositories (last 2 days)
+2. Identifies documentation files that reference changed code
+3. Creates PRs to update `update-code` metadata in affected docs
+4. Tracks processed PRs to avoid duplicate updates
+5. Commits tracking data back to the repository
+
+**Manual trigger:**
+```bash
+# Via GitHub Actions UI
+Actions → Daily Merge Documentation → Run workflow
+# Options: dry_run, days (lookback period), ignore_tracking
+```
+
+**Tracking:**
+- Processed PRs are recorded in `outputs/merge-tracking.json`
+- Uses 2-day lookback to ensure overlap between runs
+- Already-processed PRs are automatically skipped
+- Use `--ignore-tracking` to reprocess all PRs
+
+**Local usage:**
+```bash
+# Default: 2 days lookback, create PR
+python -m automation.workflows.merge_docs
+
+# Preview without creating PR
+python -m automation.workflows.merge_docs --dry-run
+
+# Custom lookback period
+python -m automation.workflows.merge_docs --days 3
+
+# Ignore tracking (reprocess all)
+python -m automation.workflows.merge_docs --ignore-tracking
+```
 
 ### Weekly Snippet Scanner
 
@@ -196,6 +237,9 @@ export NOTIFICATION_EMAIL=recipient@example.com
 
 # Run daily workflow (reports saved to automation/reports/)
 python -m automation.workflows.daily_pr_monitor --dry-run
+
+# Run merge docs workflow
+python -m automation.workflows.merge_docs --dry-run
 
 # Run weekly workflow
 python -m automation.workflows.weekly_scanner --dry-run
@@ -295,6 +339,7 @@ Workflow artifacts are retained for 30-90 days and include:
   - `refs-found.csv` - Code references found in docs
   - `CODEOWNERS-*.txt` - Generated CODEOWNERS files
   - `code-counts-*.csv` - Statistics on code blocks
+  - `merge-tracking.json` - Tracking data for processed merge PRs
 
 ## Troubleshooting
 
@@ -386,5 +431,5 @@ For issues or questions:
 
 ---
 
-**Version:** 1.0.0  
-**Last Updated:** 2026-01-13
+**Version:** 1.1.0  
+**Last Updated:** 2026-01-29
