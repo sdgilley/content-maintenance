@@ -2,6 +2,8 @@
 
 This directory contains the automation infrastructure for monitoring Azure code samples and their impact on documentation.
 
+Other than the **Daily PR Monitor**, AI created this page, the process, and the scripts it describes. I've added comments about what we might be able to do and what we shouldn't. Some could be used with a little more work.  As of now, no automation is running.    
+
 ## Overview
 
 The automation system provides four main workflows:
@@ -89,39 +91,9 @@ AUTO_APPROVE_ENABLED=true        # Enable/disable PR auto-approval
 
 ## Workflows
 
-### Daily PR Monitor
-
-**Schedule:** Monday-Friday at 7:00 AM EST (12:00 UTC)
-
-**What it does:**
-1. Monitors PRs across **3 code repositories**:
-   - **Azure/azureml-examples** - Azure Machine Learning examples
-   - **microsoft-foundry/foundry-samples** - Azure AI Foundry samples
-   - **Azure-Samples/azureai-samples** - Azure AI samples
-2. Finds PRs requesting review from the AI Platform Docs team
-3. Analyzes each PR for documentation impact
-4. Auto-approves PRs that meet safety criteria:
-   - No deleted files referenced in documentation
-   - No renamed files referenced in documentation
-   - No deleted cells/snippets in modified files that are referenced in docs
-5. Flags unsafe PRs for manual review
-6. Saves report to `automation/reports/` (email optional)
-
-**Manual trigger:**
-```bash
-# Via GitHub Actions UI
-Actions → Daily PR Monitor → Run workflow
-# Select dry_run: true for testing
-```
-
-**Safety Criteria:**
-PRs are only auto-approved if ALL of the following are true:
-- No deleted files are referenced in documentation
-- No renamed files are referenced in documentation
-- No deleted notebook cells/code snippets in modified files
-- PR is mergeable (no conflicts)
-
 ### Daily Merge Documentation
+
+> **NOT CURRENTLY ENABLED** - this one could be turned on. It would create PRs in azure-ai-docs-pr in Sheri's name when needed.
 
 **Schedule:** Daily at 9:00 AM EST (14:00 UTC)
 
@@ -160,7 +132,44 @@ python -m automation.workflows.merge_docs --days 3
 python -m automation.workflows.merge_docs --ignore-tracking
 ```
 
+### Daily PR Monitor
+
+> **NOT READY TO USE** - Sheri rewrote this to run find-prs.py instead of trying to recreate it,  but not yet tested enough to turn on. 
+
+**Schedule:** Monday-Friday at 7:00 AM EST (12:00 UTC)
+
+**What it does:**
+1. Monitors PRs across **3 code repositories**:
+   - **Azure/azureml-examples** - Azure Machine Learning examples
+   - **microsoft-foundry/foundry-samples** - Azure AI Foundry samples
+   - **Azure-Samples/azureai-samples** - Azure AI samples
+2. Finds PRs requesting review from the AI Platform Docs team
+3. Analyzes each PR for documentation impact
+4. Auto-approves PRs that meet safety criteria:
+   - No deleted files referenced in documentation
+   - No renamed files referenced in documentation
+   - No deleted cells/snippets in modified files that are referenced in docs
+5. Flags unsafe PRs for manual review
+6. Saves report to `automation/reports/` (email optional)
+
+**Manual trigger:**
+```bash
+# Via GitHub Actions UI
+Actions → Daily PR Monitor → Run workflow
+# Select dry_run: true for testing
+```
+
+**Safety Criteria:**
+PRs are only auto-approved if ALL of the following are true:
+- No deleted files are referenced in documentation
+- No renamed files are referenced in documentation
+- No deleted notebook cells/code snippets in modified files
+- PR is mergeable (no conflicts)
+
+
 ### Weekly Snippet Scanner
+
+> **NOT READY TO USE** - Part of this could be useful, but we can't just create PRs to update the CODEOWNERS files without more work - we aren't the only ones that use it, so have to merge in our changes with other parts of the file.  Could break that out and run the scanner part perhaps, to keep the data more recent.
 
 **Schedule:** Every Monday at 6:00 AM EST (11:00 UTC)
 
@@ -184,6 +193,8 @@ Actions → Weekly Snippet Scanner → Run workflow
 - `outputs/code-counts-*.csv` - Statistics on code blocks
 
 ### Monthly Maintenance Report
+
+> **NOT READY TO USE** - Haven't investigated this one yet.  But at the moment none of the automations are turned on.
 
 **Schedule:** 1st of each month at 5:00 AM EST (10:00 UTC)
 
@@ -222,12 +233,15 @@ export DRY_RUN=true
 
 ### Running Workflows Locally
 
+> **SHOULD NOT USE THE EMAIL FEATURE - WOULD EXPOSE A PASSWORD!**   
+
 ```bash
 # Install dependencies
 pip install -r requirements.txt
 
 # Set required environment variables
 export GH_ACCESS_TOKEN=your_token
+
 
 # Optional: Set email configuration (only if you want email notifications)
 export EMAIL_ENABLED=true

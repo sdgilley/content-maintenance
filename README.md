@@ -20,7 +20,11 @@ The scripts in this repository help prevent problems and identify necessary docu
 
 ## 🤖 Automation
 
-**NEW!** This repository now includes automation for daily, weekly, and monthly maintenance tasks:
+> **NEW!** This repository now includes automation for daily, weekly, and monthly maintenance tasks.  **These are a WIP and not currently turned on.** 
+
+- **Daily Merge Docs** - this could be used for monitering merged content in the code repos and creating doc PRs to update metadata, allowing the articles to rebuild with updated code.
+
+The rest were created by an AI Agent, and still have some issues that keep us from using them:
 
 - **Daily PR Monitor** - Automatically monitors PRs across **3 code repositories** (Azure/azureml-examples, Azure-AI-Foundry/foundry-samples, Azure-Samples/azureai-samples), analyzes them for documentation impact, and auto-approves safe PRs (Mon-Fri 7 AM EST)
 - **Weekly Snippet Scanner** - Scans docs and updates CODEOWNERS files (Mon 6 AM EST)
@@ -28,7 +32,7 @@ The scripts in this repository help prevent problems and identify necessary docu
 
 👉 **See [automation/README.md](automation/README.md) for setup and usage**
 
-The automation reduces manual effort by ~80% while maintaining documentation quality through automated validation and safety checks.
+The automation could reduce manual effort by ~80% while maintaining documentation quality through automated validation and safety checks.
 
 ## Documentation
 

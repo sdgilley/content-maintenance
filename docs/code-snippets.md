@@ -65,7 +65,7 @@ python find-snippets.py
 
 ### Update files - <img src="../media/maintenance.svg" width="32" height="32" style="vertical-align: text-top"> Maintenance Repo
 
-* If changes to any `*.txt` files appear, commit them to sdgilley/content-maintenance. 
+* If changes to any files appear, commit them to sdgilley/content-maintenance.
 
 ### Update codeowners files - <img src="../media/code.svg" width="32" height="32" style="vertical-align: text-top"> Code Repos
 
@@ -77,19 +77,20 @@ python find-snippets.py
 
 When code changes in a code repository, the corresponding document won't update until the next time it's built.  Find related documents by using the merge report.  A change in metadata in these articles will force a build, allowing it to update to the latest code content.
 
+> **NOTE NEW PARAMETER TO MAKE THIS SO MUCH SIMPLER!**
+
 1. Run the merge report.  If last run 7 days ago, simply run:
 
     ```bash
-    python merge-report.py 
+    python merge-report.py --create-pr
     ```
 
-    The report will show PRs merged in the last 8 days.  (The extra day insures that you don't miss a merge that happened after your report 7 days ago.)  
+    The report will find PRs merged in the last 8 days.  (The extra day insures that you don't miss a merge that happened after your report 7 days ago.)  
 1. If longer than 7 days since last run, add a days parameter to the command.:
 
     ```bash
-    python merge-report.py <days>
+    python merge-report.py <days> --create-pr
     ```
 
-1. Modify the files in azure-ai-docs-pr as listed in the report.  If there are more than 10 files, break it into multiple PRs to be eligible for auto-merge. (You'll see three separate sections, make sure you look at results from all three.)
-
-1. You might want to copy the report output to your work item.  This will let you see when it was last run, so that you can adjust days accordingly for your next report.
+1. Using the `--create-pr` argument lets the script create a PR for you.  You'll see it in your open PRs in azure-ai-docs-pr.  Once it builds, sign off to merge.
+1. You can run this report MORE OFTEN if you like - eventually we might automate it to run nightly.  It now knows which merged PRs it's already handled, so will each time only act upon more recent changes than the last time it was run.  
