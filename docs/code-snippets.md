@@ -93,4 +93,5 @@ When code changes in a code repository, the corresponding document won't update 
     ```
 
 1. Using the `--create-pr` argument lets the script create a PR for you.  You'll see it in your open PRs in azure-ai-docs-pr.  Once it builds, sign off to merge.
-1. You can run this report MORE OFTEN if you like - eventually we might automate it to run nightly.  It now knows which merged PRs it's already handled, so will each time only act upon more recent changes than the last time it was run.  
+1. You can run this report MORE OFTEN if you like - eventually we might automate it to run nightly.  It now knows which merged PRs it's already handled, so will each time only act upon more recent changes than the last time it was run.
+1. **IMPORTANT: Open a PR in this code repo to update the config.yml file whenever it has changed!**
