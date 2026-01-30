@@ -33,7 +33,7 @@ repositories:
     team: "@Azure/AI-Platform-Docs"
     short_name: "azureml-examples"
     service_type: "ml"
-    pr_report_arg: ""
+    pr_report_arg: "ml"
     search_paths:
       - "articles/ai-foundry"
       - "articles/machine-learning"

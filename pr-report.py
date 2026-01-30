@@ -17,14 +17,37 @@ To decide if the PR is safe to merge:
 
 import pandas as pd
 import sys
+
+# Fix Unicode encoding issues on Windows
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+
 from utilities import gh_auth as a
 from utilities import helpers as h
 from utilities import config
 import os
+import json
 
 # read arguments from command line - pr and optionally, whether to authenticate
 import argparse
 debug = False
+
+def validate_notebook(repo, file_path, branch="main"):
+    """
+    Validate that a notebook file is valid JSON and can be parsed.
+    Returns: (is_valid, error_message)
+    """
+    try:
+        content = repo.get_contents(file_path, ref=branch)
+        notebook_json = json.loads(content.decoded_content)
+        # Check for basic notebook structure
+        if "cells" not in notebook_json or "metadata" not in notebook_json:
+            return False, "Missing required notebook structure (cells/metadata)"
+        return True, None
+    except json.JSONDecodeError as e:
+        return False, f"Invalid JSON syntax: {str(e)}"
+    except Exception as e:
+        return False, f"Error reading notebook: {str(e)}"
 
 # Get repository configurations from config
 repos_config = config.get_repositories()
@@ -110,6 +133,7 @@ if renamed > 0:
 # print("\nChanges that may affect azure-ai-docs-pr:\n")
 data = []  # create an empty list to hold data for modified files that are referenced
 nb_mods = []  # create an empty list to hold data for modified notebooks
+nb_validation_errors = []  # track notebooks with syntax errors
 
 ### MODIFIED FILES
 if modified > 0:
@@ -119,6 +143,18 @@ if modified > 0:
     for file, blob_url in modified_files:
         if debug:
             print(f"Checking {file} for deleted cells or comments:")
+        
+        # Check if this is a notebook file and validate it
+        is_notebook = file.endswith('.ipynb')
+        if is_notebook:
+            is_valid, error_msg = validate_notebook(repo, file, "HEAD")
+            if not is_valid:
+                nb_validation_errors.append((file, error_msg))
+            else:
+                # Notebook is valid, flag it as modified for review
+                nb_mods.append(blob_url)
+        
+        # Check referenced files for deleted cells (notebooks and code files)
         if (snippets["ref_file"] == file).any():
             if debug:
                 print(f"  {file} is referenced in azure-ai-docs-pr.")
@@ -131,7 +167,7 @@ if modified > 0:
             if debug:
                 print(f"  {file} - nb: {nb}, adds: {adds}, deletes: {deletes}")
             # print (nb, adds, deletes)
-            if nb:
+            if nb and not is_notebook:  # Only add to nb_mods if it's a code file that had cells
                 nb_mods.append(blob_url)
                 # print("added to nb_mods: ", file)
             deleted_cells = [value for value in deletes if value not in adds]
@@ -148,9 +184,24 @@ if modified > 0:
                         }
                     )
                 # print(f"*** {cell}")
-    if data == []:
+    
+    # Check for notebook validation errors
+    if nb_validation_errors:
+        print(f"NOTEBOOK SYNTAX ERRORS - Cannot open/parse notebooks:")
+        for notebook_file, error in nb_validation_errors:
+            print(f"\n* {notebook_file}")
+            print(f"  Error: {error}")
+        print("\n[WARN] Notebooks contain syntax errors and cannot be used.\n")
+        data = True  # Force "needs check" state
+    elif data == [] and not nb_mods:
+        # No deleted cells and no modified notebooks
         print(
-            "✅ No problems with any of the modified files.\n"
+            "[OK] No problems with any of the modified files.\n"
+        )
+    elif data == [] and nb_mods:
+        # Modified notebooks found but syntactically valid with no deleted cells
+        print(
+            "[OK] No problems with any of the modified files.\n"
         )
     else:
         # Group the data by 'Modified File' and 'Referenced In'
@@ -160,7 +211,8 @@ if modified > 0:
             if key not in grouped_data:
                 grouped_data[key] = []
             grouped_data[key].append(item["Cell"])
-        print(f"Potential problems found in {len(grouped_data)} files. \n")        # Print the grouped data
+        print(f"Potential problems found in {len(grouped_data)} files. \n")
+        # Print the grouped data
         for (modified_file, referenced_in), cells in grouped_data.items():
             print(f"Modified File: {modified_file} \n  Referenced in:")
             refs = referenced_in.split("\n")
@@ -168,15 +220,13 @@ if modified > 0:
                 print(
                     f"   https://github.com/MicrosoftDocs/azure-ai-docs-pr/edit/main/articles/{ref.strip()}"
                 )
-            print(f"   {cell_type} cells deleted: {len(cells)}")
+            print(f"   Code cells deleted: {len(cells)}")
             for cell in cells:
                 print(f"   * {cell}")
             # compare the sha to this same file in branch "temp-fix"
-
             h.compare_branches(repo, file, "main", "temp-fix")
         # also print all the modified notebooks
-        print("⚠️ Fix all references to modified files before approving this PR.\n")
-
+        print("[WARN] Fix all references to modified files before approving this PR.\n")
     if nb_mods:
         print(
             "MODIFIED NOTEBOOKS\nFollow each link to ensure notebooks are valid before approving the PR:"
@@ -184,7 +234,9 @@ if modified > 0:
         nb_mods = list(set(nb_mods))  # remove duplicates
         for file in nb_mods:
             print(f"* {file}\n")
-        print("⚠️ Fix all references to modified files before approving this PR.\n")
+        # Only print warning if notebooks have issues, otherwise the [OK] was already printed
+        if data:  # Only warn if there are deleted cells/other issues
+            print("[WARN] Fix all references to modified files before approving this PR.\n")
 
 ### DELETED FILES
 if deleted > 0:
@@ -206,10 +258,10 @@ if deleted > 0:
             found = +1
     if found == 0:
         print(
-            "✅ No problems with any of the deleted files.\n"
+            "[OK] No problems with any of the deleted files.\n"
         )
     else:
-        print("⚠️ Fix all references to deleted files before approving this PR.\n")
+        print("[WARN] Fix all references to deleted files before approving this PR.\n")
  
 ### RENAMED FILES
 if renamed > 0:
@@ -230,11 +282,9 @@ if renamed > 0:
             h.compare_branches(repo, file, "main", "temp-fix")
             found = +1
     if found == 0:
-        print(
-            "✅ No problems with any of the renamed files.\n"
-        )
+        print("[OK] No problems with any of the renamed files.\n")
     else:
-        print("⚠️ Fix all references to renamed files before approving this PR.\n")
+        print("[WARN] Fix all references to renamed files before approving this PR.\n")
 
 print(f"\n================ {repo_name} PR summary: {pr} ===================")
 

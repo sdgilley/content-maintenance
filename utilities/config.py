@@ -68,6 +68,12 @@ def get_file_paths():
     return config.get('files', {})
 
 
+def get_fork_repo():
+    """Get the fork repository for creating PRs."""
+    config = load_config()
+    return config.get('fork_repo', 'sdgilley/azure-ai-docs-pr')
+
+
 def get_snippet_patterns():
     """Get the list of snippet patterns to search for."""
     defaults = get_default_settings()

@@ -57,7 +57,35 @@ To add or modify repositories, edit the `config.yml` file.
 
 Scripts in this repository can be run locally or in a GitHub Codespace.
 
+#### Local Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone <repo-url>
+   cd content-maintenance
+   ```
+
+2. **Create a virtual environment (recommended):**
+   ```bash
+   python -m venv .venv
+   # On Windows:
+   .venv\Scripts\activate
+   # On macOS/Linux:
+   source .venv/bin/activate
+   ```
+
+3. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Set up GitHub authentication:**
+   ```bash
+   export GH_ACCESS_TOKEN=your_github_token_here
+   ```
+
 See instructions in [Daily and weekly tasks](docs/code-snippets.md) for details.
+
 
 ## Scripts
 
