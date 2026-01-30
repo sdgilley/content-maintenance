@@ -54,10 +54,11 @@ defaults:
   # Directories to exclude when searching for snippets
   exclude_directories:
     - media
-    - ai-foundry/openai/
+    # - ai-foundry/openai/
 
 # File paths
 files:
   refs_found_csv: "refs-found.csv"
   codeowners_prefix: "CODEOWNERS-"
   code_counts_prefix: "code-counts-"
+  merge_tracking_json: "merge-tracking.json"

@@ -1,0 +1,93 @@
+name: Daily Merge Documentation
+
+on:
+  schedule:
+    # Run at 14:00 UTC (9:00 AM EST) every day
+    # Using 2-day lookback ensures overlap and no missed PRs
+    - cron: '0 14 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Run in dry-run mode (preview changes without creating PR)'
+        required: false
+        type: boolean
+        default: false
+      days:
+        description: 'Number of days to look back for merged PRs'
+        required: false
+        type: number
+        default: 2
+      ignore_tracking:
+        description: 'Ignore tracking data (reprocess all PRs)'
+        required: false
+        type: boolean
+        default: false
+
+env:
+  TZ: America/New_York
+
+jobs:
+  merge-docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Configure Git
+        run: |
+          git config --global user.name "Content Maintenance Bot"
+          git config --global user.email "bot@example.com"
+      
+      - name: Run Merge Documentation Workflow
+        env:
+          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+          SMTP_SERVER: ${{ secrets.SMTP_SERVER }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SMTP_EMAIL: ${{ secrets.SMTP_EMAIL }}
+          NOTIFICATION_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
+          EMAIL_ENABLED: ${{ secrets.EMAIL_ENABLED || 'false' }}
+          GIT_AUTHOR_NAME: "Content Maintenance Bot"
+          GIT_AUTHOR_EMAIL: "bot@example.com"
+          GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python -m automation.workflows.merge_docs \
+            --days ${{ inputs.days || 2 }} \
+            ${{ inputs.dry_run && '--dry-run' || '' }} \
+            ${{ inputs.ignore_tracking && '--ignore-tracking' || '' }}
+      
+      - name: Upload tracking artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: merge-tracking-${{ github.run_number }}
+          path: outputs/merge-tracking.json
+          retention-days: 30
+          if-no-files-found: warn
+      
+      - name: Upload reports artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: merge-reports-${{ github.run_number }}
+          path: automation/reports/
+          retention-days: 30
+          if-no-files-found: warn

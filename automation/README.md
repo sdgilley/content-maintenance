@@ -2,13 +2,16 @@
 
 This directory contains the automation infrastructure for monitoring Azure code samples and their impact on documentation.
 
+Other than the **Daily PR Monitor**, AI created this page, the process, and the scripts it describes. I've added comments about what we might be able to do and what we shouldn't. Some could be used with a little more work.  As of now, no automation is running.    
+
 ## Overview
 
-The automation system provides three main workflows:
+The automation system provides four main workflows:
 
 1. **Daily PR Monitor** - Automatically reviews and approves safe PRs in code repositories
-2. **Weekly Snippet Scanner** - Scans documentation for code references and updates CODEOWNERS files
-3. **Monthly Report** - Generates statistics and health reports
+2. **Daily Merge Docs** - Creates documentation update PRs when code changes affect docs
+3. **Weekly Snippet Scanner** - Scans documentation for code references and updates CODEOWNERS files
+4. **Monthly Report** - Generates statistics and health reports
 
 ## Directory Structure
 
@@ -21,6 +24,7 @@ automation/
 │   └── reporter.py           # Report generation and file saving
 ├── workflows/                 # Workflow orchestrators
 │   ├── daily_pr_monitor.py   # Daily PR review automation
+│   ├── merge_docs.py         # Daily merge documentation updates
 │   ├── weekly_scanner.py     # Weekly snippet scanning
 │   └── monthly_report.py     # Monthly statistics
 ├── templates/                 # Report templates (HTML)
@@ -87,14 +91,57 @@ AUTO_APPROVE_ENABLED=true        # Enable/disable PR auto-approval
 
 ## Workflows
 
+### Daily Merge Documentation
+
+> **NOT CURRENTLY ENABLED** - this one could be turned on. It would create PRs in azure-ai-docs-pr in Sheri's name when needed.
+
+**Schedule:** Daily at 9:00 AM EST (14:00 UTC)
+
+**What it does:**
+1. Analyzes recently merged PRs in code repositories (last 2 days)
+2. Identifies documentation files that reference changed code
+3. Creates PRs to update `update-code` metadata in affected docs
+4. Tracks processed PRs to avoid duplicate updates
+5. Commits tracking data back to the repository
+
+**Manual trigger:**
+```bash
+# Via GitHub Actions UI
+Actions → Daily Merge Documentation → Run workflow
+# Options: dry_run, days (lookback period), ignore_tracking
+```
+
+**Tracking:**
+- Processed PRs are recorded in `outputs/merge-tracking.json`
+- Uses 2-day lookback to ensure overlap between runs
+- Already-processed PRs are automatically skipped
+- Use `--ignore-tracking` to reprocess all PRs
+
+**Local usage:**
+```bash
+# Default: 2 days lookback, create PR
+python -m automation.workflows.merge_docs
+
+# Preview without creating PR
+python -m automation.workflows.merge_docs --dry-run
+
+# Custom lookback period
+python -m automation.workflows.merge_docs --days 3
+
+# Ignore tracking (reprocess all)
+python -m automation.workflows.merge_docs --ignore-tracking
+```
+
 ### Daily PR Monitor
+
+> **NOT READY TO USE** - Sheri rewrote this to run find-prs.py instead of trying to recreate it,  but not yet tested enough to turn on. 
 
 **Schedule:** Monday-Friday at 7:00 AM EST (12:00 UTC)
 
 **What it does:**
 1. Monitors PRs across **3 code repositories**:
    - **Azure/azureml-examples** - Azure Machine Learning examples
-   - **Azure-AI-Foundry/foundry-samples** - Azure AI Foundry samples
+   - **microsoft-foundry/foundry-samples** - Azure AI Foundry samples
    - **Azure-Samples/azureai-samples** - Azure AI samples
 2. Finds PRs requesting review from the AI Platform Docs team
 3. Analyzes each PR for documentation impact
@@ -103,7 +150,7 @@ AUTO_APPROVE_ENABLED=true        # Enable/disable PR auto-approval
    - No renamed files referenced in documentation
    - No deleted cells/snippets in modified files that are referenced in docs
 5. Flags unsafe PRs for manual review
-6. Sends email report with results
+6. Saves report to `automation/reports/` (email optional)
 
 **Manual trigger:**
 ```bash
@@ -119,7 +166,10 @@ PRs are only auto-approved if ALL of the following are true:
 - No deleted notebook cells/code snippets in modified files
 - PR is mergeable (no conflicts)
 
+
 ### Weekly Snippet Scanner
+
+> **NOT READY TO USE** - Part of this could be useful, but we can't just create PRs to update the CODEOWNERS files without more work - we aren't the only ones that use it, so have to merge in our changes with other parts of the file.  Could break that out and run the scanner part perhaps, to keep the data more recent.
 
 **Schedule:** Every Monday at 6:00 AM EST (11:00 UTC)
 
@@ -143,6 +193,8 @@ Actions → Weekly Snippet Scanner → Run workflow
 - `outputs/code-counts-*.csv` - Statistics on code blocks
 
 ### Monthly Maintenance Report
+
+> **NOT READY TO USE** - Haven't investigated this one yet.  But at the moment none of the automations are turned on.
 
 **Schedule:** 1st of each month at 5:00 AM EST (10:00 UTC)
 
@@ -181,12 +233,15 @@ export DRY_RUN=true
 
 ### Running Workflows Locally
 
+> **SHOULD NOT USE THE EMAIL FEATURE - WOULD EXPOSE A PASSWORD!**   
+
 ```bash
 # Install dependencies
 pip install -r requirements.txt
 
 # Set required environment variables
 export GH_ACCESS_TOKEN=your_token
+
 
 # Optional: Set email configuration (only if you want email notifications)
 export EMAIL_ENABLED=true
@@ -196,6 +251,9 @@ export NOTIFICATION_EMAIL=recipient@example.com
 
 # Run daily workflow (reports saved to automation/reports/)
 python -m automation.workflows.daily_pr_monitor --dry-run
+
+# Run merge docs workflow
+python -m automation.workflows.merge_docs --dry-run
 
 # Run weekly workflow
 python -m automation.workflows.weekly_scanner --dry-run
@@ -295,6 +353,7 @@ Workflow artifacts are retained for 30-90 days and include:
   - `refs-found.csv` - Code references found in docs
   - `CODEOWNERS-*.txt` - Generated CODEOWNERS files
   - `code-counts-*.csv` - Statistics on code blocks
+  - `merge-tracking.json` - Tracking data for processed merge PRs
 
 ## Troubleshooting
 
@@ -386,5 +445,5 @@ For issues or questions:
 
 ---
 
-**Version:** 1.0.0  
-**Last Updated:** 2026-01-13
+**Version:** 1.1.0  
+**Last Updated:** 2026-01-29

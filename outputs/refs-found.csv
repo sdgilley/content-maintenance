@@ -26,7 +26,6 @@ cli/assets/environment/docker-context.yml,how-to-manage-environments-v2.md,azure
 cli/assets/environment/docker-context.yml,reference-yaml-environment.md,azureml-examples,machine-learning
 cli/assets/environment/docker-image-plus-conda.yaml,how-to-manage-environments-v2.md,azureml-examples,machine-learning
 cli/assets/environment/docker-image-plus-conda.yaml,reference-yaml-environment.md,azureml-examples,machine-learning
-cli/assets/environment/docker-image.yml,how-to-identity-based-service-authentication.md,azureml-examples,machine-learning
 cli/assets/environment/docker-image.yml,how-to-manage-environments-v2.md,azureml-examples,machine-learning
 cli/assets/environment/docker-image.yml,reference-yaml-environment.md,azureml-examples,machine-learning
 cli/assets/model/local-file.yml,how-to-manage-models.md,azureml-examples,machine-learning
@@ -43,7 +42,6 @@ cli/deploy-mlcompute-update-to-system-identity.sh,how-to-identity-based-service-
 cli/deploy-mlcompute-update-to-user-identity.sh,how-to-identity-based-service-authentication.md,azureml-examples,machine-learning
 cli/deploy-moe-autoscale.sh,how-to-autoscale-endpoints.md,azureml-examples,machine-learning
 cli/deploy-rest.sh,how-to-deploy-with-rest.md,azureml-examples,machine-learning
-cli/deploy-rest.sh,how-to-train-model.md,azureml-examples,machine-learning
 cli/deploy-safe-rollout-online-endpoints.sh,how-to-safely-rollout-online-endpoints.md,azureml-examples,machine-learning
 cli/deploy-triton-managed-online-endpoint.sh,how-to-deploy-with-triton.md,azureml-examples,machine-learning
 cli/endpoints/batch/deploy-models/custom-outputs-parquet/code/batch_driver.py,how-to-deploy-model-custom-output.md,azureml-examples,machine-learning
@@ -219,7 +217,6 @@ cli/resources/compute/instance-basic.yml,reference-yaml-compute-instance.md,azur
 cli/resources/compute/instance-minimal.yml,reference-yaml-compute-instance.md,azureml-examples,machine-learning
 cli/resources/compute/instance-schedule.yml,how-to-create-compute-instance.md,azureml-examples,machine-learning
 cli/resources/compute/vm-attach.yml,reference-yaml-compute-vm.md,azureml-examples,machine-learning
-cli/resources/connections/container-registry-managed-identity.yml,how-to-identity-based-service-authentication.md,azureml-examples,machine-learning
 cli/resources/datastore/adls-gen1-credless.yml,reference-yaml-datastore-data-lake-gen1.md,azureml-examples,machine-learning
 cli/resources/datastore/adls-gen1.yml,reference-yaml-datastore-data-lake-gen1.md,azureml-examples,machine-learning
 cli/resources/datastore/adls-gen2-credless.yml,reference-yaml-datastore-data-lake-gen2.md,azureml-examples,machine-learning

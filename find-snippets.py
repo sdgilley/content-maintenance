@@ -101,11 +101,12 @@ def find_snippets():
             count = 0
             code_type = None
             inside_code_block = False
+            start_line = None
             
-            for line in lines:
+            for line_num, line in enumerate(lines, start=1):
                 # count hard-coded code blocks
-                blocks, inside_code_block, count, code_type = h.count_code_lines(
-                    line, blocks, inside_code_block, count, code_type
+                blocks, inside_code_block, count, code_type, start_line = h.count_code_lines(
+                    line, blocks, inside_code_block, count, code_type, line_num, start_line
                 )                # Search for all three snippet patterns in each line
                 for repo_key, config in repo_configs.items():
                     repo_token = config["repo_token"]
@@ -159,7 +160,7 @@ def find_snippets():
                 # this file has code blocks. add info to the dictionary
                 path_name = "ai-foundry" if "ai-foundry" in content_file.path else "machine-learning"
                 for block in blocks:
-                    all_code_counts.append({"file": file, "type": block[0], "lines": block[1], "path": path_name})
+                    all_code_counts.append({"file": content_file.path, "type": block[0], "lines": block[1], "start_line": block[2], "path": path_name})
 
     # Write combined refs file with all references
     if combined_refs_list:
