@@ -49,13 +49,20 @@ def load_code_counts(file_path: str) -> pd.DataFrame:
     # Create URL column
     df['Url'] = df['file'].apply(file_to_url)
     
-    # Aggregate by file - count code blocks and sum lines
+    # Fill NaN types with 'unknown'
+    df['type'] = df['type'].fillna('unknown')
+    
+    # Aggregate by file - count code blocks, sum lines, and combine languages
     agg_df = df.groupby(['file', 'Url']).agg({
-        'type': 'count',  # Number of code blocks
-        'lines': 'sum'    # Total lines of code
+        'type': [
+            'count',  # Number of code blocks
+            lambda x: ', '.join(sorted(x.unique()))  # Unique languages as string
+        ],
+        'lines': 'sum'  # Total lines of code
     }).reset_index()
     
-    agg_df.columns = ['file', 'Url', 'code_block_count', 'total_code_lines']
+    # Flatten column names
+    agg_df.columns = ['file', 'Url', 'code_block_count', 'languages', 'total_code_lines']
     
     return agg_df
 
@@ -151,7 +158,7 @@ def main():
         # Articles with most code
         print("\nTop 10 articles by code block count:")
         top_code = merged_df.nlargest(10, 'code_block_count')[
-            ['file', 'code_block_count', 'total_code_lines', 'PageViews']
+            ['file', 'code_block_count', 'languages', 'total_code_lines', 'PageViews']
         ]
         print(top_code.to_string(index=False))
         
@@ -159,7 +166,7 @@ def main():
         if 'PageViews' in merged_df.columns:
             print("\nTop 10 high-traffic articles with code:")
             top_traffic = merged_df.dropna(subset=['PageViews']).nlargest(10, 'PageViews')[
-                ['file', 'code_block_count', 'PageViews', 'MSAuthor']
+                ['file', 'code_block_count', 'languages', 'PageViews', 'MSAuthor']
             ]
             print(top_traffic.to_string(index=False))
 
