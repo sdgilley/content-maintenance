@@ -82,10 +82,27 @@ def load_engagement(file_path: str) -> pd.DataFrame:
     return df[available_columns].copy()
 
 
-def merge_data(code_df: pd.DataFrame, eng_df: pd.DataFrame) -> pd.DataFrame:
-    """Merge code counts with engagement data."""
+def load_toc(file_path: str) -> pd.DataFrame:
+    """Load TOC file map data."""
+    df = pd.read_csv(file_path)
+    
+    # Create file path column that matches code counts format
+    # href is like "articles/ai-foundry/agents/concepts/capability-hosts"
+    # we need "articles/ai-foundry/agents/concepts/capability-hosts.md"
+    df['file'] = df['href'] + '.md'
+    
+    # Select key columns for the merge
+    return df[['file', 'toc']].copy()
+
+
+def merge_data(code_df: pd.DataFrame, eng_df: pd.DataFrame, toc_df: pd.DataFrame = None) -> pd.DataFrame:
+    """Merge code counts with engagement data and TOC info."""
     # Merge on URL
     merged = code_df.merge(eng_df, on='Url', how='left')
+    
+    # Merge TOC data if provided
+    if toc_df is not None:
+        merged = merged.merge(toc_df, on='file', how='left')
     
     # Convert PageViews to numeric (handle comma-formatted numbers)
     if 'PageViews' in merged.columns:
@@ -113,6 +130,11 @@ def main():
         help='Path to code counts CSV'
     )
     parser.add_argument(
+        '--toc-file',
+        default=r"C:/git/docs-azdo-tools/demoniker/output/file-map.csv",
+        help='Path to TOC file map CSV'
+    )
+    parser.add_argument(
         '--output',
         default='outputs/code-engagement-merged.csv',
         help='Path for output CSV'
@@ -134,15 +156,26 @@ def main():
     eng_df = load_engagement(args.eng_file)
     print(f"  Found {len(eng_df)} articles with engagement data")
     
+    # Load TOC data if file exists
+    toc_df = None
+    if args.toc_file and os.path.exists(args.toc_file):
+        print(f"Loading TOC data from: {args.toc_file}")
+        toc_df = load_toc(args.toc_file)
+        print(f"  Found {len(toc_df)} TOC entries")
+    
     # Merge
     print("Merging data...")
-    merged_df = merge_data(code_df, eng_df)
+    merged_df = merge_data(code_df, eng_df, toc_df)
     
     # Count matches
     matched = merged_df['PageViews'].notna().sum()
     unmatched = merged_df['PageViews'].isna().sum()
-    print(f"  Matched: {matched} articles")
+    print(f"  Matched: {matched} articles with engagement data")
     print(f"  Unmatched: {unmatched} articles (no engagement data)")
+    
+    if toc_df is not None:
+        toc_matched = merged_df['toc'].notna().sum()
+        print(f"  TOC matched: {toc_matched} articles with TOC info")
     
     # Save output
     os.makedirs(os.path.dirname(args.output), exist_ok=True)
