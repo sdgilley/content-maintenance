@@ -12,7 +12,7 @@ repositories:
     pr_report_arg: "ai"
     search_paths:
       - "articles/foundry"
-      - "articles/foundry-samples"
+      - "articles/foundry-classic"
       - "articles/machine-learning"
   
   # Azure AI samples repository  
@@ -25,7 +25,7 @@ repositories:
     pr_report_arg: "ai2"
     search_paths:
       - "articles/foundry"
-      - "articles/foundry-samples"
+      - "articles/foundry-classic"
       - "articles/machine-learning"
 
   # Azure ML examples repository
@@ -38,7 +38,7 @@ repositories:
     pr_report_arg: "ml"
     search_paths:
       - "articles/foundry"
-      - "articles/foundry-samples"
+      - "articles/foundry-classic"
       - "articles/machine-learning"
 
 # Output directory for generated files

@@ -94,7 +94,11 @@ def find_snippets():
                 continue
                 
             file = os.path.basename(content_file.path)
-            file_content = content_file.decoded_content
+            try:
+                file_content = content_file.decoded_content
+            except Exception as e:
+                print(f"Error reading {content_file.path}: {e}")
+                continue
             lines = file_content.decode().splitlines()
 
             blocks = []
