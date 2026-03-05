@@ -3,8 +3,20 @@ Functions to get and use authenticated responses from GitHub
 
 You'll need to set the GH_ACCESS_TOKEN environment variable for this to work.
 See https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
-to create a token.  Then add the token to an environment variable called GH_ACCESS_TOKEN.
+to create a token.  Then add the token to a .env file or environment variable called GH_ACCESS_TOKEN.
+In Codespaces, set GH_ACCESS_TOKEN as a Codespace secret.
 """
+
+import os
+from pathlib import Path
+
+# Load .env file if it exists (overrides system env vars; in Codespaces without
+# a .env file, Codespace secrets are used directly)
+_env_path = Path(__file__).resolve().parent.parent / ".env"
+if _env_path.is_file():
+    from dotenv import load_dotenv
+    load_dotenv(_env_path, override=True)
+
 
 # function to connect to GitHub repo
 def connect_repo(repo_name):

@@ -23,6 +23,7 @@ repositories:
     short_name: "azureai-samples"
     service_type: "ai"
     pr_report_arg: "ai2"
+    search_paths:
       - "articles/foundry"
       - "articles/foundry-samples"
       - "articles/machine-learning"
@@ -35,6 +36,7 @@ repositories:
     short_name: "azureml-examples"
     service_type: "ml"
     pr_report_arg: "ml"
+    search_paths:
       - "articles/foundry"
       - "articles/foundry-samples"
       - "articles/machine-learning"
