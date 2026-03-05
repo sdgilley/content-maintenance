@@ -6,6 +6,7 @@ repositories:
   foundry-samples:
     owner: "microsoft-foundry"
     repo: "foundry-samples-pr"
+    snippet_repo: "foundry-samples"
     team: "@microsoft-foundry/AI-Platform-Docs"
     short_name: "foundry-samples-pr"
     service_type: "ai"

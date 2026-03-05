@@ -34,7 +34,7 @@ def find_snippets():
     repo_configs = {}
     for repo_key, repo_config in repos_config.items():
         repo_configs[repo_key] = {
-            "repo_token": repo_config["repo"],
+            "repo_token": repo_config.get("snippet_repo", repo_config["repo"]),
             "owners": repo_config["team"]
         }
     
