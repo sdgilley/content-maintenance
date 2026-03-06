@@ -4,7 +4,7 @@ The scripts in this repo require the use of a github token to authenticate.  Use
 
 ## Create a GitHub token
 
-1. Go to https://github.com/settings/tokens.  Generate a new token (classic). Add a note and pick an expiration date.  Skip all the checkboxes; scroll to the bottom, and click **Generate token**.
+1. Go to https://github.com/settings/tokens.  Generate a new token (classic). Add a note and pick an expiration date.  Check the Repo checkbox; scroll to the bottom, and click **Generate token**.
 1. **COPY** the token. **SAVE** it somewhere temporarily.  It's about to go away forever, and you'll need it in a future step.  
     1. If you're going to run scripts locally, create or update an environment variable **GH_ACCESS_TOKEN** with this value.
     1. To run in a codespace, see next section to save the token in a Codespace secret.
