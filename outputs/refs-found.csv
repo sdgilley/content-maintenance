@@ -364,6 +364,8 @@ samples/java/quickstart/create-agent/src/main/java/com/azure/ai/agents/CreateAge
 samples/java/quickstart/create-agent/src/main/java/com/azure/ai/agents/CreateAgent.java,prompt-agent.md,foundry-samples,foundry/agents/quickstarts
 samples/python/enterprise-agent-tutorial/1-idea-to-prototype/evaluate.py,developer-journey-idea-to-prototype.md,foundry-samples,foundry/tutorials
 samples/python/enterprise-agent-tutorial/1-idea-to-prototype/main.py,developer-journey-idea-to-prototype.md,foundry-samples,foundry/tutorials
+samples/python/foundry-models/model-router/model-router-chat-completions.py,how-to-model-router-1.md,foundry-samples,foundry/openai/includes
+samples/python/foundry-models/model-router/model-router-foundry-responses.py,how-to-model-router-1.md,foundry-samples,foundry/openai/includes
 samples/python/quickstart/chat-with-agent/quickstart-chat-with-agent.py,quickstart-v2-agent-chat.md,foundry-samples,foundry/includes
 samples/python/quickstart/chat-with-agent/quickstart-chat-with-agent.py,prompt-agent.md,foundry-samples,foundry/agents/quickstarts
 samples/python/quickstart/create-agent/quickstart-create-agent.py,quickstart-v2-create-agent.md,foundry-samples,foundry/includes
