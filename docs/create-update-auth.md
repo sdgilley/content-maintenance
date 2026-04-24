@@ -9,7 +9,7 @@ The scripts in this repo require the use of a github token to authenticate.  Use
     1. If you're going to run scripts locally, create or update an environment variable **GH_ACCESS_TOKEN** with this value.
     1. To run in a codespace, see next section to save the token in a Codespace secret.
     1. Make sure you have stored the copy of the token before going on to the next step.
-1. Use **Configure SSO** to authorize **MicrosoftDocs** to use the token.  
+1. Use **Configure SSO** to authorize **MicrosoftDocs**, and to **microsoft-foundry** to use the token.  
     > ⚠️ IMPORTANT! Once you start this step, you'll never see the token value again. So make sure you've copied it before you select the dropdown.
 
 ### Troubleshooting
@@ -17,7 +17,7 @@ The scripts in this repo require the use of a github token to authenticate.  Use
 If your token doesn't work when you run code, verify that you've configured the SSO: 
  
 1. Go to https://github.com/settings/tokens.
-1. Select **Configure SSO**.  You should see **Deauthorize** for MicrosoftDocs.  If you see **Authorize**, select it to authorize MicrosoftDocs to use the token.
+1. Select **Configure SSO**.  You should see **Deauthorize** for MicrosoftDocs and **microsoft-foundry**.  If you see **Authorize** beside either one, select it to authorize it to use the token.
 
 ## Save the token as a Codespace secret
 
