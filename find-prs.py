@@ -18,6 +18,8 @@ Usage:
     python find-prs.py --days 14 --verbose
     python find-prs.py --markdown my-report.md      # Custom markdown filename
     python find-prs.py --output data.csv            # Also save as CSV
+    python find-prs.py --teams-webhook-url https://...  # Send Teams notification when PRs need attention
+    python find-prs.py --teams-webhook-env MY_TEAMS_HOOK  # Read webhook URL from env var
 
 Requirements:
     - Set GH_ACCESS_TOKEN environment variable
@@ -25,15 +27,17 @@ Requirements:
 """
 
 import argparse
+import os
 from datetime import datetime, timedelta, timezone
 import pandas as pd
 import subprocess
 import sys
+import requests
+from dotenv import find_dotenv, load_dotenv
 
 # Fix Unicode encoding issues on Windows
 if sys.platform == 'win32':
     sys.stdout.reconfigure(encoding='utf-8')
-import sys
 from utilities import gh_auth as auth
 from utilities import config
 
@@ -90,6 +94,19 @@ def parse_arguments():
         "--verbose", 
         action="store_true",
         help="Show detailed information"
+    )
+
+    parser.add_argument(
+        "--teams-webhook-url",
+        type=str,
+        default=None,
+        help="Microsoft Teams incoming webhook URL for notifications"
+    )
+    parser.add_argument(
+        "--teams-webhook-env",
+        type=str,
+        default="TEAMS_WEBHOOK_URL",
+        help="Environment variable name containing Teams webhook URL (default: TEAMS_WEBHOOK_URL)"
     )
     
     return parser.parse_args()
@@ -399,6 +416,87 @@ def display_results(all_pr_data, args):
             print(f"CSV report saved to: {args.output}")
 
 
+def send_teams_notification(all_pr_data, args):
+    """Send a Teams message when PR approvals/review are needed."""
+    approved_prs = all_pr_data.get("approved", [])
+    check_prs = all_pr_data.get("needs_check", [])
+    total_prs = len(approved_prs) + len(check_prs)
+
+    # No notification when there is nothing needing attention.
+    if total_prs == 0:
+        return False
+
+    webhook_url = resolve_teams_webhook_url(args)
+
+    if not webhook_url:
+        print("[INFO] Teams webhook not configured. Skipping Teams notification.")
+        return False
+
+    max_items = 10
+    lines = []
+    for pr in (check_prs + approved_prs)[:max_items]:
+        lines.append(f"- [{pr['short_name']}] PR #{pr['pr_number']}: {pr['title']}\\n  {pr['url']}")
+
+    extra = ""
+    if total_prs > max_items:
+        extra = f"\\n...and {total_prs - max_items} more PR(s)."
+
+    message = (
+        f"**PR approvals/review needed** — {datetime.now().strftime('%Y-%m-%d %H:%M')}\\n\\n"
+        f"- Total PRs needing attention: {total_prs}\\n"
+        f"- Ready to approve: {len(approved_prs)}\\n"
+        f"- Need further review: {len(check_prs)}\\n\\n"
+        f"{chr(10).join(lines)}"
+        f"{extra}"
+    )
+
+    payload = {
+        "text": message
+    }
+
+    try:
+        response = requests.post(webhook_url, json=payload, timeout=15)
+        response.raise_for_status()
+        print("[OK] Teams notification sent")
+        return True
+    except Exception as e:
+        print(f"[WARN] Failed to send Teams notification: {e}")
+        return False
+
+
+def resolve_teams_webhook_url(args):
+    """Resolve Teams webhook URL from CLI arg, env/GitHub secrets, .env, then config."""
+    if args.teams_webhook_url:
+        return args.teams_webhook_url
+
+    env_names = [
+        args.teams_webhook_env,
+        "TEAMS_WEBHOOK_URL",
+    ]
+
+    # Remove empty names and duplicates while preserving order.
+    env_names = list(dict.fromkeys([name for name in env_names if name]))
+
+    # First pass: current process environment (works in GitHub Actions when
+    # workflow maps secrets into env vars).
+    for env_name in env_names:
+        value = os.environ.get(env_name)
+        if value:
+            return value
+
+    # Second pass: local .env file for local runs.
+    dotenv_path = find_dotenv(filename=".env", usecwd=True)
+    if dotenv_path:
+        load_dotenv(dotenv_path=dotenv_path, override=False)
+        for env_name in env_names:
+            value = os.environ.get(env_name)
+            if value:
+                return value
+
+    # Final fallback: config.yml
+    return config.load_config().get("teams_webhook_url")
+
+
 
 def main():
     """Main function"""
@@ -459,6 +557,9 @@ def main():
     # Display and save results
     print(f"\nTotal PRs found across all repositories: {len(approved_prs) + len(check_prs)}")
     display_results(all_pr_data, args)
+
+    # Notify Teams only when approvals/review are needed.
+    send_teams_notification(all_pr_data, args)
 
 
 if __name__ == "__main__":

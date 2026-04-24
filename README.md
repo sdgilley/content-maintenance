@@ -101,7 +101,14 @@ See instructions in [Daily and weekly tasks](docs/code-snippets.md) for details.
 **[find-prs.py](find-prs.py)** - Find PRs requiring team review
 - Identifies pull requests across multiple repositories that need review from documentation team members
 - Generates a markdown report (`pr-review-report-DATE.md`) with clickable links
+- Optional: sends Microsoft Teams notifications when PRs need attention (ready-to-approve or needs_check)
 - **Usage:** `python find-prs.py`
+- **Teams webhook options:**
+   - CLI: `python find-prs.py --teams-webhook-url https://...`
+   - Environment: set `TEAMS_WEBHOOK_URL` (default), or custom name via `--teams-webhook-env`
+   - Local development: add webhook to `.env` (same env var names)
+   - Config fallback: add `teams_webhook_url` in `config.yml`
+   - Resolution order: `--teams-webhook-url` -> env/GitHub Actions env vars -> `.env` -> `config.yml`
 
 **[find-snippets.py](find-snippets.py)** - Scan documentation for code references
 - Creates `refs-found.csv` file used by other scripts
