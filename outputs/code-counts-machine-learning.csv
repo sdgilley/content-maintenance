@@ -982,8 +982,8 @@ articles/machine-learning/how-to-deploy-with-triton.md,python,1,481,machine-lear
 articles/machine-learning/how-to-devops-machine-learning.md,,1,44,machine-learning
 articles/machine-learning/how-to-devops-machine-learning.md,yaml,45,113,machine-learning
 articles/machine-learning/how-to-devops-machine-learning.md,yaml,53,161,machine-learning
-articles/machine-learning/how-to-devops-machine-learning.md,yml,15,240,machine-learning
-articles/machine-learning/how-to-devops-machine-learning.md,yml,18,262,machine-learning
+articles/machine-learning/how-to-devops-machine-learning.md,yml,15,243,machine-learning
+articles/machine-learning/how-to-devops-machine-learning.md,yml,18,265,machine-learning
 articles/machine-learning/how-to-disable-local-auth-storage.md,python,1,54,machine-learning
 articles/machine-learning/how-to-disable-local-auth-storage.md,python,2,60,machine-learning
 articles/machine-learning/how-to-disable-local-auth-storage.md,python,24,115,machine-learning
@@ -1752,8 +1752,8 @@ articles/machine-learning/how-to-train-model.md,bash,11,253,machine-learning
 articles/machine-learning/how-to-train-model.md,bash,9,269,machine-learning
 articles/machine-learning/how-to-train-model.md,bash,3,285,machine-learning
 articles/machine-learning/how-to-train-model.md,bash,20,299,machine-learning
-articles/machine-learning/how-to-train-model.md,python,11,334,machine-learning
-articles/machine-learning/how-to-train-model.md,bash,9,360,machine-learning
+articles/machine-learning/how-to-train-model.md,python,11,339,machine-learning
+articles/machine-learning/how-to-train-model.md,bash,9,365,machine-learning
 articles/machine-learning/how-to-train-scikit-learn.md,python,6,56,machine-learning
 articles/machine-learning/how-to-train-tensorflow.md,python,6,64,machine-learning
 articles/machine-learning/how-to-train-with-ui.md,tree,5,83,machine-learning
