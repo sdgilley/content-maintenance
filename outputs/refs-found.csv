@@ -348,6 +348,7 @@ samples/REST/quickstart/quickstart-chat-with-agent.sh,quickstart-v2-agent-chat.m
 samples/REST/quickstart/quickstart-chat-with-agent.sh,prompt-agent.md,foundry-samples,foundry/agents/quickstarts
 samples/REST/quickstart/quickstart-create-agent.sh,quickstart-v2-create-agent.md,foundry-samples,foundry/includes
 samples/REST/quickstart/quickstart-create-agent.sh,prompt-agent.md,foundry-samples,foundry/agents/quickstarts
+samples/REST/quickstart/quickstart-responses.sh,what-is-foundry.md,foundry-samples,foundry
 samples/REST/quickstart/quickstart-responses.sh,how-to-integrate-with-other-apps-content.md,foundry-samples,foundry/includes
 samples/REST/quickstart/quickstart-responses.sh,quickstart-v2-chat.md,foundry-samples,foundry/includes
 samples/csharp/enterprise-agent-tutorial/1-idea-to-prototype/Evaluate/Program.cs,developer-journey-idea-to-prototype.md,foundry-samples,foundry/tutorials
@@ -356,6 +357,7 @@ samples/csharp/quickstart/chat-with-agent/quickstart-chat-with-agent.cs,quicksta
 samples/csharp/quickstart/chat-with-agent/quickstart-chat-with-agent.cs,prompt-agent.md,foundry-samples,foundry/agents/quickstarts
 samples/csharp/quickstart/create-agent/quickstart-create-agent.cs,quickstart-v2-create-agent.md,foundry-samples,foundry/includes
 samples/csharp/quickstart/create-agent/quickstart-create-agent.cs,prompt-agent.md,foundry-samples,foundry/agents/quickstarts
+samples/csharp/quickstart/responses/quickstart-responses.cs,what-is-foundry.md,foundry-samples,foundry
 samples/csharp/quickstart/responses/quickstart-responses.cs,quickstart-v2-chat.md,foundry-samples,foundry/includes
 samples/java/quickstart/chat-with-agent/src/main/java/com/azure/ai/agents/ChatWithAgent.java,quickstart-v2-agent-chat.md,foundry-samples,foundry/includes
 samples/java/quickstart/chat-with-agent/src/main/java/com/azure/ai/agents/ChatWithAgent.java,quickstart-v2-chat.md,foundry-samples,foundry/includes
@@ -370,9 +372,11 @@ samples/python/quickstart/chat-with-agent/quickstart-chat-with-agent.py,quicksta
 samples/python/quickstart/chat-with-agent/quickstart-chat-with-agent.py,prompt-agent.md,foundry-samples,foundry/agents/quickstarts
 samples/python/quickstart/create-agent/quickstart-create-agent.py,quickstart-v2-create-agent.md,foundry-samples,foundry/includes
 samples/python/quickstart/create-agent/quickstart-create-agent.py,prompt-agent.md,foundry-samples,foundry/agents/quickstarts
+samples/python/quickstart/responses/quickstart-responses.py,what-is-foundry.md,foundry-samples,foundry
 samples/python/quickstart/responses/quickstart-responses.py,quickstart-v2-chat.md,foundry-samples,foundry/includes
 samples/typescript/quickstart/chat-with-agent/src/quickstart-chat-with-agent.ts,quickstart-v2-agent-chat.md,foundry-samples,foundry/includes
 samples/typescript/quickstart/chat-with-agent/src/quickstart-chat-with-agent.ts,prompt-agent.md,foundry-samples,foundry/agents/quickstarts
 samples/typescript/quickstart/create-agent/src/quickstart-create-agent.ts,quickstart-v2-create-agent.md,foundry-samples,foundry/includes
 samples/typescript/quickstart/create-agent/src/quickstart-create-agent.ts,prompt-agent.md,foundry-samples,foundry/agents/quickstarts
+samples/typescript/quickstart/responses/src/quickstart-responses.ts,what-is-foundry.md,foundry-samples,foundry
 samples/typescript/quickstart/responses/src/quickstart-responses.ts,quickstart-v2-chat.md,foundry-samples,foundry/includes
