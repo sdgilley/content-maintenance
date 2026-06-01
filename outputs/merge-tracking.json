@@ -11,7 +11,8 @@
       149
     ],
     "Azure/azureml-examples": [
-      3872
+      3872,
+      3889
     ]
   },
   "update_prs": [
@@ -70,6 +71,18 @@
         "foundry/includes/quickstart-v2-agent-chat.md",
         "foundry/tutorials/developer-journey-idea-to-prototype.md",
         "machine-learning/how-to-safely-rollout-online-endpoints.md"
+      ]
+    },
+    {
+      "created_at": "2026-05-15T07:08:49.505344",
+      "pr_url": "https://github.com/MicrosoftDocs/azure-ai-docs-pr/pull/12160",
+      "source_prs": {
+        "Azure/azureml-examples": [
+          3889
+        ]
+      },
+      "files_updated": [
+        "machine-learning/how-to-use-sweep-in-pipeline.md"
       ]
     }
   ]
