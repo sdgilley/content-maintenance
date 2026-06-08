@@ -14,7 +14,7 @@ def find_pr_files(owner_name, repo_name, snippets, days, sync_delay_hours=0):
         # Return error info to caller
         return {"error": "The maximum number of days is 100."}
 
-    # For repos that sync to a public repo (e.g., foundry-samples-pr),
+    # For repos that sync to a public repo (e.g., foundry-samples),
     # only include PRs merged at least sync_delay_hours ago
     ready_cutoff = None
     if sync_delay_hours > 0:
@@ -23,13 +23,7 @@ def find_pr_files(owner_name, repo_name, snippets, days, sync_delay_hours=0):
     # Define the URL for the GitHub API
     url = f"https://api.github.com/repos/{owner_name}/{repo_name}/pulls?state=closed&sort=updated&direction=desc"
     
-    # Use authenticated request to avoid rate limiting
-    headers = {}
-    token = os.environ.get("GH_ACCESS_TOKEN")
-    if token:
-        headers["Authorization"] = f"token {token}"
-    
-    response = requests.get(url, headers=headers)
+    response = requests.get(url)
     pr_data = response.json()
     
     # Check if we got an error response (usually a dict with 'message' key)

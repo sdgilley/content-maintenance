@@ -83,10 +83,12 @@ Scripts in this repository can be run locally or in a GitHub Codespace.
    pip install -r requirements.txt
    ```
 
-4. **Set up GitHub authentication:**
+4. **Authenticate with GitHub using the secure native flow:**
    ```bash
-   export GH_ACCESS_TOKEN=your_github_token_here
+   gh auth login
    ```
+   For GitHub Actions, rely on the built-in `github.token` / `GITHUB_TOKEN` and `gh` CLI instead of storing a personal access token.
+   Public read-only scans can run without any PAT at all.
 
 See instructions in [Daily and weekly tasks](docs/code-snippets.md) for details.
 

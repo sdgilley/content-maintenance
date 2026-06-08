@@ -23,11 +23,11 @@ Tracking:
   - Use --ignore-tracking to process all PRs regardless of tracking data
 
 Fork detection:
-  - By default, uses your GitHub username from the GH_ACCESS_TOKEN
+  - By default, uses your GitHub username from the authenticated `gh` CLI session
   - Can override with --fork-repo username/fork-name if needed
 
 Requirements:
-    GH_ACCESS_TOKEN environment variable must be set for PR creation
+    GitHub CLI authentication (`gh auth login`) is preferred for PR creation
     PyGithub must be installed (pip install -r requirements.txt)
 """
 
@@ -255,133 +255,107 @@ def create_metadata_update_pr(
 ) -> str:
     """
     Create a PR in a fork to update metadata for files.
-    
-    Args:
-        doc_files: List of documentation file paths to update
-        pr_info: Dictionary with PRs that triggered updates
-        dry_run: If True, don't actually create PR
-        fork_repo: Your fork repository (owner/repo). If None, reads from config or env var.
-        
-    Returns:
-        PR URL string if successful, None if failed or no changes needed
-        
-    Fork repo resolution order:
-        1. fork_repo parameter (CLI argument)
-        2. Auto-detect from authenticated user's GitHub username
+
+    This implementation uses an SSH-backed git flow for the fork branch push and
+    the GitHub CLI for PR creation. It avoids relying on GH_ACCESS_TOKEN for
+    the write path when the runner already has SSH access to the fork.
     """
-    from utilities import gh_auth, config as cfg
+    import os
+    import shutil
+    import subprocess
+    import tempfile
+
     from datetime import datetime
-    from github import Github, Auth
-    
+
     try:
-        # Resolve fork_repo - use CLI arg or auto-detect from token
         if fork_repo is None:
-            # Auto-detect from authenticated user
-            logger.info("Auto-detecting fork from authenticated user...")
-            token = os.environ.get('GH_ACCESS_TOKEN')
-            if not token:
-                raise ValueError("GH_ACCESS_TOKEN environment variable not set")
-            auth = Auth.Token(token)
-            gh = Github(auth=auth)
-            user = gh.get_user()
-            username = user.login
-            fork_repo = f"{username}/azure-ai-docs-pr"
-            logger.info(f"Detected fork: {fork_repo}")
-        
-        # Connect to the fork repo for updates
-        fork_github_repo = gh_auth.connect_repo(fork_repo)
-        
-        # Also connect to the main repo for PR creation
-        main_repo = gh_auth.connect_repo("MicrosoftDocs/azure-ai-docs-pr")
-        
+            try:
+                result = subprocess.run(
+                    ["gh", "api", "user", "--jq", ".login"],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
+                username = result.stdout.strip()
+                fork_repo = f"{username}/azure-ai-docs-pr"
+                logger.info(f"Detected fork from gh CLI: {fork_repo}")
+            except Exception as exc:
+                raise ValueError("Could not determine your fork. Pass --fork-repo or authenticate with gh CLI first.") from exc
+
         logger.info(f"Using fork: {fork_repo}")
-        logger.info(f"PR will be created in: MicrosoftDocs/azure-ai-docs-pr")
-        
-        # Create feature branch in fork
+        logger.info("PR will be created in: MicrosoftDocs/azure-ai-docs-pr")
+
         timestamp = datetime.now().strftime('%Y%m%d-%H%M%S')
         branch_name = f"chore/update-code-metadata-{timestamp}"
-        
-        # Get the main branch reference from UPSTREAM (to stay in sync)
-        logger.info(f"Fetching latest from upstream main branch...")
-        main_ref = main_repo.get_git_ref("heads/main")
-        main_sha = main_ref.object.sha
-        logger.info(f"Using upstream main at SHA: {main_sha[:7]}")
-        
-        if not dry_run:
-            # Create the feature branch in fork
-            fork_github_repo.create_git_ref(f"refs/heads/{branch_name}", main_sha)
-            logger.info(f"Created branch in fork: {branch_name}")
-        else:
-            logger.info(f"[DRY RUN] Would create branch: {branch_name}")
-        
-        # Track which files were actually changed
         updated_files = []
         failed_files = []
-        
-        # Update metadata for each file using GitHub API
-        for doc_file in doc_files:
-            # Prepend 'articles/' if not already present
-            if not doc_file.startswith('articles/'):
-                repo_path = f'articles/{doc_file}'
-            else:
-                repo_path = doc_file
-            try:
-                # Get the file from the exact SHA we're basing the branch on (upstream main)
-                try:
-                    file_content = main_repo.get_contents(repo_path, ref=main_sha)
-                except Exception as e:
-                    logger.warning(f"File not found: {repo_path} - {e}")
+
+        if dry_run:
+            logger.info(f"[DRY RUN] Would create branch: {branch_name}")
+            logger.info("[DRY RUN] SSH/gh-based write path is enabled when a fork repo is provided")
+            return "dry-run-success", updated_files
+
+        temp_root = tempfile.mkdtemp(prefix="merge-report-")
+        main_clone = os.path.join(temp_root, "main")
+        fork_clone = os.path.join(temp_root, "fork")
+
+        try:
+            subprocess.run(
+                ["git", "clone", "--depth", "1", "--branch", "main", "https://github.com/MicrosoftDocs/azure-ai-docs-pr.git", main_clone],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            subprocess.run(
+                ["gh", "repo", "clone", fork_repo, fork_clone],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+
+            subprocess.run(["git", "-C", fork_clone, "config", "user.name", "Content Maintenance Bot"], check=True)
+            subprocess.run(["git", "-C", fork_clone, "config", "user.email", "bot@example.com"], check=True)
+            subprocess.run(["git", "-C", fork_clone, "checkout", "-b", branch_name], check=True)
+
+            for doc_file in doc_files:
+                repo_path = f"articles/{doc_file}" if not doc_file.startswith('articles/') else doc_file
+                main_path = os.path.join(main_clone, repo_path)
+                fork_path = os.path.join(fork_clone, repo_path)
+
+                if not os.path.exists(main_path):
+                    logger.warning(f"File not found: {repo_path}")
                     failed_files.append(doc_file)
                     continue
-                
-                # Decode content
-                content = file_content.decoded_content.decode('utf-8')
-                
-                # Update metadata
+
+                with open(main_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+
                 updated_content, was_changed = update_yaml_metadata(content)
-                
                 if was_changed:
-                    if not dry_run:
-                        # Update the file in the feature branch in fork
-                        fork_github_repo.update_file(
-                            path=repo_path,
-                            message=f"chore: update update-code metadata for {doc_file}",
-                            content=updated_content,
-                            sha=file_content.sha,
-                            branch=branch_name
-                        )
+                    os.makedirs(os.path.dirname(fork_path), exist_ok=True)
+                    with open(fork_path, 'w', encoding='utf-8') as f:
+                        f.write(updated_content)
                     updated_files.append(doc_file)
                     logger.info(f"Updated metadata: {doc_file}")
                 else:
                     logger.info(f"No changes needed: {doc_file}")
-                    
-            except Exception as e:
-                logger.error(f"Error updating {doc_file}: {e}")
-                failed_files.append(doc_file)
-        
-        if not updated_files:
-            logger.info("No files needed metadata updates")
-            return None
-        
-        if dry_run:
-            logger.info(f"[DRY RUN] Would update {len(updated_files)} files:")
-            for file in updated_files:
-                logger.info(f"  - {file}")
-            if failed_files:
-                logger.warning(f"Would skip {len(failed_files)} files (not found)")
-            return "dry-run-success"  # Return truthy value to indicate success in dry-run
-        
-        # Build PR information
-        pr_summary = []
-        for repo_name, prs in pr_info.items():
-            pr_links = ", ".join([f"#{pr}" for pr in prs])
-            pr_summary.append(f"{repo_name}: {pr_links}")
-        
-        pr_summary_text = "\n".join(pr_summary)
-        
-        # Create PR
-        pr_title = f"chore: update code reference metadata ({datetime.now().strftime('%Y-%m-%d')})"
-        pr_body = f"""## Updates
+
+            if not updated_files:
+                logger.info("No files needed metadata updates")
+                return None, []
+
+            subprocess.run(["git", "-C", fork_clone, "add", "."], check=True)
+            subprocess.run(["git", "-C", fork_clone, "commit", "-m", f"chore: update update-code metadata for {len(updated_files)} files"], check=True)
+            subprocess.run(["git", "-C", fork_clone, "push", "--set-upstream", "origin", branch_name], check=True)
+
+            pr_summary = []
+            for repo_name, prs in pr_info.items():
+                pr_links = ", ".join([f"#{pr}" for pr in prs])
+                pr_summary.append(f"{repo_name}: {pr_links}")
+            pr_summary_text = "\n".join(pr_summary)
+
+            pr_title = f"chore: update code reference metadata ({datetime.now().strftime('%Y-%m-%d')})"
+            pr_body = f"""## Updates
 
 Updated `update-code` metadata for documentation files impacted by recent code repository changes.
 
@@ -397,61 +371,63 @@ Updated `update-code` metadata for documentation files impacted by recent code r
 - Total files updated: {len(updated_files)}
 - Created by: automated merge-report workflow
 """
-        # Create PR in main repo with head pointing to fork branch
-        fork_owner = fork_repo.split('/')[0]
-        
-        pr = main_repo.create_pull(
-            title=pr_title,
-            body=pr_body,
-            head=f"{fork_owner}:{branch_name}",
-            base="main"
-        )
-        
-        logger.info(f"Created PR: {pr.html_url}")
-        if failed_files:
-            logger.warning(f"Note: {len(failed_files)} files were not found in the repo")
-        
-        return pr.html_url, updated_files
-            
+
+            body_file = os.path.join(temp_root, "pr_body.md")
+            with open(body_file, 'w', encoding='utf-8') as f:
+                f.write(pr_body)
+
+            gh_cmd = [
+                "gh", "pr", "create",
+                "--repo", "MicrosoftDocs/azure-ai-docs-pr",
+                "--head", f"{fork_repo.split('/')[0]}:{branch_name}",
+                "--base", "main",
+                "--title", pr_title,
+                "--body-file", body_file,
+            ]
+            pr_result = subprocess.run(gh_cmd, check=True, capture_output=True, text=True)
+            pr_url = pr_result.stdout.strip().splitlines()[-1]
+            logger.info(f"Created PR: {pr_url}")
+
+            if failed_files:
+                logger.warning(f"Note: {len(failed_files)} files were not found in the repo")
+
+            return pr_url, updated_files
+        finally:
+            shutil.rmtree(temp_root, ignore_errors=True)
+
     except Exception as e:
         logger.error(f"Failed to create metadata update PR: {e}", exc_info=True)
         return None, []
 
 
 
+def generate_report_for_service(service: str, days: int) -> None:
+    """Generate a combined report for AI or ML repository references."""
     from utilities import helpers as h
     from utilities import find_pr_files as f
     from utilities import config
 
-    # Get repository configurations from config file
     repos_config = config.get_repositories()
-    
+
     if service == "ai":
-        # Get AI-related repositories
         ai_repos = config.get_repositories_by_service("ai")
         repo_names = [repo_config["repo"] for repo_config in ai_repos.values()]
         owner_names = [repo_config["owner"] for repo_config in ai_repos.values()]
     elif service == "ml":
-        # Get ML-related repositories  
         ml_repos = config.get_repositories_by_service("ml")
         repo_names = [repo_config["repo"] for repo_config in ml_repos.values()]
         owner_names = [repo_config["owner"] for repo_config in ml_repos.values()]
     else:
         print(f"Unknown service: {service}")
         return
-        
+
     output_dir = config.get_output_directory()
-    
-    # get the refs-found file for this service
     file_paths = config.get_file_paths()
     fn = os.path.join(output_dir, file_paths["refs_found_csv"])
-    # print(f"Reading {fn} for all snippets")
-    snippets = h.read_snippets(fn)  # read the snippets file
-    
-    # Aggregate results from all repos
+    snippets = h.read_snippets(fn)
+
     all_results = []
     for owner_name, repo_name in zip(owner_names, repo_names):
-        # Look up sync_delay_hours for this repo
         delay = 0
         for rc in repos_config.values():
             if rc["owner"] == owner_name and rc["repo"] == repo_name:
@@ -463,12 +439,12 @@ Updated `update-code` metadata for documentation files impacted by recent code r
         elif repo_results:
             all_results.extend(repo_results)
 
-    # Print a single combined report
     if not all_results:
         print("\n[OK] Nothing to do here :-)  There are no PRs that impacted references.\n")
         return
 
     import pandas as pd
+
     df = pd.DataFrame(all_results)
     print("\nThese PRs impacted references across all repos:\n")
     prs = df[["owner", "repo", "PR"]].drop_duplicates()
@@ -477,14 +453,12 @@ Updated `update-code` metadata for documentation files impacted by recent code r
         print(f"* [PR {row['PR']} ({row['repo']})]({pr_url})")
 
     print("\n[ACTION] **Add 'update-code' to ms.custom metadata (or modify if already present) to the following files:**")
-    # Collect all referenced files
     refs = []
     for ref_list in df["Referenced In"]:
         refs.extend(ref_list)
     refs = sorted(set(refs))
     for i, ref in enumerate(refs, 1):
         print(f"{i}  {ref}")
-    return
 
 if __name__ == "__main__":
     import concurrent.futures

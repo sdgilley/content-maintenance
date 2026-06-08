@@ -22,7 +22,7 @@ Usage:
     python find-prs.py --teams-webhook-env MY_TEAMS_HOOK  # Read webhook URL from env var
 
 Requirements:
-    - Set GH_ACCESS_TOKEN environment variable
+    - Prefer GitHub CLI authentication (`gh auth login`) for secure access
     - Install required packages: pip install PyGithub requests pandas
 """
 

@@ -29,13 +29,11 @@ class GitHubClient:
             max_retries: Maximum number of retry attempts
             backoff_factor: Exponential backoff multiplier
         """
-        self.token = token or os.getenv('GH_ACCESS_TOKEN')
-        if not self.token:
-            raise ValueError("GitHub token is required (GH_ACCESS_TOKEN environment variable)")
-        
+        self.token = None
+
         self.max_retries = max_retries
         self.backoff_factor = backoff_factor
-        self._github = Github(self.token)
+        self._github = Github()
         
         logger.info("GitHub client initialized")
     

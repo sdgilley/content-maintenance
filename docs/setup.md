@@ -2,7 +2,7 @@
 
 ## Set up your environment to run the scripts
 
-To run the scripts, create a GitHub access token.  Then run the scripts either in CODESPACES or locally.
+To run the scripts, authenticate with GitHub using the secure native flow (`gh auth login` in Codespaces or locally). For Actions, rely on `github.token` / `GITHUB_TOKEN` instead of a long-lived PAT.
 
 <details>
 <summary> Create a GitHub personal access token</summary>
@@ -29,7 +29,7 @@ For local execution, you'll need:
 
 - Python 3.8 or later (check with `py -3 --version`)
 - Git installed and configured
-- A GitHub personal access token (see [authentication setup](docs/create-update-auth.md))
+- GitHub CLI authentication (`gh auth login`) for local/Codespace use
 
 **Setup steps:**
 
