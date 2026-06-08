@@ -1,9 +1,6 @@
 # function to find PRs merged in the last N days that have doc references
 # used from merge_report
 def find_pr_files(owner_name, repo_name, snippets, days, sync_delay_hours=0):
-    import requests
-    import os
-    import pandas as pd
     from utilities import gh_auth as a
     from datetime import datetime, timedelta
 
@@ -20,12 +17,15 @@ def find_pr_files(owner_name, repo_name, snippets, days, sync_delay_hours=0):
     if sync_delay_hours > 0:
         ready_cutoff = (datetime.now() - timedelta(hours=sync_delay_hours)).isoformat()
 
-    # Define the URL for the GitHub API
+    # Use the authenticated GitHub CLI path so private repos work without a
+    # personal access token in the runtime code.
     url = f"https://api.github.com/repos/{owner_name}/{repo_name}/pulls?state=closed&sort=updated&direction=desc"
-    
-    response = requests.get(url)
-    pr_data = response.json()
-    
+
+    try:
+        pr_data = a.get_auth_response(url)
+    except Exception as exc:
+        return {"error": f"GitHub API error for {repo_name}: {exc}"}
+
     # Check if we got an error response (usually a dict with 'message' key)
     if isinstance(pr_data, dict) and "message" in pr_data:
         return {"error": f"GitHub API error for {repo_name}: {pr_data['message']}"}
