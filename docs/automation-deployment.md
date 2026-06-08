@@ -6,7 +6,7 @@ This guide provides step-by-step instructions for deploying and configuring the 
 
 - [Prerequisites Checklist](#prerequisites-checklist)
 - [Step-by-Step Setup](#step-by-step-setup)
-  - [A. GitHub Personal Access Token Setup](#a-github-personal-access-token-setup)
+  - [A. GitHub Authentication](#a-github-authentication)
   - [B. Email Configuration](#b-email-configuration)
   - [C. GitHub Secrets Configuration](#c-github-secrets-configuration)
   - [D. Testing with Dry-Run Mode](#d-testing-with-dry-run-mode)
@@ -25,7 +25,6 @@ This guide provides step-by-step instructions for deploying and configuring the 
 Before starting deployment, ensure you have:
 
 - [ ] **GitHub Repository Access** - Admin or maintainer permissions on the `content-maintenance` repository
-- [ ] **Organization Permissions** - Access to configure SSO for Personal Access Tokens
 - [ ] **Email Account** (OPTIONAL) - Gmail, Office 365, or other SMTP-compatible email account (only needed for email notifications)
 - [ ] **Email App Password** (OPTIONAL) - Generated app-specific password (only needed if using email)
 - [ ] **Basic Knowledge** - Familiarity with GitHub Actions and repository settings
@@ -36,79 +35,16 @@ Before starting deployment, ensure you have:
 
 ## Step-by-Step Setup
 
-### A. GitHub Personal Access Token Setup
+### A. GitHub Authentication
 
-The automation requires a GitHub Personal Access Token (PAT) with specific permissions to interact with repositories and workflows across **3 code repositories**:
-- **Azure/azureml-examples** - Azure Machine Learning examples
-- **Azure-AI-Foundry/foundry-samples** - Azure AI Foundry samples
-- **Azure-Samples/azureai-samples** - Azure AI samples
-
-#### 1. Create a Personal Access Token
-
-**Navigate to Token Settings:**
-
-1. Go to **GitHub.com** → Click your profile picture (top-right)
-2. Select **Settings** → Scroll down to **Developer settings** (bottom-left)
-3. Click **Personal access tokens** → **Tokens (classic)**
-4. Click **Generate new token** → **Generate new token (classic)**
-
-> 💡 **TIP**: Use classic tokens for now as they're more widely supported. Fine-grained tokens may work but require additional configuration.
-
-#### 2. Configure Token Permissions
-
-**Set the following details:**
-
-- **Note**: `Content Maintenance Automation` (or any descriptive name)
-- **Expiration**: `90 days` (recommended - set calendar reminder to renew)
-
-**Select these scopes:**
-
-- ✅ `repo` - Full control of private repositories
-  - Includes: `repo:status`, `repo_deployment`, `public_repo`, `repo:invite`, `security_events`
-- ✅ `workflow` - Update GitHub Action workflows
-- ✅ `read:org` - Read org and team membership, read org projects
-- ✅ `read:user` - Read user profile data
-- ✅ `user:email` - Access user email addresses (read-only)
-
-> ⚠️ **WARNING**: Do NOT grant `admin:org`, `delete_repo`, or other admin permissions. Follow the principle of least privilege.
-
-#### 3. Generate and Save Token
-
-1. Scroll to bottom and click **Generate token**
-2. **IMMEDIATELY COPY THE TOKEN** - You won't be able to see it again
-3. Store it securely (password manager recommended)
-4. Format: `ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
-
-#### 4. Configure SSO Authorization
-
-The automation monitors repositories across **3 different GitHub organizations**, so SSO authorization is required for each:
-
-1. Next to the newly created token, click **Configure SSO**
-2. **Authorize for ALL 3 organizations:**
-   - **Azure** (for Azure/azureml-examples)
-   - **Azure-AI-Foundry** (for Azure-AI-Foundry/foundry-samples)
-   - **Azure-Samples** (for Azure-Samples/azureai-samples)
-3. Click **Authorize** next to each organization
-4. Complete any additional authentication steps
-5. Verify: Token should show "Authorized" for all 3 organizations
-
-> ⚠️ **CRITICAL**: Without SSO authorization for ALL 3 organizations, the automation cannot access all code repositories!
-
-#### 5. Test Token Works
-
-**Using curl (recommended):**
+Use the native GitHub authentication flow for local and Codespaces work:
 
 ```bash
-curl -H "Authorization: token ghp_YOUR_TOKEN_HERE" \
-  https://api.github.com/user
+gh auth login
+gh auth status
 ```
 
-**Expected response:** Your user information in JSON format
-
-**If you see errors:**
-- `401 Unauthorized` - Token is invalid or expired
-- `403 Forbidden` - SSO not configured or insufficient scopes
-- `404 Not Found` - Check the URL
+For GitHub Actions, rely on the built-in `github.token` / `GITHUB_TOKEN` and the authenticated `gh` CLI. No manual GitHub secret setup is required for this repository.
 
 ---
 
@@ -265,16 +201,6 @@ Repository Settings
         └── Variables (tab)
 ```
 
-#### Add Required Secrets
-
-Click **New repository secret** for the following **REQUIRED** secret:
-
-##### 1. GH_ACCESS_TOKEN (REQUIRED)
-
-- **Name**: `GH_ACCESS_TOKEN`
-- **Secret**: Paste your GitHub Personal Access Token from Step A
-- **Example**: `ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
-
 #### Add Optional Email Secrets
 
 **Only add these if you completed Section B and want email notifications:**
@@ -329,14 +255,13 @@ Click **New repository secret** for the following **REQUIRED** secret:
 
 ```
 Repository secrets
-└── GH_ACCESS_TOKEN         Updated X seconds ago
+└── (none required)
 ```
 
 **Full configuration (with email):**
 
 ```
 Repository secrets
-├── GH_ACCESS_TOKEN         Updated X seconds ago
 ├── EMAIL_ENABLED           Updated X seconds ago
 ├── SMTP_SERVER             Updated X seconds ago
 ├── SMTP_PORT               Updated X seconds ago
@@ -451,7 +376,7 @@ monitor-prs (or scan-snippets, monthly-report)
 Error: GitHub token is required
 Error: Bad credentials
 ```
-→ Check that `GH_ACCESS_TOKEN` is set correctly and has SSO authorization
+→ Verify `gh auth status` succeeds and the workflow is using the built-in Actions token or your authenticated CLI session
 
 ❌ **Email errors:**
 ```
@@ -559,10 +484,8 @@ If you need to pause automation:
 Use this checklist to verify your deployment is complete and working:
 
 ### Initial Setup
-- [ ] GitHub PAT created with scopes: `repo`, `workflow`, `read:org`, `read:user`, `user:email`
-- [ ] PAT configured for SSO with MicrosoftDocs organization
-- [ ] PAT tested successfully with curl or API call
-- [ ] `GH_ACCESS_TOKEN` secret configured in repository settings
+- [ ] GitHub CLI authentication verified with `gh auth status`
+- [ ] Actions workflow uses the built-in `github.token` / `GITHUB_TOKEN` or a valid authenticated CLI session
 - [ ] (Optional) Email SMTP credentials tested and working
 - [ ] (Optional) Email secrets configured if email is desired
 
@@ -582,7 +505,6 @@ Use this checklist to verify your deployment is complete and working:
 - [ ] Workflow status shows green checkmarks in Actions tab
 
 ### Post-Deployment
-- [ ] Calendar reminder set for PAT renewal (before expiration)
 - [ ] Team members notified about automation
 - [ ] Documentation bookmarked for future reference
 - [ ] Monitoring plan established (who checks what, how often)
@@ -721,10 +643,10 @@ Flagged PRs (Manual Review Needed):
 
 **Common failure scenarios:**
 
-1. **Token Expiration**
-   - Frequency: Every 60-90 days (based on PAT expiration)
-   - Warning: Monthly report will warn 30 days before
-   - Fix: Generate new PAT and update `GH_ACCESS_TOKEN` secret
+1. **Authentication context missing**
+   - Frequency: When the CLI session is not signed in
+   - Warning: Workflow logs show auth failures
+   - Fix: Run `gh auth login` locally or confirm the built-in Actions token is available
 
 2. **Rate Limit Exceeded**
    - Frequency: Rare, only if processing many PRs
@@ -776,26 +698,21 @@ Status code: 401
 ```
 
 **Possible causes:**
-1. GitHub PAT is incorrect or expired
-2. PAT was regenerated but secret not updated
-3. Token doesn't have required scopes
+1. GitHub CLI session is not authenticated
+2. Actions workflow is missing the built-in `github.token`
+3. Repository permissions changed for the current runner
 
 **Solutions:**
 
-✅ **Verify token in secrets:**
-1. Go to Settings → Secrets → Actions
-2. Update `GH_ACCESS_TOKEN` with correct token
-3. Re-run workflow to test
+✅ **Verify the current auth path:**
+1. Run `gh auth status` in your local/Codespaces shell
+2. Confirm the workflow uses the built-in `github.token` / `GITHUB_TOKEN`
+3. Re-run the workflow after confirming the session is valid
 
-✅ **Check token expiration:**
-1. Go to github.com → Settings → Developer settings → Personal access tokens
-2. Check "Expires" column
-3. If expired, generate new token and update secret
-
-✅ **Verify token scopes:**
-1. Click on token in GitHub settings
-2. Verify these scopes are checked: `repo`, `workflow`, `read:org`, `read:user`, `user:email`
-3. If missing scopes, create new token with correct scopes
+✅ **Check repository permissions:**
+1. Verify you have the required access to the repos the workflow touches
+2. Review workflow permissions in repository settings
+3. Re-run the workflow after permission changes
 
 #### Error: "Resource not accessible by integration" or "403 Forbidden"
 
@@ -806,17 +723,16 @@ Status code: 403
 ```
 
 **Possible causes:**
-1. SSO not authorized for organization
-2. Repository permissions changed
-3. Token doesn't have specific scope needed
+1. Repository permissions changed
+2. Workflow is running without the required Actions token
+3. The current runner lacks access to the repo or branch
 
 **Solutions:**
 
-✅ **Configure SSO authorization:**
-1. GitHub → Settings → Developer settings → Personal access tokens
-2. Click "Configure SSO" next to your token
-3. Authorize for MicrosoftDocs organization
-4. Re-run workflow
+✅ **Verify auth path:**
+1. Confirm the workflow uses `github.token` / `GITHUB_TOKEN`
+2. Confirm `gh auth status` succeeds in local/Codespaces testing
+3. Re-run the workflow after permission or auth changes
 
 ✅ **Check repository permissions:**
 1. Verify you have write access to repositories
@@ -943,7 +859,7 @@ error: failed to push some refs
 
 **Possible causes:**
 1. Branch protection rules prevent bot from pushing
-2. PAT doesn't have bypass permissions
+2. The current workflow identity lacks bypass permissions
 3. Required status checks not passing
 
 **Solutions:**
@@ -1243,36 +1159,25 @@ GitHub Actions automatically caches pip dependencies. To add more caching:
 
 ## Security Best Practices
 
-### Token Rotation Schedule
+### Authentication Hygiene
 
-**Recommended schedule:**
+Use the native GitHub authentication flow and the built-in Actions token instead of long-lived PATs:
 
-1. **Initial Setup**: Create PAT with 90-day expiration
-2. **30 Days Before Expiry**: Monthly report will send warning
-3. **7 Days Before Expiry**: Generate new PAT
-4. **Update Secret**: Replace `GH_ACCESS_TOKEN` with new token
-5. **Revoke Old**: After confirming new token works, revoke old one
-
-**Set calendar reminders:**
-- 30 days before expiration: Review and prepare
-- 7 days before expiration: Generate and test new token
-- Day before expiration: Update secret and verify
+1. Keep `gh auth login` / `gh auth status` verified for local and Codespaces runs
+2. Let GitHub Actions use `github.token` / `GITHUB_TOKEN` automatically
+3. Remove any manual token setup guidance from your deployment notes
 
 ### Principle of Least Privilege
 
-**Token permissions:**
+**Access model:**
 
-✅ **DO grant:**
-- `repo` - Required for reading/writing repository content
-- `workflow` - Required for triggering workflows
-- `read:org` - Required for organization access
-- `read:user` - Required for user information
+✅ **Use:**
+- Built-in Actions token (`github.token` / `GITHUB_TOKEN`)
+- Native CLI authentication for local and Codespaces use
 
-❌ **DO NOT grant:**
-- `admin:org` - Not needed, gives too much power
-- `delete_repo` - Never needed for automation
-- `admin:repo_hook` - Not needed for this automation
-- `admin:public_key` - Not needed
+❌ **Avoid:**
+- Long-lived PATs for routine automation
+- Manual secret setup for the standard GitHub auth path
 
 **Email permissions:**
 
@@ -1313,13 +1218,11 @@ GitHub Actions automatically caches pip dependencies. To add more caching:
 ✅ **Normal activity:**
 ```
 Workflow run by github-actions
-Secret GH_ACCESS_TOKEN read
 Workflow completed successfully
 ```
 
 ⚠️ **Investigate these:**
 ```
-Secret GH_ACCESS_TOKEN updated by unknown-user
 Workflow triggered from suspicious branch
 Multiple failed authentication attempts
 ```
@@ -1330,14 +1233,12 @@ Multiple failed authentication attempts
 
 1. **Review their access:**
    - Did they have access to repository secrets?
-   - Did they create the PAT used for automation?
    - Did they have admin access?
 
 2. **Rotate credentials they had access to:**
-   - Generate new GitHub PAT
-   - Update `GH_ACCESS_TOKEN` secret
-   - Change SMTP password if they knew it
-   - Update all related secrets
+   - Refresh any SMTP or email credentials they used
+   - Review a new workflow token or auth session if needed
+   - Update related secrets only if necessary
 
 3. **Review recent activity:**
    - Check audit logs for their actions
@@ -1359,7 +1260,6 @@ Multiple failed authentication attempts
 
 | Secret | Required? | Example | Description |
 |--------|-----------|---------|-------------|
-| `GH_ACCESS_TOKEN` | **Yes** | `ghp_xxxx...` | GitHub Personal Access Token |
 | `EMAIL_ENABLED` | No | `true` | Enable email notifications (default: false) |
 | `SMTP_SERVER` | No* | `smtp.gmail.com` | Email server address |
 | `SMTP_PORT` | No* | `587` | Email server port |
@@ -1387,11 +1287,10 @@ Multiple failed authentication attempts
 # Test SMTP connection
 python -c "import smtplib; s=smtplib.SMTP('smtp.gmail.com',587); s.starttls(); s.login('user@gmail.com','password'); print('✅ Success')"
 
-# Test GitHub token
-curl -H "Authorization: token ghp_TOKEN" https://api.github.com/user
+# Confirm GitHub CLI auth
+gh auth status
 
 # Run workflow locally (dry-run)
-export GH_ACCESS_TOKEN=ghp_xxx
 export SMTP_USERNAME=user@gmail.com
 export SMTP_PASSWORD=xxx
 export NOTIFICATION_EMAIL=recipient@example.com
@@ -1403,7 +1302,6 @@ python -m automation.workflows.daily_pr_monitor --dry-run
 - **GitHub Actions Docs**: https://docs.github.com/en/actions
 - **Cron Schedule Tester**: https://crontab.guru
 - **Gmail App Passwords**: https://myaccount.google.com/apppasswords
-- **GitHub PAT Settings**: https://github.com/settings/tokens
 - **Repository Actions**: https://github.com/YOUR_ORG/content-maintenance/actions
 
 ---

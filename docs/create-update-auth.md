@@ -1,5 +1,6 @@
 # Create/update a GitHub access token
 
+ARCHIVE ONLY - GH ACCESS TOKEN NO LONGER NEEDED 
 The scripts in this repo require the use of a github token to authenticate.  Use these steps to create the token.  When the token expires, redo the same steps to create a new token.
 
 ## Create a GitHub token

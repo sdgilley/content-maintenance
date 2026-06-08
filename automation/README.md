@@ -41,9 +41,9 @@ automation/
 
 ### Prerequisites
 
-1. **GitHub Personal Access Token** with the following permissions:
-   - `repo` (full repository access)
-   - `workflow` (for triggering workflows)
+1. **GitHub authentication** using the native CLI and the built-in Actions token:
+   - Run `gh auth login` in local/Codespaces environments
+   - Use `github.token` / `GITHUB_TOKEN` in GitHub Actions
 
 2. **SMTP Email Account** (OPTIONAL) - Only required if you want email notifications
    - Gmail, Office 365, or other SMTP provider
@@ -51,12 +51,9 @@ automation/
 
 ### Environment Variables
 
-The following environment variables must be configured in GitHub Actions Secrets:
+The following environment variables are optional for email notifications:
 
 ```bash
-# GitHub Authentication (REQUIRED)
-GH_ACCESS_TOKEN=ghp_your_token_here
-
 # Email Configuration (OPTIONAL - set EMAIL_ENABLED=true to enable)
 EMAIL_ENABLED=false              # Set to true to enable email notifications
 SMTP_SERVER=smtp.gmail.com       # Only needed if EMAIL_ENABLED=true
@@ -77,10 +74,7 @@ AUTO_APPROVE_ENABLED=true        # Enable/disable PR auto-approval
 ### GitHub Secrets Setup
 
 1. Go to your repository Settings → Secrets and variables → Actions
-2. Add the following **required** secrets:
-   - `GH_ACCESS_TOKEN`
-
-3. Add the following **optional** secrets (only if you want email notifications):
+2. Add the following **optional** secrets (only if you want email notifications):
    - `EMAIL_ENABLED` (set to `true`)
    - `SMTP_SERVER`
    - `SMTP_PORT`
@@ -239,9 +233,8 @@ export DRY_RUN=true
 # Install dependencies
 pip install -r requirements.txt
 
-# Set required environment variables
-export GH_ACCESS_TOKEN=your_token
-
+# Authenticate with the native GitHub CLI if you are running locally
+# gh auth login
 
 # Optional: Set email configuration (only if you want email notifications)
 export EMAIL_ENABLED=true
@@ -362,9 +355,9 @@ Workflow artifacts are retained for 30-90 days and include:
 **Problem:** `Error: GitHub token is required`
 
 **Solution:**
-1. Verify `GH_ACCESS_TOKEN` secret is set correctly
-2. Check token has required permissions (repo, workflow)
-3. Ensure token hasn't expired
+1. Verify `gh auth status` succeeds in your environment
+2. Confirm the workflow is using the built-in Actions token or your authenticated CLI session
+3. If the error persists, review the workflow logs for permission or repository access issues
 
 ### Email Not Delivered (Optional Feature)
 

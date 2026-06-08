@@ -5,20 +5,31 @@
 To run the scripts, authenticate with GitHub using the secure native flow (`gh auth login` in Codespaces or locally). For Actions, rely on `github.token` / `GITHUB_TOKEN` instead of a long-lived PAT.
 
 <details>
-<summary> Create a GitHub personal access token</summary>
-
-First create a GitHub personal access token following instructions in [Create/update a GitHub access token](create-update-auth.md). 
-
-> ⚠️ **Important:**  Don't forget to configure SSO for MicrosoftDocs.
-
-</details>
-
-<details>
 <summary> Run scripts in GitHub CODESPACES</summary>
 
 Once your secret is stored, perform all maintenance tasks using the button below to open this repo in GitHub Codespaces. No additional setup needed. Use the Codespace terminal to run the scripts.
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/sdgilley/content-maintenance?quickstart=1)
+
+</details>
+
+<details>
+<summary> Manual install in an existing Codespace (for branch testing)</summary>
+
+If you are testing on a feature branch before the devcontainer change is merged to `main`, the Codespace will not automatically get the new `gh` feature. Install it manually in the current Codespace terminal without relying on the image's apt sources:
+
+```bash
+tmpdir=$(mktemp -d) && cd "$tmpdir" && \
+ARCH=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/') && \
+curl -fsSL -o gh.tar.gz "https://github.com/cli/cli/releases/download/v2.92.0/gh_2.92.0_linux_${ARCH}.tar.gz" && \
+tar -xzf gh.tar.gz && \
+sudo install -m 0755 "$tmpdir/gh_2.92.0_linux_${ARCH}/bin/gh" /usr/local/bin/gh && \
+gh --version && \
+gh auth login && \
+gh auth status
+```
+
+Use those same commands any time you need to validate the branch version of the setup before the main branch update is available.
 
 </details>
 
@@ -42,14 +53,17 @@ For local execution, you'll need:
    pip install -r requirements.txt
    ```
 
-3. Store your GitHub access token as an environment variable:
-   - Create a personal access token following steps in [Create/update a GitHub access token](docs/create-update-auth.md) 
-   - Set the `GH_ACCESS_TOKEN` environment variable with your token
+3. Sign in with the native GitHub CLI before running the scripts:
 
-> ⚠️ **Important:** You must set the `GH_ACCESS_TOKEN` environment variable before running any scripts. 
+   ```bash
+   gh auth login
+   gh auth status
+   ```
 
-</details>
-
+   No manual secret configuration is required for the local or Codespaces workflow.
+authentication** using the native CLI and Actions token:
+   - Run `gh auth login` in local/Codespaces environments
+   - Use the built-in `github.token` / `GITHUB_TOKEN` in GitHub Actions
 ## Add a new code repo (done once per code repo)
 
 The process of monitoring a code repoository involves some initial setup:
@@ -60,8 +74,8 @@ The process of monitoring a code repoository involves some initial setup:
     * Create a team at `https://github.com/orgs/{ORG-NAME}/teams/`. (For example, https://github.com/orgs/azure/teams/)
     * Add members to the team once they've joined the org.
 1. (Docs) Add information about the repo to [config.yml](../config.yml) in the maintenance repo
-1. (Code repository admin) To configure a code repository:
-
+1. (Code repository adminnative CLI / Actions token)
+# No manual GitHub secret setup is required for the current workflow.
     * Add the above GH team with write permissions into the repository.
     * Create a CODEOWNERS file in the repository.  
     * Require approval from a code owner before the author can merge a pull request. Require a reapproval if subsequent pushes made.

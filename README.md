@@ -37,7 +37,6 @@ The automation could reduce manual effort by ~80% while maintaining documentatio
 ## Documentation
 
 * [Setup and overview](docs/setup.md)
-* [Create token for authentication](docs/create-update-auth.md)
 * [Daily and weekly tasks](docs/code-snippets.md)
 * [Fix the problem](docs/fix-the-problem.md)
 * **[Automation Guide](automation/README.md)** ⭐ **NEW**
@@ -87,8 +86,6 @@ Scripts in this repository can be run locally or in a GitHub Codespace.
    ```bash
    gh auth login
    ```
-   For GitHub Actions, rely on the built-in `github.token` / `GITHUB_TOKEN` and `gh` CLI instead of storing a personal access token.
-   Public read-only scans can run without any PAT at all.
 
 See instructions in [Daily and weekly tasks](docs/code-snippets.md) for details.
 
