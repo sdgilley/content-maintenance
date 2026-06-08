@@ -12,6 +12,18 @@ When using this process, you'll create PRs in each of the following repositories
 
 ## Daily tasks - monitor the <img src="../media/code.svg" width="44" height="44" style="vertical-align: text-bottom"> Code Repos
 
+### Authenticate before you start
+
+1. Open a terminal in this repo (local machine or GitHub Codespaces).
+1. Sign in with the secure native GitHub flow if needed:
+
+   ```bash
+   gh auth login
+   gh auth status
+   ```
+
+1. Confirm the CLI reports an authenticated GitHub account before you run the PR checks below.
+
 ### Check PRs
 
 1. Check for PRs that need review:
