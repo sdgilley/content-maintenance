@@ -31,7 +31,7 @@
 	},
 
 	// Use 'postStartCommand' to run commands after the container starts.
-	"postStartCommand": "echo 'Welcome! Open docs/code-snippets.md and press Ctrl+Shift+V to view in preview mode.'"
+	"postStartCommand": "bash .devcontainer/ensure-gh-auth.sh && echo 'Welcome! Open docs/code-snippets.md and press Ctrl+Shift+V to view in preview mode.'"
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
