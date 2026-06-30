@@ -1,6 +1,10 @@
 # Repository Moved
 
-This repository has moved to:
+
+
+
+
+![Moving truck icon](https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f69a.png) This repository has moved to:
 
 https://github.com/azure-core/code-ref-monitor
 
